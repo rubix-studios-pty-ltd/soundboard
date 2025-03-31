@@ -1,14 +1,12 @@
-import type { Settings as SettingsType, HotkeyMap as HotkeyMapType } from './src/types';
+import type { Settings as SettingsType, HotkeyMap as HotkeyMapType } from '@/types';
 import type { BrowserWindow as BrowserWindowType } from 'electron';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import Store from 'electron-store';
 
-// Configure app
 app.commandLine.appendSwitch('log-level', '3');
-app.disableHardwareAcceleration(); // Reduce memory usage
+app.disableHardwareAcceleration();
 
-// Default settings
 const DEFAULT_SETTINGS = {
     multiSoundEnabled: true,
     repeatSoundEnabled: false,
@@ -21,7 +19,6 @@ interface StoreSchema {
     settings: SettingsType;
 }
 
-// Initialize store with schema
 const store = new Store({
     schema: {
         hotkeys: {
@@ -38,7 +35,6 @@ const store = new Store({
     migrations: {
         '1.0.0': (storeMigration: Store<StoreSchema>) => {
             try {
-                // Reset to defaults if any validation fails
                 const settings = storeMigration.get('settings');
                 storeMigration.set('settings', {
                     multiSoundEnabled: Boolean(settings?.multiSoundEnabled ?? true),
@@ -54,7 +50,6 @@ const store = new Store({
     }
 });
 
-// Validate initial settings
 try {
     const settings = store.get('settings');
     if (!settings || typeof settings.volume !== 'number' || isNaN(settings.volume) || settings.volume < 0 || settings.volume > 1) {
@@ -95,10 +90,13 @@ function createWindow(): void {
         });
 
         win.loadFile(path.join(ROOT_PATH, 'index.html'));
+
+        if (process.argv.includes('--enable-logging')) {
+            win.webContents.openDevTools();
+        }
     }
 }
 
-// Batch IPC setup with error handling
 function setupIPC(): void {
     ipcMain.handle('load-hotkeys', (): HotkeyMapType => {
         try {

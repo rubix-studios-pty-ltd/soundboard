@@ -13,7 +13,7 @@
     "dev": "concurrently \"npm run watch:app\" \"npm run watch:css\" \"npm run electron:dev\"",
     "watch:app": "node build.mjs --watch",
     "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/styles.css --watch",
-    "electron:dev": "nodemon --watch dist --exec \"electron .\"",
+    "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
     "build:win": "npm run clean && npm run build && electron-builder --win portable"
   },
   "author": "",
@@ -34,9 +34,16 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@radix-ui/react-slider": "^1.2.3",
     "@tailwindcss/cli": "^4.0.17",
     "@tailwindcss/postcss": "^4.0.17",
-    "electron-store": "^10.0.1"
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "clsx": "^2.1.1",
+    "electron-store": "^10.0.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.0.2"
   },
   "build": {
     "appId": "com.rubixstudios.soundboard",

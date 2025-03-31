@@ -1,4 +1,4 @@
-import type { SoundData } from '../types';
+import type { SoundData } from '@/types';
 
 export const musicData: SoundData[] = [
     { id: "sound140", file: "sound/30-min.mp3", title: "30 Phút" },

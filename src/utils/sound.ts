@@ -1,9 +1,9 @@
-import AudioPool from './audio-pool';
+import AudioPool from '@/utils/audio-pool';
 import HotkeyManager from './hotkeys';
-import { soundData } from './data/audio';
-import { musicData } from './data/music';
-import type { SoundData } from './types';
-import getSettingsManager from './settings';
+import { soundData } from '@/data/audio';
+import { musicData } from '@/data/music';
+import type { SoundData } from '@/types';
+import getSettingsManager from '@/utils/settings';
 
 class SoundboardApp {
     private container1: HTMLElement;

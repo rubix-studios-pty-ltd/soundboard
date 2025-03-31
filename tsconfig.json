@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
+    "jsx": "react-jsx",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
@@ -16,7 +17,8 @@
     "declaration": true,
     "declarationMap": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "*": ["node_modules/*"],
+      "@/*": ["src/*"],
     },
     "typeRoots": [
       "./node_modules/@types",
@@ -28,10 +30,11 @@
       "DOM.Iterable"
     ]
   },
-  "include": [
+    "include": [
     "src/**/*",
     "*.ts",
-    "*.mts"
+    "*.mts",
+    "*.tsx"
   ],
   "exclude": [
     "node_modules",

@@ -1,4 +1,4 @@
-import type { Settings } from './types';
+import type { Settings } from '@/types';
 
 class SettingsManager {
     private multiSoundSwitch: HTMLInputElement;

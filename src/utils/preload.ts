@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { IpcApi, Settings, HotkeyMap } from './types';
+import type { IpcApi, Settings, HotkeyMap } from '@/types';
 
 const electronAPI: IpcApi = {
     loadHotkeys: async () => {
