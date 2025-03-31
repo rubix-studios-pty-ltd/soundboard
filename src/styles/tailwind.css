@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@layer components {
+  .toggle-switch {
+    @apply appearance-none w-[14px] h-[24px] bg-gray-300 rounded-[30px] relative outline-none cursor-pointer transition-colors duration-300 mb-[5px];
+  }
+
+  .toggle-switch::before {
+    content: '';
+    @apply w-[12px] h-[12px] bg-white rounded-full absolute top-[1px] left-[1px] transition-transform duration-300;
+  }
+
+  .toggle-switch:checked {
+    @apply bg-green-500;
+  }
+
+  .toggle-switch:checked::before {
+    @apply translate-y-[10px];
+  }
+
+  .sound-button.active {
+    @apply !bg-black text-white;
+  }
+
+  .button-modal {
+    @apply bg-black text-white px-5 py-2.5 border-none rounded cursor-pointer;
+  }
+}
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  @apply w-[6px];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-black/40 rounded-[10px];
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-black/10 rounded-[10px];
+}
