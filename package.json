@@ -16,7 +16,7 @@
     "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
     "build:win": "npm run clean && npm run build && electron-builder --win portable"
   },
-  "author": "",
+  "author": "rubixstudios",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.13.14",

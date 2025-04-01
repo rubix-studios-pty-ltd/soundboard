@@ -20,6 +20,7 @@ yarn-error.log*
 
 # Environment
 .env
+.env.trustedsigning
 .env.local
 .env.*.local
 
