@@ -75,7 +75,6 @@ function createWindow(): void {
         alwaysOnTop: store.get('settings')?.alwaysOnTop ?? false,
         autoHideMenuBar: true,
         show: false,
-        backgroundColor: '#F0E8E4',
         webPreferences: {
             preload: path.join(ROOT_PATH, 'dist', 'preload.cjs'),
             nodeIntegration: false,
