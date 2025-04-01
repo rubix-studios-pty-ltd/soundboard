@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { HotkeyMap, SoundData } from '@/types';
+import { tauriAPI } from '@/utils/tauri-api';
 
 export const useHotkeys = (soundData: SoundData[], onSoundPlay: (soundId: string) => void) => {
   const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>({});
@@ -9,7 +10,7 @@ export const useHotkeys = (soundData: SoundData[], onSoundPlay: (soundId: string
   useEffect(() => {
     const loadHotkeys = async () => {
       try {
-        const savedHotkeys = await window.electronAPI.loadHotkeys();
+        const savedHotkeys = await tauriAPI.loadHotkeys();
         setHotkeyMap(savedHotkeys);
       } catch (error) {
         console.error('Error loading hotkeys:', error);
@@ -55,8 +56,8 @@ export const useHotkeys = (soundData: SoundData[], onSoundPlay: (soundId: string
       // Add new assignment
       newMap[currentSoundId] = key;
 
-      // Save to electron store
-      window.electronAPI.saveHotkeys(newMap);
+      // Save using Tauri
+      tauriAPI.saveHotkeys(newMap);
 
       return newMap;
     });
@@ -71,8 +72,8 @@ export const useHotkeys = (soundData: SoundData[], onSoundPlay: (soundId: string
       const newMap = { ...prev };
       delete newMap[currentSoundId];
 
-      // Save to electron store
-      window.electronAPI.saveHotkeys(newMap);
+      // Save using Tauri
+      tauriAPI.saveHotkeys(newMap);
 
       return newMap;
     });

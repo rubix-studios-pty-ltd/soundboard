@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import type { Settings } from '@/types';
+import { tauriAPI } from '@/utils/tauri-api';
 
 interface SettingsContextType {
   settings: Settings;
@@ -22,7 +23,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [settings, setSettings] = useState<Settings>(defaultSettings);
 
   useEffect(() => {
-    window.electronAPI.loadSettings().then((savedSettings) => {
+    tauriAPI.loadSettings().then((savedSettings) => {
       setSettings(savedSettings);
     });
   }, []);
@@ -30,9 +31,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const updateSettings = (newSettings: Partial<Settings>) => {
     setSettings((prev) => {
       const updated = { ...prev, ...newSettings };
-      window.electronAPI.saveSettings(updated);
+      tauriAPI.saveSettings(updated);
       if ('alwaysOnTop' in newSettings) {
-        window.electronAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false);
+        tauriAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false);
       }
       return updated;
     });

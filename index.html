@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self';
-        media-src 'self' blob:;
-        script-src 'self';
+        default-src 'self' tauri:;
+        media-src 'self' blob: tauri:;
+        script-src 'self' 'unsafe-eval' 'unsafe-inline' tauri:;
         style-src 'self' 'unsafe-inline';
-        img-src 'self' data:;
+        img-src 'self' data: tauri:;
+        connect-src 'self' tauri: https://tauri.localhost;
     ">
     <title>XRL - Soundboard</title>
     <link rel="stylesheet" href="dist/styles.css">

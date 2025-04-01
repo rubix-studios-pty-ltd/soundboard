@@ -1,4 +1,5 @@
 import type { Settings } from '@/types';
+import { tauriAPI } from './tauri-api';
 
 class SettingsManager {
     private multiSoundSwitch: HTMLInputElement;
@@ -35,7 +36,7 @@ class SettingsManager {
 
     private initializeSettings(): Promise<void> {
         return new Promise<void>((resolve) => {
-            window.electronAPI.loadSettings()
+            tauriAPI.loadSettings()
                 .then(settings => {
                     this.currentSettings = settings;
                     this.applySettings(settings);
@@ -75,7 +76,7 @@ class SettingsManager {
 
         this.alwaysOnTopSwitch.addEventListener('change', () => {
             this.updateSetting('alwaysOnTop', this.alwaysOnTopSwitch.checked);
-            window.electronAPI.toggleAlwaysOnTop(this.alwaysOnTopSwitch.checked);
+            tauriAPI.toggleAlwaysOnTop(this.alwaysOnTopSwitch.checked);
         });
 
         this.volumeSlider.addEventListener('input', () => {
@@ -89,7 +90,7 @@ class SettingsManager {
 
     private updateSetting<K extends keyof Settings>(key: K, value: Settings[K]): void {
         this.currentSettings[key] = value;
-        window.electronAPI.saveSettings(this.currentSettings);
+        tauriAPI.saveSettings(this.currentSettings);
         this.onSettingsChangeCallbacks.forEach(callback => callback(this.currentSettings));
     }
 

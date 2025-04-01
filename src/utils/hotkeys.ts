@@ -1,4 +1,5 @@
 import type { HotkeyMap } from '@/types';
+import { tauriAPI } from './tauri-api';
 
 class HotkeyManager {
     private modal: HTMLElement;
@@ -22,7 +23,7 @@ class HotkeyManager {
 
     private async initializeHotkeys(): Promise<void> {
         try {
-            this.hotkeyMap = await window.electronAPI.loadHotkeys();
+            this.hotkeyMap = await tauriAPI.loadHotkeys();
         } catch (error) {
             console.error('Error loading hotkeys:', error);
             this.hotkeyMap = {};
@@ -37,7 +38,7 @@ class HotkeyManager {
         this.clearHotkeyButton.addEventListener('click', () => {
             if (this.currentSoundId && this.currentSoundId in this.hotkeyMap) {
                 delete this.hotkeyMap[this.currentSoundId];
-                window.electronAPI.saveHotkeys(this.hotkeyMap);
+                tauriAPI.saveHotkeys(this.hotkeyMap);
                 this.hideModal();
             }
         });
@@ -53,7 +54,7 @@ class HotkeyManager {
                 }
 
                 this.hotkeyMap[this.currentSoundId] = key;
-                window.electronAPI.saveHotkeys(this.hotkeyMap);
+                tauriAPI.saveHotkeys(this.hotkeyMap);
                 this.hideModal();
             }
         });

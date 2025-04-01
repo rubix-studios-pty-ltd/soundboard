@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useRef, useEffect } from 'react';
-import AudioPool, { AudioPoolItem } from '@/utils/audio-pool';
+import AudioPool from '@/utils/audio-pool';
 import { useSettings } from '@/context/settingcontext';
 
 interface AudioContextType {

@@ -20,16 +20,5 @@ export interface AudioPoolItem {
     isPlaying: boolean;
 }
 
-export interface IpcApi {
-    loadHotkeys: () => Promise<HotkeyMap>;
-    loadSettings: () => Promise<Settings>;
-    saveHotkeys: (hotkeys: HotkeyMap) => void;
-    saveSettings: (settings: Settings) => void;
-    toggleAlwaysOnTop: (isEnabled: boolean) => void;
-}
-
-declare global {
-    interface Window {
-        electronAPI: IpcApi;
-    }
-}
+// Note: IpcApi and Window.electronAPI have been removed as we're now using Tauri's invoke system
+// See tauri-api.ts for the Tauri-specific implementation

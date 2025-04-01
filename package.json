@@ -3,33 +3,31 @@
   "version": "2.0.2",
   "description": "soundboard",
   "type": "module",
-  "main": "dist/main.cjs",
   "scripts": {
     "clean": "rimraf dist && rimraf release",
-    "start": "npm run clean && npm run build && electron .",
+    "start": "npm run tauri dev",
     "build": "npm run build:app && npm run build:css",
     "build:app": "node build.mjs",
     "build:css": "npx @tailwindcss/cli -i ./src/styles/tailwind.css -o ./dist/styles.css",
-    "dev": "concurrently \"npm run watch:app\" \"npm run watch:css\" \"npm run electron:dev\"",
-    "watch:app": "node build.mjs --watch",
-    "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/styles.css --watch",
-    "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
-    "build:win": "npm run clean && npm run build && electron-builder --win portable"
+    "dev": "npm run build && npm run serve",
+    "serve": "serve dist -p 3000",
+    "tauri": "tauri",
+    "build:tauri": "npm run build && tauri build"
   },
   "author": "rubixstudios",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^22.13.14",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
+    "@tauri-apps/cli": "^2.4.0",
+    "@types/node": "^22.13.16",
+    "@typescript-eslint/eslint-plugin": "^8.29.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.2",
-    "electron": "^35.1.2",
-    "electron-builder": "^26.0.12",
     "esbuild": "^0.25.2",
     "nodemon": "^3.1.9",
     "postcss": "^8.5.3",
     "rimraf": "^6.0.1",
+    "serve": "^14.2.4",
     "tailwindcss": "^4.0.17",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.2"
@@ -40,45 +38,14 @@
     "@radix-ui/react-slider": "^1.2.3",
     "@tailwindcss/cli": "^4.0.17",
     "@tailwindcss/postcss": "^4.0.17",
+    "@tauri-apps/api": "^2.4.0",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "electron-store": "^10.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwind-merge": "^3.0.2",
+    "tailwind-merge": "^3.1.0",
     "tailwindcss-animated": "^2.0.0"
-  },
-  "build": {
-    "appId": "com.rubixstudios.soundboard",
-    "productName": "Soundboard",
-    "win": {
-      "target": "portable",
-      "icon": "icon.ico"
-    },
-    "asar": {
-      "smartUnpack": true
-    },
-    "files": [
-      "dist/**/*",
-      "icon.ico",
-      "index.html",
-      "sound/**/*",
-      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
-      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
-      "!**/node_modules/*.d.ts",
-      "!**/node_modules/.bin",
-      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-      "!.editorconfig",
-      "!**/._*",
-      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
-      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
-      "!**/{appveyor.yml,.travis.yml,circle.yml}",
-      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
-    ],
-    "directories": {
-      "output": "release"
-    }
   }
 }
