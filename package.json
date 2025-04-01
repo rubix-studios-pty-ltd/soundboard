@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
@@ -16,8 +16,8 @@
     "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
     "build:win": "npm run clean && npm run build && electron-builder --win portable"
   },
-  "author": "rubixstudios",
-  "license": "ISC",
+  "author": "Rubix Studios Pty. Ltd.",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^22.13.14",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
