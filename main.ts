@@ -4,8 +4,6 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import Store from 'electron-store';
 
-app.disableHardwareAcceleration();
-
 const shouldLog = () => process.argv.includes('--enable-logging');
 
 const DEFAULT_SETTINGS = {
@@ -183,7 +181,6 @@ app.on('window-all-closed', () => {
     }
 });
 
-// Always log critical errors regardless of mode
 process.on('uncaughtException', (error: Error) => {
     console.error('[Critical] Uncaught Exception:', error);
 });
