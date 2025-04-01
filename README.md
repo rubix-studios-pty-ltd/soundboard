@@ -72,3 +72,9 @@ MIT License - See full license in LICENSE file.
 ## Author
 
 Rubix Studios Pty. Ltd.
+
+## Contact
+
+For support or inquiries, contact Vincent Vu [@rubixvi](https://x.com/rubixvi) on X.
+Rubix Studios - [https://www.rubixstudios.com.au](https://www.rubixstudios.com.au)
+Project: [https://github.com/rubixvi/rubix-documents](https://github.com/rubixvi/rubix-documents)
