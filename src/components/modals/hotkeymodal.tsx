@@ -26,13 +26,13 @@ const HotkeyModal: React.FC<HotkeyModalProps> = ({
   currentHotkey,
   onAssign,
 }) => {
-  const [displayText, setDisplayText] = useState('Nhấn bất kỳ phím nào để gán');
+  const [displayText, setDisplayText] = useState('Nhấn một phím bất kỳ để thiết lập phím tắt.');
 
   useEffect(() => {
     if (currentHotkey) {
       setDisplayText(`Hiện tại: "${currentHotkey}". \nNhấn phím mới để thay đổi.`);
     } else {
-      setDisplayText('Nhấn bất kỳ phím nào để gán');
+      setDisplayText('Nhấn một phím bất kỳ để thiết lập phím tắt.');
     }
   }, [currentHotkey]);
 

@@ -40,7 +40,11 @@ class AudioPool {
                 poolItem.blobUrl = undefined;
             }
             poolItem.onEnd?.();
-            this.pool.delete(poolItem.source);
+            const itemKey = Array.from(this.pool.entries())
+                .find(([_, item]) => item === poolItem)?.[0];
+            if (itemKey) {
+                this.pool.delete(itemKey);
+            }
         };
 
         poolItem.audio.addEventListener('ended', endedListener);
@@ -56,69 +60,67 @@ class AudioPool {
 
     private cleanupAudioItem(item: AudioPoolItem): void {
         item.cleanupListeners?.forEach(cleanup => cleanup());
-        item.audio.pause();
-        item.audio.currentTime = 0;
-        item.audio.src = '';
         if (item.blobUrl) {
             URL.revokeObjectURL(item.blobUrl);
             item.blobUrl = undefined;
         }
+        item.audio.src = '';
+        item.audio.remove();
         item.isPlaying = false;
     }
 
     async play(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
-        let poolItem = this.pool.get(source);
-
-        if (repeat || !poolItem) {
-            const stoppedItem = this.findStoppedAudio();
-            if (stoppedItem) {
-                this.cleanupAudioItem(stoppedItem);
-                this.pool.delete(stoppedItem.source);
-            }
-
-            if (this.pool.size < this.maxPoolSize) {
-                const audio = new Audio();
-                poolItem = {
-                    audio,
-                    source,
-                    isPlaying: false,
-                    cleanupListeners: [],
-                    onEnd,
-                    blobUrl: url
-                };
-                this.setupAudioListeners(poolItem);
-                const key = repeat ? `${source}_${Date.now()}` : source;
-                this.pool.set(key, poolItem);
-            }
-        } else if (poolItem && !repeat) {
-            if (poolItem.blobUrl && poolItem.blobUrl !== url) {
-                URL.revokeObjectURL(poolItem.blobUrl);
-            }
-            poolItem.blobUrl = url;
-            poolItem.onEnd = onEnd;
+        const existingItem = this.pool.get(source);
+        if (existingItem) {
+            this.cleanupAudioItem(existingItem);
+            this.pool.delete(source);
         }
 
-        if (poolItem) {
-            const { audio } = poolItem;
-            audio.currentTime = 0;
-            audio.src = url;
-            audio.volume = volume;
-            audio.loop = false;
-
-            try {
-                await audio.play();
-                poolItem.isPlaying = true;
-            } catch (error) {
-                console.error('Error playing audio:', error);
-                poolItem.isPlaying = false;
-                if (poolItem.blobUrl) {
-                    URL.revokeObjectURL(poolItem.blobUrl);
-                    poolItem.blobUrl = undefined;
+        if (this.pool.size >= this.maxPoolSize) {
+            const stoppedItem = this.findStoppedAudio();
+            if (stoppedItem) {
+                const stoppedKey = Array.from(this.pool.entries())
+                    .find(([_, item]) => item === stoppedItem)?.[0];
+                if (stoppedKey) {
+                    this.cleanupAudioItem(stoppedItem);
+                    this.pool.delete(stoppedKey);
                 }
-                this.pool.delete(source);
+            } else {
+                console.warn('Audio pool is full. Cannot play more sounds simultaneously.');
+                return;
             }
-        } else {
-            console.warn('Audio pool is full. Cannot play more sounds simultaneously.');
+        }
+
+        const audio = new Audio();
+        const key = repeat ? `${source}_${Date.now()}` : source;
+        const poolItem: AudioPoolItem = {
+            audio,
+            source,
+            isPlaying: false,
+            cleanupListeners: [],
+            onEnd,
+            blobUrl: url
+        };
+        
+        this.setupAudioListeners(poolItem);
+        this.pool.set(key, poolItem);
+
+        audio.currentTime = 0;
+        audio.src = url;
+        audio.volume = volume;
+        audio.loop = false;
+
+        try {
+            await audio.play();
+            poolItem.isPlaying = true;
+        } catch (error) {
+            console.error('Error playing audio:', error);
+            poolItem.isPlaying = false;
+            if (poolItem.blobUrl) {
+                URL.revokeObjectURL(poolItem.blobUrl);
+                poolItem.blobUrl = undefined;
+            }
+            this.pool.delete(source);
         }
     }
 
