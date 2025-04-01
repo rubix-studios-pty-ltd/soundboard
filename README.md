@@ -46,13 +46,13 @@ npm install
 ```txt
 soundboard/
 ├── src/                # Source code
-│   ├── app/           # Main app components
-│   ├── components/    # Reusable UI components
-│   ├── context/      # React contexts
-│   ├── hooks/        # Custom React hooks
-│   └── utils/        # Utility functions
-├── sound/            # Sound effect files
-└── dist/             # Build output
+│   ├── app/            # Main app components
+│   ├── components/     # Reusable UI components
+│   ├── context/        # React contexts
+│   ├── hooks/          # Custom React hooks
+│   └── utils/          # Utility functions
+├── sound/              # Sound effect files
+└── dist/               # Build output
 ```
 
 ## Building for Production
