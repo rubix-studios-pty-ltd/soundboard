@@ -4,8 +4,9 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import Store from 'electron-store';
 
-app.commandLine.appendSwitch('log-level', '3');
 app.disableHardwareAcceleration();
+
+const shouldLog = () => process.argv.includes('--enable-logging');
 
 const DEFAULT_SETTINGS = {
     multiSoundEnabled: true,
@@ -43,7 +44,7 @@ const store = new Store({
                     volume: Math.min(1, Math.max(0, Number(settings?.volume) || 1))
                 });
             } catch (error) {
-                console.error('Migration failed, resetting to defaults:', error);
+                if (shouldLog()) console.error('Migration failed, resetting to defaults:', error);
                 storeMigration.set('settings', DEFAULT_SETTINGS);
             }
         }
@@ -60,7 +61,7 @@ try {
         });
     }
 } catch (error) {
-    console.error('Error validating settings:', error);
+    if (shouldLog()) console.error('Error validating settings:', error);
     store.set('settings', DEFAULT_SETTINGS);
 }
 
@@ -101,7 +102,7 @@ function setupIPC(): void {
         try {
             return store.get('hotkeys') ?? {};
         } catch (error) {
-            console.error('Error loading hotkeys:', error);
+            if (shouldLog()) console.error('Error loading hotkeys:', error);
             return {};
         }
     });
@@ -110,7 +111,7 @@ function setupIPC(): void {
         try {
             return store.get('settings') ?? DEFAULT_SETTINGS;
         } catch (error) {
-            console.error('Error loading settings:', error);
+            if (shouldLog()) console.error('Error loading settings:', error);
             return DEFAULT_SETTINGS;
         }
     });
@@ -119,7 +120,7 @@ function setupIPC(): void {
         try {
             store.set('hotkeys', newHotkeys);
         } catch (error) {
-            console.error('Error saving hotkeys:', error);
+            if (shouldLog()) console.error('Error saving hotkeys:', error);
         }
     });
 
@@ -138,11 +139,11 @@ function setupIPC(): void {
 
             store.set('settings', validatedSettings);
         } catch (error) {
-            console.error('Error saving settings:', error);
+            if (shouldLog()) console.error('Error saving settings:', error);
             try {
                 store.set('settings', DEFAULT_SETTINGS);
             } catch (e) {
-                console.error('Failed to save default settings:', e);
+                if (shouldLog()) console.error('Failed to save default settings:', e);
             }
         }
     });
@@ -155,7 +156,7 @@ function setupIPC(): void {
                 store.set('settings', { ...currentSettings, alwaysOnTop: isEnabled });
             }
         } catch (error) {
-            console.error('Error toggling always-on-top:', error);
+            if (shouldLog()) console.error('Error toggling always-on-top:', error);
         }
     });
 }
@@ -165,7 +166,7 @@ app.whenReady().then(() => {
         createWindow();
         setupIPC();
     } catch (error) {
-        console.error('Error during startup:', error);
+        if (shouldLog()) console.error('Error during startup:', error);
     }
 
     app.on('activate', () => {
@@ -182,10 +183,11 @@ app.on('window-all-closed', () => {
     }
 });
 
+// Always log critical errors regardless of mode
 process.on('uncaughtException', (error: Error) => {
-    console.error('Uncaught Exception:', error);
+    console.error('[Critical] Uncaught Exception:', error);
 });
 
 process.on('unhandledRejection', (error: Error | unknown) => {
-    console.error('Unhandled Rejection:', error);
+    console.error('[Critical] Unhandled Rejection:', error);
 });
