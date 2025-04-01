@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAudio } from '@/context/audiocontext';
 import { useSettings } from '@/context/settingcontext';
+import { Button } from "@/components/ui/button";
 
 interface SoundButtonProps {
   id: string;
@@ -26,10 +27,8 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       }
     };
 
-    // Check initial state
     checkPlayingState();
 
-    // Create interval to check state
     const interval = setInterval(checkPlayingState, 100);
 
     return () => clearInterval(interval);
@@ -38,11 +37,9 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   const { settings } = useSettings();
 
   const handleClick = async () => {
-    // In repeat mode, always play a new instance
     if (settings.repeatSoundEnabled) {
       await playSound(id, file);
     } else {
-      // Normal toggle behavior when repeat is disabled
       if (isActive) {
         stopSound(file);
       } else {
@@ -57,16 +54,18 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   };
 
   return (
-    <button
-      className={`sound-button bg-white text-[9px] font-bold border rounded px-0.5 py-1.5 cursor-pointer flex flex-col items-center w-24 overflow-hidden ${
-        isActive ? 'active' : ''
+    <Button
+      variant="outline"
+      size="sm"
+      className={`h-7 w-24 rounded text-[9px] font-bold items-center justify-center p-1 overflow-hidden ${
+        isActive ? 'bg-black text-white hover:bg-gray-900 hover:text-white' : 'hover:bg-accent'
       }`}
       onClick={handleClick}
       onContextMenu={handleContextMenu}
       data-sound-id={id}
     >
-      <span className="title">{title}</span>
-    </button>
+      <span className="truncate w-full text-center">{title}</span>
+    </Button>
   );
 };
 

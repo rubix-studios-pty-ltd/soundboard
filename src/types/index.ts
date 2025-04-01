@@ -1,4 +1,3 @@
-// Settings types
 export interface Settings {
     multiSoundEnabled: boolean;
     repeatSoundEnabled: boolean;
@@ -6,25 +5,21 @@ export interface Settings {
     volume: number;
 }
 
-// Sound types
 export interface SoundData {
     id: string;
     file: string;
     title: string;
 }
 
-// Hotkey types
 export interface HotkeyMap {
     [soundId: string]: string;
 }
 
-// Audio types
 export interface AudioPoolItem {
     audio: HTMLAudioElement;
     isPlaying: boolean;
 }
 
-// IPC types
 export interface IpcApi {
     loadHotkeys: () => Promise<HotkeyMap>;
     loadSettings: () => Promise<Settings>;
@@ -33,7 +28,6 @@ export interface IpcApi {
     toggleAlwaysOnTop: (isEnabled: boolean) => void;
 }
 
-// Window types
 declare global {
     interface Window {
         electronAPI: IpcApi;

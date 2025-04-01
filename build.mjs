@@ -2,7 +2,6 @@ import * as esbuild from 'esbuild'
 
 const isWatch = process.argv.includes('--watch')
 
-// Common build options
 const commonOptions = {
   bundle: true,
   sourcemap: true,
@@ -14,7 +13,6 @@ const commonOptions = {
 }
 
 const buildOptions = [
-  // Main process
   {
     ...commonOptions,
     entryPoints: ['main.ts'],
@@ -23,7 +21,6 @@ const buildOptions = [
     outfile: 'dist/main.cjs',
     format: 'cjs'
   },
-  // Preload script
   {
     ...commonOptions,
     entryPoints: ['src/utils/preload.ts'],
@@ -32,7 +29,6 @@ const buildOptions = [
     outfile: 'dist/preload.cjs',
     format: 'cjs',
   },
-  // Renderer process
   {
     ...commonOptions,
     entryPoints: ['src/app/index.tsx'],
@@ -49,14 +45,12 @@ const buildOptions = [
 ]
 
 if (isWatch) {
-  // Watch mode
   const contexts = await Promise.all(
     buildOptions.map(options => esbuild.context(options))
   )
   await Promise.all(contexts.map(context => context.watch()))
   console.log('Watching for changes...')
 } else {
-  // Build once
   await Promise.all(buildOptions.map(options => esbuild.build(options)))
   console.log('Build complete')
 }

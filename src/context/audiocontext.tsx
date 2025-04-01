@@ -20,7 +20,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const audioPoolRef = useRef<AudioPool>(new AudioPool());
   const { settings } = useSettings();
 
-  // Update volume when settings change
   useEffect(() => {
     if (settings.volume >= 0 && settings.volume <= 1) {
       audioPoolRef.current.updateVolume(settings.volume);
@@ -37,7 +36,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (!settings.repeatSoundEnabled) {
           audioPoolRef.current.stopAll();
         } else {
-          // In repeat mode, stop all sounds except the current one
           for (const [key, _] of audioPoolRef.current.getPlayingAudios()) {
             if (!key.startsWith(file)) {
               audioPoolRef.current.stopSpecific(key);
@@ -46,7 +44,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
       }
 
-      // Allow repeat regardless of multiSound setting
       const shouldAllowRepeat = settings.repeatSoundEnabled;
 
       await audioPoolRef.current.play(
@@ -55,7 +52,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         settings.volume,
         shouldAllowRepeat
       );
-      // URL cleanup is now handled by AudioPool
     } catch (error) {
       console.error('Error playing sound:', error);
       audioPoolRef.current.stopSpecific(file);

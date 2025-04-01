@@ -124,7 +124,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-[#F0E8E4] text-foreground;
   }
 }
 
@@ -139,19 +139,11 @@
   }
 
   .toggle-switch:checked {
-    @apply bg-green-500;
+    @apply bg-black;
   }
 
   .toggle-switch:checked::before {
     @apply translate-y-[10px];
-  }
-
-  .sound-button.active {
-    @apply !bg-black text-white;
-  }
-
-  .button-modal {
-    @apply bg-black text-white px-5 py-2.5 border-none rounded cursor-pointer;
   }
 }
 

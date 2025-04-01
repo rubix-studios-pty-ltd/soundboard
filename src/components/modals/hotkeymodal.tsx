@@ -1,4 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Button } from '@/components/ui/button';
 
 interface HotkeyModalProps {
   isOpen: boolean;
@@ -42,29 +53,27 @@ const HotkeyModal: React.FC<HotkeyModalProps> = ({
     }
   }, [isOpen, handleKeyDown]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed z-[1000] left-0 top-0 w-full h-full bg-black/50 flex justify-center items-center">
-      <div className="bg-white p-5 rounded-lg text-center w-[300px]">
-        <h2 className="text-base font-bold mb-2.5">Gán Phím Tắt</h2>
-        <p className="text-sm mb-5 whitespace-pre-line">{displayText}</p>
-        <div className="flex gap-2.5 justify-center">
-          <button
-            className="bg-black text-white px-6 py-2 cursor-pointer rounded text-xs"
-            onClick={onClear}
-          >
-            Xóa
-          </button>
-          <button
-            className="bg-black text-white px-6 py-2 cursor-pointer rounded text-xs"
-            onClick={onClose}
-          >
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-[280px]">
+        <DialogHeader>
+          <DialogTitle>Gán phím tắt</DialogTitle>
+          <DialogDescription>
+            {displayText}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-2">
+          <Button onClick={onClose}>
             Đóng
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+          {currentHotkey && (
+            <Button variant="destructive" onClick={onClear}>
+              Xóa
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

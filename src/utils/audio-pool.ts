@@ -4,7 +4,7 @@ export interface AudioPoolItem {
     isPlaying: boolean;
     cleanupListeners: (() => void)[];
     onEnd?: () => void;
-    blobUrl?: string;  // Store blob URL for cleanup
+    blobUrl?: string;
 }
 
 class AudioPool {
@@ -47,7 +47,6 @@ class AudioPool {
         poolItem.audio.addEventListener('pause', pauseListener);
         poolItem.audio.addEventListener('error', errorListener);
 
-        // Store cleanup function
         poolItem.cleanupListeners = [
             () => poolItem.audio.removeEventListener('ended', endedListener),
             () => poolItem.audio.removeEventListener('pause', pauseListener),
@@ -85,14 +84,13 @@ class AudioPool {
                     isPlaying: false,
                     cleanupListeners: [],
                     onEnd,
-                    blobUrl: url  // Store the blob URL
+                    blobUrl: url
                 };
                 this.setupAudioListeners(poolItem);
                 const key = repeat ? `${source}_${Date.now()}` : source;
                 this.pool.set(key, poolItem);
             }
         } else if (poolItem && !repeat) {
-            // Clean up previous blob URL if it exists
             if (poolItem.blobUrl && poolItem.blobUrl !== url) {
                 URL.revokeObjectURL(poolItem.blobUrl);
             }
@@ -132,7 +130,6 @@ class AudioPool {
     }
 
     stopSpecific(source: string): void {
-        // Find and stop all instances of the sound (for repeat mode)
         for (const [key, item] of this.pool.entries()) {
             if (key.startsWith(source)) {
                 this.cleanupAudioItem(item);
@@ -148,7 +145,6 @@ class AudioPool {
     }
 
     isPlaying(source: string): boolean {
-        // Check if any instance of this sound is playing (for repeat mode)
         for (const [key, item] of this.pool.entries()) {
             if (key.startsWith(source) && item.isPlaying) {
                 return true;
@@ -168,7 +164,6 @@ class AudioPool {
 
     private findStoppedAudio(): AudioPoolItem | undefined {
         for (const [, item] of this.pool) {
-            // Check both isPlaying flag and actual audio state
             if (!item.isPlaying && (item.audio.ended || item.audio.paused)) {
                 return item;
             }

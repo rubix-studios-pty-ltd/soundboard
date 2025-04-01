@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useAudio } from '@/context/audiocontext';
 import { useSettings } from '@/context/settingcontext';
 import ToggleSwitch from '@/components/controls/toggleswitch';
-import { Slider } from "@/components/controls/slider"
+import { Slider } from "@/components/ui/slider"
+import { Separator } from "@/components/ui/separator"
 
 const Header: React.FC = () => {
   const { stopAll } = useAudio();
   const { settings, updateSettings } = useSettings();
   const [previousVolume, setPreviousVolume] = useState(1);
 
-  const handleVolumeChange = (value: number[]) => {
-    const newVolume = value[0] / 100;
+  const handleVolumeChange = (newVolume: number) => {
     if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
       updateSettings({ volume: newVolume });
     }
@@ -34,11 +34,11 @@ const Header: React.FC = () => {
 
   return (
     <div className="bg-white flex items-center justify-between p-1 sticky top-0 z-50">
-      <div className="text-base font-bold ml-2">Soundboard</div>
+      <div className="text-base font-bold mx-2">Soundboard</div>
       <div className="flex items-center gap-2">
         <Slider
           value={[settings.volume * 100]}
-          onValueChange={handleVolumeChange}
+          onValueChange={(value) => handleVolumeChange(value[0] / 100)}
           max={100}
           step={1}
           className="w-[70px] mr-1.5"
@@ -91,7 +91,7 @@ const Header: React.FC = () => {
           </div>
         </button>
 
-        <div className="w-px h-10 bg-gray-300 mx-2"></div>
+        <Separator orientation="vertical" />
 
         <div className="flex gap-3">
           <ToggleSwitch

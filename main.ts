@@ -70,7 +70,7 @@ const ROOT_PATH = path.join(__dirname, '..');
 function createWindow(): void {
     win = new BrowserWindow({
         width: 620,
-        height: 980,
+        height: 986,
         resizable: true,
         alwaysOnTop: store.get('settings')?.alwaysOnTop ?? false,
         autoHideMenuBar: true,
@@ -161,7 +161,6 @@ function setupIPC(): void {
     });
 }
 
-// Startup
 app.whenReady().then(() => {
     try {
         createWindow();
@@ -177,7 +176,6 @@ app.whenReady().then(() => {
     });
 });
 
-// Cleanup
 app.on('window-all-closed', () => {
     win = null;
     if (process.platform !== 'darwin') {
@@ -185,7 +183,6 @@ app.on('window-all-closed', () => {
     }
 });
 
-// Global error handlers
 process.on('uncaughtException', (error: Error) => {
     console.error('Uncaught Exception:', error);
 });

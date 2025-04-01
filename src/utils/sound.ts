@@ -29,20 +29,17 @@ class SoundboardApp {
             
             const settingsManager = getSettingsManager();
             settingsManager.onSettingsChange(settings => {
-                // Update volume if changed
                 if (parseFloat(this.volumeSlider.value) !== settings.volume) {
                     this.volumeSlider.value = settings.volume.toString();
                     this.audioPool.updateVolume(settings.volume);
                 }
 
-                // Handle multiSound setting changes - only stop sounds if multiSound is disabled
                 if (!settings.multiSoundEnabled) {
                     const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
                     const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
                     const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
                     
                     if (activeButtons.length > 1) {
-                        // Stop all but the most recently played sound
                         activeButtons.slice(0, -1).forEach(button => {
                             this.audioPool.stopSpecific(button.id);
                             button.classList.remove('active');
@@ -65,10 +62,8 @@ class SoundboardApp {
 
         try {
             const isPlaying = this.audioPool.isPlaying(file);
-            
-            // When repeat is enabled, always play a new instance of the sound
+
             if (settings.repeatSoundEnabled) {
-                // Handle multiSound setting
                 if (!settings.multiSoundEnabled) {
                     const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
                     const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
@@ -80,27 +75,24 @@ class SoundboardApp {
                     }
                 }
 
-                // Start a new instance of the sound
                 const response = await fetch(file);
                 const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            
-            await this.audioPool.play(url, file, currentVolume, false, () => {
-                buttonElement.classList.remove("active");
-            });
-            buttonElement.classList.add("active");
-            URL.revokeObjectURL(url);
-            return;
+                const url = URL.createObjectURL(blob);
+                
+                await this.audioPool.play(url, file, currentVolume, false, () => {
+                    buttonElement.classList.remove("active");
+                });
+                buttonElement.classList.add("active");
+                URL.revokeObjectURL(url);
+                return;
             }
 
-            // Normal non-repeat behavior
             if (isPlaying) {
                 this.audioPool.stopSpecific(file);
                 buttonElement.classList.remove("active");
                 return;
             }
 
-            // Handle multiSound setting
             if (!settings.multiSoundEnabled) {
                 const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
                 const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
@@ -112,7 +104,6 @@ class SoundboardApp {
                 }
             }
 
-            // Start playing new sound
             const response = await fetch(file);
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
@@ -122,13 +113,11 @@ class SoundboardApp {
             });
             buttonElement.classList.add("active");
 
-            // Cleanup the blob URL
             URL.revokeObjectURL(url);
 
         } catch (error) {
             console.error('Error playing sound:', error);
             buttonElement.classList.remove("active");
-            // Clean up on error
             this.audioPool.stopSpecific(file);
         }
     }

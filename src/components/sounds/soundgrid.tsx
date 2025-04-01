@@ -21,7 +21,6 @@ const SoundGrid: React.FC<SoundGridProps> = ({ sounds, containerId }) => {
   }, [sounds, playSound]);
 
   const {
-    hotkeyMap,
     modalOpen,
     currentHotkey,
     showHotkeyModal,

@@ -30,12 +30,10 @@ class HotkeyManager {
     }
 
     private setupEventListeners(): void {
-        // Modal close button
         this.closeModalButton.addEventListener('click', () => {
             this.hideModal();
         });
 
-        // Clear hotkey button
         this.clearHotkeyButton.addEventListener('click', () => {
             if (this.currentSoundId && this.currentSoundId in this.hotkeyMap) {
                 delete this.hotkeyMap[this.currentSoundId];
@@ -44,27 +42,22 @@ class HotkeyManager {
             }
         });
 
-        // Global keydown for hotkey assignment
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (this.modal.style.display === 'flex' && this.currentSoundId) {
                 event.preventDefault();
                 const key = event.key.toLowerCase();
-                
-                // Check if key is already assigned
+
                 const existingSound = Object.entries(this.hotkeyMap).find(([, hotkey]) => hotkey === key);
                 if (existingSound) {
-                    // Remove existing assignment
                     delete this.hotkeyMap[existingSound[0]];
                 }
 
-                // Assign new hotkey
                 this.hotkeyMap[this.currentSoundId] = key;
                 window.electronAPI.saveHotkeys(this.hotkeyMap);
                 this.hideModal();
             }
         });
 
-        // Global keydown for triggering sounds
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             if (this.modal.style.display !== 'flex') {
                 const key = event.key.toLowerCase();
@@ -74,7 +67,6 @@ class HotkeyManager {
                 if (button) {
                     button.click();
                 } else {
-                    // Fallback to id if data-sound-id is not found
                     const buttonById = document.getElementById(soundId) as HTMLButtonElement;
                     buttonById?.click();
                 }
