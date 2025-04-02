@@ -14,16 +14,34 @@ class AudioPool {
     private maxPoolSize: number;
     private audioCache: AudioCache;
     private unusedAudioElements: HTMLAudioElement[];
+    private preloadedSounds: Map<string, string>;
 
     constructor(maxPoolSize: number = 50) {
         this.pool = new Map();
         this.maxPoolSize = maxPoolSize;
         this.audioCache = new AudioCache();
         this.unusedAudioElements = [];
+        this.preloadedSounds = new Map();
 
         for (let i = 0; i < Math.min(maxPoolSize, 10); i++) {
             this.unusedAudioElements.push(new Audio());
         }
+    }
+
+    preloadSound(url: string, source: string): void {
+        this.preloadedSounds.set(source, url);
+    }
+
+    isPreloaded(source: string): boolean {
+        return this.preloadedSounds.has(source);
+    }
+
+    async play(source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
+        const url = this.preloadedSounds.get(source);
+        if (!url) {
+            throw new Error(`Sound ${source} not preloaded`);
+        }
+        return this.playFromUrl(url, source, volume, repeat, onEnd);
     }
 
     private getAudioElement(): HTMLAudioElement {
@@ -81,7 +99,7 @@ class AudioPool {
         this.recycleAudioElement(item.audio);
     }
 
-    async play(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
+    private async playFromUrl(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
         const existingItem = this.pool.get(source);
         if (existingItem) {
             this.cleanupAudioItem(existingItem);
