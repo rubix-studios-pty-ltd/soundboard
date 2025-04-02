@@ -2,6 +2,8 @@
 
 A feature-rich desktop soundboard application built with Electron and React.
 
+![Soundboard Interface](public/main-interface.png)
+
 ## Features
 
 - Modern, responsive UI built with TailwindCSS
