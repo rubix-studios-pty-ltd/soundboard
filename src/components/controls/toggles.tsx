@@ -22,19 +22,19 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ icon, title, text, checked,
             {icon}
           </div>
         </HoverCardTrigger>
-        { text &&
-        <HoverCardContent className="max-w-80 p-3">
-          <div className="flex flex-col justify-between gap-2">
-            { title &&
-            <span className="text-sm font-semibold">
-              {title}
-            </span>
-            }
-            <p className="text-sm">
-              {text}
-            </p>
-          </div>
-        </HoverCardContent>
+        {text &&
+          <HoverCardContent className="max-w-80 p-3">
+            <div className="flex flex-col justify-between gap-2">
+              {title &&
+                <span className="text-sm font-semibold">
+                  {title}
+                </span>
+              }
+              <p className="text-sm">
+                {text}
+              </p>
+            </div>
+          </HoverCardContent>
         }
       </HoverCard>
       <input 

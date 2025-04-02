@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef, useEffect } from 'react';
 import AudioPool, { AudioPoolItem } from '@/utils/audio-pool';
-import { useSettings } from '@/context/settingcontext';
+import { useSettings } from '@/context/setting';
 
 interface AudioContextType {
   playSound: (soundId: string, file: string) => Promise<void>;
