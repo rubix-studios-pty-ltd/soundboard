@@ -4,6 +4,7 @@ import { soundData } from '@/data/audio';
 import { musicData } from '@/data/music';
 import type { SoundData } from '@/types';
 import getSettingsManager from '@/utils/settings';
+import { generateSoundId } from '@/utils/sound-id';
 
 class SoundboardApp {
     private container1: HTMLElement;
@@ -151,13 +152,14 @@ class SoundboardApp {
     private createSoundButton(data: SoundData): HTMLElement {
         const button = this.template.content.cloneNode(true) as HTMLElement;
         const btnElement = button.querySelector('button') as HTMLButtonElement;
-        
-        btnElement.id = data.id;
-        btnElement.setAttribute('data-sound-id', data.id);
-        btnElement.onclick = () => this.toggleSound(data.file, data.id);
+
+        const soundId = data.id ?? generateSoundId(data.file);
+        btnElement.id = soundId;
+        btnElement.setAttribute('data-sound-id', soundId);
+        btnElement.onclick = () => this.toggleSound(data.file, soundId);
         btnElement.oncontextmenu = (e) => {
             e.preventDefault();
-            this.hotkeyManager.showModal(data.id);
+            this.hotkeyManager.showModal(soundId);
             return false;
         };
 
