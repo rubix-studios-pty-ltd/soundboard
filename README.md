@@ -78,5 +78,3 @@ Rubix Studios Pty. Ltd.
 For support or inquiries, contact Vincent Vu [@rubixvi](https://x.com/rubixvi) on X.
 
 Rubix Studios - [https://www.rubixstudios.com.au](https://www.rubixstudios.com.au)
-
-Project: [https://github.com/rubixvi/rubix-documents](https://github.com/rubixvi/rubix-documents)
