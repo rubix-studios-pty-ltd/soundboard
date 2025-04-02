@@ -17,7 +17,7 @@ export class AudioDB {
 
             request.onupgradeneeded = (event) => {
                 const db = (event.target as IDBOpenDBRequest).result;
-                const oldVersion = event.oldVersion;
+                const {oldVersion} = event;
 
                 if (oldVersion < 1) {
                     const store = db.createObjectStore(STORE_NAME, { keyPath: 'url' });
