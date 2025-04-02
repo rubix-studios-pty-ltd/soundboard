@@ -7,7 +7,7 @@ export interface Settings {
 }
 
 export interface SoundData {
-    id: string;
+    id?: string;
     file: string;
     title: string;
     frequent?: boolean;

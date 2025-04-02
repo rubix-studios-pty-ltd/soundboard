@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { SoundData } from '@/types';
 import { useHotkeys } from '@/hooks/usehotkey';
+import { generateSoundId } from '@/utils/sound-id';
 import SoundButton from '@/components/sounds/button';
 import HotkeyModal from '@/components/modals/hotkey';
 import { useAudio } from '@/context/audio';
@@ -10,7 +11,15 @@ interface SoundGridProps {
   containerId: string;
 }
 
-const SoundGrid: React.FC<SoundGridProps> = ({ sounds, containerId }) => {
+const SoundGrid: React.FC<SoundGridProps> = ({ sounds: rawSounds, containerId }) => {
+  const sounds = rawSounds.map(sound => {
+    const soundWithId = {
+      ...sound,
+      id: sound.id ?? generateSoundId(sound.file)
+    };
+    return soundWithId;
+  });
+
   const { playSound } = useAudio();
 
   const handleSoundPlay = useCallback((soundId: string) => {
