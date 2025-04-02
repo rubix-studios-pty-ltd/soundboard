@@ -47,15 +47,12 @@ export const useHotkeys = (soundData: SoundData[], onSoundPlay: (soundId: string
     if (!currentSoundId) return;
 
     setHotkeyMap(prev => {
-      // Remove existing assignments for this key
       const newMap = Object.fromEntries(
         Object.entries(prev).filter(([, value]) => value !== key)
       );
 
-      // Add new assignment
       newMap[currentSoundId] = key;
 
-      // Save to electron store
       window.electronAPI.saveHotkeys(newMap);
 
       return newMap;
@@ -71,7 +68,6 @@ export const useHotkeys = (soundData: SoundData[], onSoundPlay: (soundId: string
       const newMap = { ...prev };
       delete newMap[currentSoundId];
 
-      // Save to electron store
       window.electronAPI.saveHotkeys(newMap);
 
       return newMap;

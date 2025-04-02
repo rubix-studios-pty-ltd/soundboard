@@ -1,8 +1,8 @@
 import React from 'react';
-import { SettingsProvider } from '@/context/settingcontext';
-import { AudioProvider } from '@/context/audiocontext';
+import { SettingsProvider } from '@/context/setting';
+import { AudioProvider } from '@/context/audio';
 import Header from '@/components/controls/header';
-import SoundGrid from '@/components/sounds/soundgrid';
+import SoundGrid from '@/components/sounds/grid';
 import { soundData } from '@/data/audio';
 import { musicData } from '@/data/music';
 import { Separator } from "@/components/ui/separator"

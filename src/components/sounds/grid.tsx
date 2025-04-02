@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 import { SoundData } from '@/types';
 import { useHotkeys } from '@/hooks/usehotkey';
-import SoundButton from '@/components/sounds/soundbutton';
-import HotkeyModal from '@/components/modals/hotkeymodal';
-import { useAudio } from '@/context/audiocontext';
+import SoundButton from '@/components/sounds/button';
+import HotkeyModal from '@/components/modals/hotkey';
+import { useAudio } from '@/context/audio';
 
 interface SoundGridProps {
   sounds: SoundData[];

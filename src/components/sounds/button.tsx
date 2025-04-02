@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useAudio } from '@/context/audiocontext';
-import { useSettings } from '@/context/settingcontext';
+import { useAudio } from '@/context/audio';
+import { useSettings } from '@/context/setting';
 import { Button } from "@/components/ui/button";
 
 interface SoundButtonProps {
