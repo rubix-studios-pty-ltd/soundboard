@@ -2,7 +2,7 @@
 
 A feature-rich desktop soundboard application built with Electron and React.
 
-![Soundboard Interface](public/main-interface.png)
+![Soundboard Interface](screenshot/main-interface.png)
 
 ## Features
 
@@ -79,4 +79,4 @@ Rubix Studios Pty. Ltd.
 
 For support or inquiries, contact Vincent Vu [@rubixvi](https://x.com/rubixvi) on X.
 
-Rubix Studios - [https://www.rubixstudios.com.au](https://www.rubixstudios.com.au)
+Rubix Studios - [https://www.rubixstudios.com.au](https://www.rubixstudios.com.au).
