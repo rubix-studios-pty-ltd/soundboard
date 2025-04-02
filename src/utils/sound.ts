@@ -20,34 +20,68 @@ class SoundboardApp {
         this.stopAllButton = document.getElementById('stopAllButton') as HTMLButtonElement;
         this.template = document.getElementById('sound-button-template') as HTMLTemplateElement;
         this.volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement;
-        this.audioPool = new AudioPool();
+        
+        const settingsManager = getSettingsManager();
+        const settings = settingsManager.getSettings();
+        this.audioPool = new AudioPool(settings.maxPlaybackSounds ?? 10);
         this.hotkeyManager = new HotkeyManager();
         
-        this.initializeSettings().then(() => {
+        Promise.all([
+            this.initializeSettings(),
+            this.preloadFrequentSounds()
+        ]).then(() => {
             this.initializeSoundboard();
             this.setupEventListeners();
-            
-            const settingsManager = getSettingsManager();
-            settingsManager.onSettingsChange(settings => {
-                if (parseFloat(this.volumeSlider.value) !== settings.volume) {
-                    this.volumeSlider.value = settings.volume.toString();
-                    this.audioPool.updateVolume(settings.volume);
-                }
-
-                if (!settings.multiSoundEnabled) {
-                    const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
-                    const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
-                    const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
-                    
-                    if (activeButtons.length > 1) {
-                        activeButtons.slice(0, -1).forEach(button => {
-                            this.audioPool.stopSpecific(button.id);
-                            button.classList.remove('active');
-                        });
-                    }
-                }
-            });
+            this.setupSettingsListeners();
         });
+    }
+
+    private setupSettingsListeners(): void {
+        const settingsManager = getSettingsManager();
+        settingsManager.onSettingsChange(settings => {
+            if (parseFloat(this.volumeSlider.value) !== settings.volume) {
+                this.volumeSlider.value = settings.volume.toString();
+                this.audioPool.updateVolume(settings.volume);
+            }
+
+            if (!settings.multiSoundEnabled) {
+                const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
+                const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
+                const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
+                
+                if (activeButtons.length > 1) {
+                    activeButtons.slice(0, -1).forEach(button => {
+                        this.audioPool.stopSpecific(button.id);
+                        button.classList.remove('active');
+                    });
+                }
+            }
+        });
+    }
+
+    private async preloadFrequentSounds(): Promise<void> {
+        const frequentSounds = [
+            ...soundData.slice(0, 5),
+            ...musicData.slice(0, 5)
+        ].filter(sound => sound.frequent !== false);
+
+        const batchSize = 3;
+        for (let i = 0; i < frequentSounds.length; i += batchSize) {
+            const batch = frequentSounds.slice(i, i + batchSize);
+            await Promise.all(
+                batch.map(async sound => {
+                    try {
+                        const response = await fetch(sound.file);
+                        const blob = await response.blob();
+                        const url = URL.createObjectURL(blob);
+                        await this.audioPool.play(url, sound.file, 0, false);
+                        this.audioPool.stopSpecific(sound.file);
+                    } catch (error) {
+                        console.warn(`Failed to preload sound: ${sound.file}`, error);
+                    }
+                })
+            );
+        }
     }
 
     private async initializeSettings(): Promise<void> {
@@ -65,25 +99,10 @@ class SoundboardApp {
 
             if (settings.repeatSoundEnabled) {
                 if (!settings.multiSoundEnabled) {
-                    const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
-                    const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
-                    const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
-                    
-                    if (activeButtons.length > 0) {
-                        this.audioPool.stopAll();
-                        activeButtons.forEach(btn => btn.classList.remove("active"));
-                    }
+                    await this.stopActiveSounds();
                 }
 
-                const response = await fetch(file);
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                
-                await this.audioPool.play(url, file, currentVolume, false, () => {
-                    buttonElement.classList.remove("active");
-                });
-                buttonElement.classList.add("active");
-                URL.revokeObjectURL(url);
+                await this.playSound(file, currentVolume, buttonElement);
                 return;
             }
 
@@ -94,31 +113,38 @@ class SoundboardApp {
             }
 
             if (!settings.multiSoundEnabled) {
-                const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
-                const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
-                const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
-                
-                if (activeButtons.length > 0) {
-                    this.audioPool.stopAll();
-                    activeButtons.forEach(btn => btn.classList.remove("active"));
-                }
+                await this.stopActiveSounds();
             }
 
-            const response = await fetch(file);
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            
-            await this.audioPool.play(url, file, currentVolume, false, () => {
-                buttonElement.classList.remove("active");
-            });
-            buttonElement.classList.add("active");
-
-            URL.revokeObjectURL(url);
+            await this.playSound(file, currentVolume, buttonElement);
 
         } catch (error) {
             console.error('Error playing sound:', error);
             buttonElement.classList.remove("active");
             this.audioPool.stopSpecific(file);
+        }
+    }
+
+    private async playSound(file: string, volume: number, buttonElement: HTMLButtonElement): Promise<void> {
+        try {
+            await this.audioPool.play(file, file, volume, false, () => {
+                buttonElement.classList.remove("active");
+            });
+            buttonElement.classList.add("active");
+        } catch (error) {
+            console.error('Error in playSound:', error);
+            throw error;
+        }
+    }
+
+    private async stopActiveSounds(): Promise<void> {
+        const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
+        const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
+        const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
+        
+        if (activeButtons.length > 0) {
+            this.audioPool.stopAll();
+            activeButtons.forEach(btn => btn.classList.remove("active"));
         }
     }
 
