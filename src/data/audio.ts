@@ -86,6 +86,6 @@ export const soundData: SoundData[] = [
     { id: generateSoundId("sound/quatbatieu.mp3"), file: "sound/quatbatieu.mp3", title: "Quat Ba Tiêu" },
     { id: generateSoundId("sound/concainit.mp3"), file: "sound/concainit.mp3", title: "Còn Cái Nịt" },
     { id: generateSoundId("sound/aidanhtaodi.mp3"), file: "sound/aidanhtaodi.mp3", title: "Ai Đánh T Đê" },
-    { id: generateSoundId("sound/troidatdth.mp3"), file: "sound/troidatdth.mp3", title: "Trời đất Dth" },
+    { id: generateSoundId("sound/troidatdth.mp3"), file: "sound/troidatdth.mp3", title: "Trời Đất Dth" },
     { id: generateSoundId("sound/wowamazing.mp3"), file: "sound/wowamazing.mp3", title: "Wow Amazing" },
 ];
