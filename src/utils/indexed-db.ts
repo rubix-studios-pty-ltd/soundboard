@@ -1,6 +1,6 @@
 const DB_NAME = 'soundboard_cache';
 const STORE_NAME = 'audio_files';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export class AudioDB {
     private db: IDBDatabase | null = null;
@@ -17,9 +17,19 @@ export class AudioDB {
 
             request.onupgradeneeded = (event) => {
                 const db = (event.target as IDBOpenDBRequest).result;
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const {oldVersion} = event;
+
+                if (oldVersion < 1) {
                     const store = db.createObjectStore(STORE_NAME, { keyPath: 'url' });
                     store.createIndex('timestamp', 'timestamp', { unique: false });
+                }
+
+                if (oldVersion < 2) {
+                    const store = request.transaction!.objectStore(STORE_NAME);
+                    
+                    if (!store.indexNames.contains('timestamp')) {
+                        store.createIndex('timestamp', 'timestamp', { unique: false });
+                    }
                 }
             };
         });
