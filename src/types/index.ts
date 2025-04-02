@@ -3,12 +3,14 @@ export interface Settings {
     repeatSoundEnabled: boolean;
     alwaysOnTop: boolean;
     volume: number;
+    maxPlaybackSounds?: number;
 }
 
 export interface SoundData {
     id: string;
     file: string;
     title: string;
+    frequent?: boolean;
 }
 
 export interface HotkeyMap {
