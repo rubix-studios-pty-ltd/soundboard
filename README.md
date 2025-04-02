@@ -1,6 +1,8 @@
 # Soundboard
 
-A feature-rich desktop soundboard application built with Electron and React.
+A feature-rich desktop soundboard application built with Electron and React — perfect for livestreaming on TikTok Live, Bigo Live, Twitch, and Nimo TV.
+
+Một ứng dụng soundboard dành cho máy tính, được xây dựng bằng Electron và React — lý tưởng cho các buổi livestream trên TikTok Live, Bigo Live, Twitch và Nimo TV.
 
 ![Soundboard Interface](screenshot/main-interface.png)
 
