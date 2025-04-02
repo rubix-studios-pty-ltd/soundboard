@@ -1,5 +1,5 @@
 import AudioPool from '@/utils/audio-pool';
-import HotkeyManager from './hotkeys';
+import HotkeyManager from '@/utils/hotkeys';
 import { soundData } from '@/data/audio';
 import { musicData } from '@/data/music';
 import type { SoundData } from '@/types';
@@ -75,8 +75,7 @@ class SoundboardApp {
                         const response = await fetch(sound.file);
                         const blob = await response.blob();
                         const url = URL.createObjectURL(blob);
-                        await this.audioPool.play(url, sound.file, 0, false);
-                        this.audioPool.stopSpecific(sound.file);
+                        this.audioPool.preloadSound(url, sound.file);
                     } catch (error) {
                         console.warn(`Failed to preload sound: ${sound.file}`, error);
                     }
@@ -128,7 +127,11 @@ class SoundboardApp {
 
     private async playSound(file: string, volume: number, buttonElement: HTMLButtonElement): Promise<void> {
         try {
-            await this.audioPool.play(file, file, volume, false, () => {
+            const response = await fetch(file);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            this.audioPool.preloadSound(url, file);
+            await this.audioPool.play(file, volume, false, () => {
                 buttonElement.classList.remove("active");
             });
             buttonElement.classList.add("active");
