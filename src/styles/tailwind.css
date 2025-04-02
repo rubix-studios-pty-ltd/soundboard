@@ -147,7 +147,6 @@
   }
 }
 
-/* Custom scrollbar styles */
 ::-webkit-scrollbar {
   @apply w-[6px];
 }
