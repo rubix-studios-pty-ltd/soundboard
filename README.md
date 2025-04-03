@@ -67,6 +67,16 @@ To create a portable Windows executable:
 npm run build:win
 ```
 
+To create a portable Macbook executable:
+
+```bash
+npm run build:mac
+```
+
+---
+
+Let me know if you'd like me to rewrite it with more technical depth or keep it beginner-friendly.
+
 The built application will be available in the `release` directory.
 
 ## License
