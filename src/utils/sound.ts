@@ -25,8 +25,8 @@ class SoundboardApp {
         const settingsManager = getSettingsManager();
         const settings = settingsManager.getSettings();
         this.audioPool = new AudioPool(
-            settings.maxPlaybackSounds ?? 10,
-            3,
+            settings.maxPlaybackSounds ?? 100,
+            10,
             settings.multiSoundEnabled ?? false
         );
         this.hotkeyManager = new HotkeyManager();

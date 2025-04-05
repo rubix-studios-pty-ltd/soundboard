@@ -19,7 +19,7 @@ class AudioPool {
     private preloadedSounds: Map<string, string>;
     private instanceCounts: Map<string, number>;
 
-    constructor(maxPoolSize: number = 50, maxInstancesPerSound: number = 3, multiSoundEnabled: boolean = true) {
+    constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 10, multiSoundEnabled: boolean = true) {
         this.pool = new Map();
         this.maxPoolSize = maxPoolSize;
         this.maxInstancesPerSound = maxInstancesPerSound;
