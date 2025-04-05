@@ -24,7 +24,11 @@ class SoundboardApp {
         
         const settingsManager = getSettingsManager();
         const settings = settingsManager.getSettings();
-        this.audioPool = new AudioPool(settings.maxPlaybackSounds ?? 10);
+        this.audioPool = new AudioPool(
+            settings.maxPlaybackSounds ?? 10,
+            3,
+            settings.multiSoundEnabled ?? false
+        );
         this.hotkeyManager = new HotkeyManager();
         
         Promise.all([
@@ -45,18 +49,7 @@ class SoundboardApp {
                 this.audioPool.updateVolume(settings.volume);
             }
 
-            if (!settings.multiSoundEnabled) {
-                const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'));
-                const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'));
-                const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
-                
-                if (activeButtons.length > 1) {
-                    activeButtons.slice(0, -1).forEach(button => {
-                        this.audioPool.stopSpecific(button.id);
-                        button.classList.remove('active');
-                    });
-                }
-            }
+            this.audioPool.updateMultiSoundEnabled(settings.multiSoundEnabled ?? false);
         });
     }
 
