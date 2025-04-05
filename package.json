@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
@@ -15,7 +15,8 @@
     "watch:app": "node build.mjs --watch",
     "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/app/styles.css --watch",
     "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
-    "build:win": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --win portable"
+    "build:win": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --win portable",
+    "build:mac": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --mac dmg"
   },
   "author": "Rubix Studios Pty. Ltd.",
   "license": "MIT",
@@ -59,6 +60,11 @@
     "win": {
       "target": "portable",
       "icon": "icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icon.icns",
+      "category": "public.app-category.utilities"
     },
     "asar": {
       "smartUnpack": true

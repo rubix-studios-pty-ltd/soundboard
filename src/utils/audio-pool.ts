@@ -13,12 +13,13 @@ class AudioPool {
     private pool: Map<string, AudioPoolItem>;
     private maxPoolSize: number;
     private maxInstancesPerSound: number;
+    private multiSoundEnabled: boolean;
     private audioCache: AudioCache;
     private unusedAudioElements: HTMLAudioElement[];
     private preloadedSounds: Map<string, string>;
     private instanceCounts: Map<string, number>;
 
-    constructor(maxPoolSize: number = 50, maxInstancesPerSound: number = 3) {
+    constructor(maxPoolSize: number = 50, maxInstancesPerSound: number = 3, multiSoundEnabled: boolean = true) {
         this.pool = new Map();
         this.maxPoolSize = maxPoolSize;
         this.maxInstancesPerSound = maxInstancesPerSound;
@@ -26,6 +27,7 @@ class AudioPool {
         this.unusedAudioElements = [];
         this.preloadedSounds = new Map();
         this.instanceCounts = new Map();
+        this.multiSoundEnabled = multiSoundEnabled;
 
         for (let i = 0; i < Math.min(maxPoolSize, 10); i++) {
             this.unusedAudioElements.push(new Audio());
@@ -143,7 +145,7 @@ class AudioPool {
                     }
                 }
             }
-        } else {
+    } else if (!this.multiSoundEnabled) {
             this.stopSpecific(source);
         }
 
@@ -236,6 +238,10 @@ class AudioPool {
         this.pool.forEach(({ audio }) => {
             audio.volume = volume;
         });
+    }
+
+    updateMultiSoundEnabled(enabled: boolean): void {
+        this.multiSoundEnabled = enabled;
     }
 
     isPlaying(source: string): boolean {
