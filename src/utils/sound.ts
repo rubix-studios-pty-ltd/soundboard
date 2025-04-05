@@ -140,9 +140,23 @@ class SoundboardApp {
         const activeButtons = soundButtons.filter(btn => !uiButtons.includes(btn));
         
         if (activeButtons.length > 0) {
-            this.audioPool.stopAll();
-            activeButtons.forEach(btn => btn.classList.remove("active"));
+            for (const btn of activeButtons) {
+                const soundId = btn.id;
+                const soundFile = this.getSoundFileFromId(soundId);
+                if (soundFile && this.audioPool.isPlaying(soundFile)) {
+                    this.audioPool.stopSpecific(soundFile);
+                    btn.classList.remove("active");
+                }
+            }
         }
+    }
+
+    private getSoundFileFromId(id: string): string | undefined {
+        const foundSound = soundData.find(s => s.id === id || generateSoundId(s.file) === id);
+        if (foundSound) return foundSound.file;
+        
+        const foundMusic = musicData.find(s => s.id === id || generateSoundId(s.file) === id);
+        return foundMusic?.file;
     }
 
     private createSoundButton(data: SoundData): HTMLElement {
@@ -185,10 +199,14 @@ class SoundboardApp {
 
     private setupEventListeners(): void {
         this.stopAllButton.addEventListener('click', () => {
-            this.audioPool.stopAll();
-            const soundButtons = document.querySelectorAll('.sound-button:not(.settings-control)');
+            const soundButtons = document.querySelectorAll('.sound-button:not(.settings-control).active');
             soundButtons.forEach(button => {
-                button.classList.remove('active');
+                const soundId = button.id;
+                const soundFile = this.getSoundFileFromId(soundId);
+                if (soundFile) {
+                    this.audioPool.stopSpecific(soundFile);
+                    button.classList.remove('active');
+                }
             });
         });
 

@@ -85,16 +85,15 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         audioPoolRef.current.preloadSound(url, file);
       }
 
+      // If multi-sound is disabled, stop existing sounds
       if (!settings.multiSoundEnabled) {
-        if (!settings.repeatSoundEnabled) {
-          audioPoolRef.current.stopAll();
-        } else {
-          for (const [key, _] of audioPoolRef.current.getPlayingAudios()) {
-            if (!key.startsWith(file)) {
-              audioPoolRef.current.stopSpecific(key);
-            }
-          }
-        }
+        audioPoolRef.current.stopAll();
+      }
+
+      // If repeat-sound is disabled and the same sound is already playing, stop it
+      if (!settings.repeatSoundEnabled && audioPoolRef.current.isPlaying(file)) {
+        audioPoolRef.current.stopSpecific(file);
+        return;
       }
 
       const shouldAllowRepeat = settings.repeatSoundEnabled;

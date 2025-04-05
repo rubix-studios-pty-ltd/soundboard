@@ -124,9 +124,10 @@ class AudioPool {
     }
 
     private async playFromUrl(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
-        if (repeat) {
-            const currentCount = this.instanceCounts.get(source) || 0;
-            if (currentCount >= this.maxInstancesPerSound) {
+            const instanceId = repeat ? `${source}_${Date.now()}` : source;
+            if (repeat) {
+                const currentCount = this.instanceCounts.get(source) || 0;
+                if (currentCount >= this.maxInstancesPerSound) {
                 let oldestKey: string | undefined;
                 let oldestTime = Date.now();
 
@@ -146,7 +147,13 @@ class AudioPool {
                 }
             }
     } else if (!this.multiSoundEnabled) {
-            this.stopSpecific(source);
+            // When multiSound is disabled, stop all instances of this sound
+            for (const [key, item] of this.pool.entries()) {
+                if (key.startsWith(source)) {
+                    this.cleanupAudioItem(item);
+                    this.pool.delete(key);
+                }
+            }
         }
 
         if (this.pool.size >= this.maxPoolSize) {
@@ -177,7 +184,6 @@ class AudioPool {
 
         try {
             const audioElement = this.getAudioElement();
-            const key = repeat ? `${source}_${Date.now()}` : source;
             const blobUrl = await this.audioCache.getOrCreate(url);
             
             const poolItem: AudioPoolItem = {
@@ -190,7 +196,7 @@ class AudioPool {
             };
             
             this.setupAudioListeners(poolItem);
-            this.pool.set(key, poolItem);
+            this.pool.set(instanceId, poolItem);
 
             audioElement.currentTime = 0;
             audioElement.src = blobUrl;
@@ -201,7 +207,7 @@ class AudioPool {
             poolItem.isPlaying = true;
             poolItem.lastUsed = Date.now();
 
-            if (repeat) {
+            if (repeat || this.multiSoundEnabled) {
                 const currentCount = this.instanceCounts.get(source) || 0;
                 this.instanceCounts.set(source, currentCount + 1);
             }
