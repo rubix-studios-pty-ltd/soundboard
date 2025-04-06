@@ -38,6 +38,7 @@ npm install
 - `npm run dev` - Starts the app in development mode with hot reload
 - `npm run build` - Builds the application
 - `npm run build:win` - Creates a portable Windows executable
+- `npm run build:mac` - Creates a portable Mac executable
 
 ### Development Scripts
 
@@ -72,10 +73,6 @@ To create a portable Macbook executable:
 ```bash
 npm run build:mac
 ```
-
----
-
-Let me know if you'd like me to rewrite it with more technical depth or keep it beginner-friendly.
 
 The built application will be available in the `release` directory.
 
