@@ -147,7 +147,6 @@ class AudioPool {
                 }
             }
     } else if (!this.multiSoundEnabled) {
-            // When multiSound is disabled, stop all instances of this sound
             for (const [key, item] of this.pool.entries()) {
                 if (key.startsWith(source)) {
                     this.cleanupAudioItem(item);
