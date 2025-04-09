@@ -31,5 +31,21 @@ export const presetThemes: Record<string, ThemePreset> = {
     buttonText: "#F0F6FF",
     buttonActive: "#274158",
     buttonHoverColor: "#274158"
+  },
+  lightgreen: {
+    name: "Light Green",
+    backgroundColor: "#FFFFFF",
+    buttonColor: "#669694",
+    buttonText: "#ffffff",
+    buttonActive: "#94BEBC",
+    buttonHoverColor: "#94BEBC"
+  },
+  yellow: {
+    name: "Yellow",
+    backgroundColor: "#16171B",
+    buttonColor: "#F5C249",
+    buttonText: "#16171B",
+    buttonActive: "#F7C865",
+    buttonHoverColor: "#F7C865"
   }
 };
