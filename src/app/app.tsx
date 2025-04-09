@@ -3,11 +3,11 @@ import { SettingsProvider, useSettings } from '@/context/setting';
 import { AudioProvider } from '@/context/audio';
 import Header from '@/components/controls/header';
 import SoundGrid from '@/components/sounds/grid';
+import Footer from '@/components/controls/footer';
+import { Separator } from "@/components/ui/separator"
 import { soundData } from '@/data/audio';
 import { musicData } from '@/data/music';
-import { Separator } from "@/components/ui/separator"
 import "@/styles/tailwind.css";
-import Footer from '@/components/controls/footer';
 
 const App: React.FC = () => (
   <SettingsProvider>
@@ -19,7 +19,7 @@ const App: React.FC = () => (
 
 const AppContent: React.FC = () => {
   const { settings } = useSettings();
-  
+
   const themeStyles = useMemo(() => {
     if (settings?.theme?.enabled) {
       return {

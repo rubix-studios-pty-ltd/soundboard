@@ -76,7 +76,7 @@ const ROOT_PATH = path.join(__dirname, '..');
 
 function createWindow(): void {
     win = new BrowserWindow({
-        width: 630,
+        width: 626,
         height: 1005,
         resizable: true,
         alwaysOnTop: store.get('settings')?.alwaysOnTop ?? false,

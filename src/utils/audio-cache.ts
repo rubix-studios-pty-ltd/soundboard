@@ -56,6 +56,12 @@ class AudioCache {
         return recencyScore * 0.7 + frequencyScore * 0.3;
     }
 
+    async getFromDB(source: string): Promise<Blob | null> {
+        await this.initPromise;
+        if (!this.initialized) return null;
+        return audioDB.get(source);
+    }
+
     async getOrCreate(url: string): Promise<string> {
         await this.initPromise;
 
