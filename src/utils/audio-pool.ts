@@ -18,6 +18,8 @@ class AudioPool {
     private unusedAudioElements: HTMLAudioElement[];
     private preloadedSounds: Map<string, string>;
     private instanceCounts: Map<string, number>;
+    private audioContext: AudioContext;
+    private initialized: boolean;
 
     constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 10, multiSoundEnabled: boolean = true) {
         this.pool = new Map();
@@ -28,10 +30,43 @@ class AudioPool {
         this.preloadedSounds = new Map();
         this.instanceCounts = new Map();
         this.multiSoundEnabled = multiSoundEnabled;
+        this.initialized = false;
+        this.audioContext = new AudioContext();
+        this.initializeAudioSystem();
 
-        for (let i = 0; i < Math.min(maxPoolSize, 10); i++) {
-            this.unusedAudioElements.push(new Audio());
+        document.addEventListener('click', () => {
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume();
+            }
+        }, { once: true });
+    }
+
+    private async initializeAudioSystem(): Promise<void> {
+        if (this.initialized) {
+            return;
         }
+
+        const silentAudio = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA=";
+        const warmupCount = Math.min(5, this.maxPoolSize);
+    
+        for (let i = 0; i < warmupCount; i++) {
+            const audio = new Audio();
+            audio.preload = 'auto';
+            audio.crossOrigin = 'anonymous';
+            audio.src = silentAudio;
+            
+            try {
+                await audio.play();
+                audio.pause();
+                audio.currentTime = 0;
+                audio.src = '';
+                this.unusedAudioElements.push(audio);
+            } catch (error) {
+                console.warn('Audio warmup failed:', error);
+            }
+        }
+    
+        this.initialized = true;
     }
 
     preloadSound(url: string, source: string): void {
@@ -51,7 +86,16 @@ class AudioPool {
     }
 
     private getAudioElement(): HTMLAudioElement {
-        return this.unusedAudioElements.pop() || new Audio();
+        const audio = this.unusedAudioElements.pop();
+        if (audio) {
+            return audio;
+        }
+
+        const newAudio = new Audio();
+        newAudio.preload = 'auto';
+        newAudio.crossOrigin = 'anonymous';
+        newAudio.load();
+        return newAudio;
     }
 
     private recycleAudioElement(audio: HTMLAudioElement): void {

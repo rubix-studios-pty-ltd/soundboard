@@ -15,6 +15,14 @@ const defaultSettings: Settings = {
   hiddenSounds: [] as string[],
   colorEnabled: false,
   buttonColors: {},
+  theme: {
+    enabled: false,
+    backgroundColor: '#f3f4f6',
+    buttonColor: '#4b5563',
+    buttonText: '#ffffff',
+    buttonActive: '#374151',
+    buttonHoverColor: '#404040'
+  }
 };
 
 const SettingsContext = createContext<SettingsContextType>({

@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
