@@ -30,7 +30,15 @@ class SettingsManager {
             hideEnabled: false,
             hiddenSounds: [],
             colorEnabled: false,
-            buttonColors: {}
+            buttonColors: {},
+            theme: {
+                enabled: false,
+                backgroundColor: '#f3f4f6',
+                buttonColor: '#4b5563',
+                buttonText: '#ffffff',
+                buttonActive: '#374151',
+                buttonHoverColor: '#404040'
+            }
         };
 
         this.initialized = this.initializeSettings();
@@ -70,6 +78,24 @@ class SettingsManager {
         }
         if (typeof settings.buttonColors !== 'object' || settings.buttonColors === null) {
             settings.buttonColors = {};
+        }
+
+        if (typeof settings.theme !== 'object' || 
+            settings.theme === null ||
+            typeof settings.theme.buttonText !== 'string' ||
+            typeof settings.theme.buttonActive !== 'string' ||
+            typeof settings.theme.buttonColor !== 'string' ||
+            typeof settings.theme.backgroundColor !== 'string' ||
+            typeof settings.theme.buttonHoverColor !== 'string'
+        ) {
+            settings.theme = {
+                enabled: false,
+                backgroundColor: '#f3f4f6',
+                buttonColor: '#4b5563',
+                buttonText: '#ffffff',
+                buttonActive: '#374151',
+                buttonHoverColor: '#404040'
+            };
         }
     }
 

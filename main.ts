@@ -14,15 +14,18 @@ const DEFAULT_SETTINGS = {
     hideEnabled: false,
     hiddenSounds: [] as string[],
     colorEnabled: false,
-    buttonColors: {}
+    buttonColors: {},
+    theme: {
+        enabled: false,
+        backgroundColor: '#f3f4f6',
+        buttonColor: '#4b5563',
+        buttonText: '#ffffff',
+        buttonActive: '#374151',
+        buttonHoverColor: '#404040'
+    }
 };
 
-interface StoreSchema {
-    hotkeys: HotkeyMapType;
-    settings: SettingsType;
-}
-
-const store = new Store({
+const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
     schema: {
         hotkeys: {
             type: 'object'
@@ -34,26 +37,6 @@ const store = new Store({
     defaults: {
         hotkeys: {},
         settings: DEFAULT_SETTINGS
-    },
-    migrations: {
-        '1.0.0': (storeMigration: Store<StoreSchema>) => {
-            try {
-                const settings = storeMigration.get('settings');
-                storeMigration.set('settings', {
-                    multiSoundEnabled: Boolean(settings?.multiSoundEnabled ?? true),
-                    repeatSoundEnabled: Boolean(settings?.repeatSoundEnabled ?? false),
-                    alwaysOnTop: Boolean(settings?.alwaysOnTop ?? false),
-                    volume: Math.min(1, Math.max(0, Number(settings?.volume) || 1)),
-                    hideEnabled: Boolean(settings?.hideEnabled ?? false),
-                    hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],
-                    colorEnabled: Boolean(settings?.colorEnabled ?? false),
-                    buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {}
-                });
-            } catch (error) {
-                if (shouldLog()) console.error('Migration failed, resetting to defaults:', error);
-                storeMigration.set('settings', DEFAULT_SETTINGS);
-            }
-        }
     }
 });
 
@@ -65,14 +48,22 @@ try {
         settings.volume < 0 || 
         settings.volume > 1 ||
         !Array.isArray(settings.hiddenSounds) ||
-        typeof settings.buttonColors !== 'object'
+        typeof settings.buttonColors !== 'object' ||
+        typeof settings.theme !== 'object' ||
+        typeof settings.theme?.buttonText !== 'string' ||
+        typeof settings.theme?.buttonActive !== 'string'
     ) {
         store.set('settings', {
             ...DEFAULT_SETTINGS,
             ...settings,
             volume: settings && typeof settings.volume === 'number' && !isNaN(settings.volume) && settings.volume >= 0 && settings.volume <= 1 ? settings.volume : 1,
             hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],
-            buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {}
+            buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {},
+            theme: typeof settings?.theme === 'object' && 
+                  typeof settings.theme?.buttonText === 'string' &&
+                  typeof settings.theme?.buttonActive === 'string'
+                ? settings.theme
+                : DEFAULT_SETTINGS.theme
         });
     }
 } catch (error) {
@@ -149,7 +140,15 @@ function setupIPC(): void {
                 hideEnabled: Boolean(settings.hideEnabled),
                 hiddenSounds: Array.isArray(settings.hiddenSounds) ? settings.hiddenSounds : [],
                 colorEnabled: Boolean(settings.colorEnabled),
-                buttonColors: typeof settings.buttonColors === 'object' ? settings.buttonColors || {} : {}
+                buttonColors: typeof settings.buttonColors === 'object' ? settings.buttonColors || {} : {},
+                    theme: typeof settings.theme === 'object' && 
+                          typeof settings.theme?.buttonText === 'string' &&
+                          typeof settings.theme?.buttonActive === 'string' &&
+                          typeof settings.theme?.buttonColor === 'string' &&
+                          typeof settings.theme?.backgroundColor === 'string' &&
+                          typeof settings.theme?.buttonHoverColor === 'string'
+                        ? settings.theme
+                        : DEFAULT_SETTINGS.theme
             };
 
             if (isNaN(validatedSettings.volume) || validatedSettings.volume < 0 || validatedSettings.volume > 1) {
@@ -178,7 +177,15 @@ function setupIPC(): void {
                     hideEnabled: currentSettings.hideEnabled ?? false,
                     hiddenSounds: Array.isArray(currentSettings.hiddenSounds) ? currentSettings.hiddenSounds : [],
                     colorEnabled: currentSettings.colorEnabled ?? false,
-                    buttonColors: typeof currentSettings.buttonColors === 'object' ? currentSettings.buttonColors || {} : {}
+                    buttonColors: typeof currentSettings.buttonColors === 'object' ? currentSettings.buttonColors || {} : {},
+                    theme: typeof currentSettings.theme === 'object' && 
+                          typeof currentSettings.theme?.buttonText === 'string' &&
+                          typeof currentSettings.theme?.buttonActive === 'string' &&
+                          typeof currentSettings.theme?.buttonColor === 'string' &&
+                          typeof currentSettings.theme?.backgroundColor === 'string' &&
+                          typeof currentSettings.theme?.buttonHoverColor === 'string'
+                        ? currentSettings.theme
+                        : DEFAULT_SETTINGS.theme
                 };
                 store.set('settings', updatedSettings);
             }

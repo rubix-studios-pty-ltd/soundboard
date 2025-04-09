@@ -8,6 +8,14 @@ export interface Settings {
     hiddenSounds: string[];
     colorEnabled: boolean;
     buttonColors: { [soundId: string]: string | undefined };
+    theme: {
+        enabled: boolean;
+        backgroundColor: string;
+        buttonColor: string;
+        buttonText: string;
+        buttonActive: string;
+        buttonHoverColor: string;
+    };
 }
 
 export interface SoundData {
