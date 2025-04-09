@@ -57,22 +57,22 @@ const Header: React.FC = () => {
       <div className="flex items-center gap-2">
         <button
           className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
-            settings.hideEnabled ? 'text-red-500' : ''
-          }`}
-          onClick={toggleHide}
-        >
-          <div className="w-5 h-5">
-            <Hide className="w-full h-full" />
-          </div>
-        </button>
-        <button
-          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
             settings.colorEnabled ? 'text-red-500' : ''
           }`}
           onClick={toggleColor}
         >
           <div className="w-5 h-5">
             <Color className="w-full h-full" />
+          </div>
+        </button>
+        <button
+          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
+            settings.hideEnabled ? 'text-red-500' : ''
+          }`}
+          onClick={toggleHide}
+        >
+          <div className="w-5 h-5">
+            <Hide className="w-full h-full" />
           </div>
         </button>
         <Slider
