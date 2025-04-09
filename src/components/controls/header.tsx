@@ -8,6 +8,7 @@ import {
   Volume,
   Mute,
   StopIcon,
+  Hide,
   Windows,
   Multi,
   Repeat
@@ -24,6 +25,10 @@ const Header: React.FC = () => {
     }
   };
 
+  const toggleHide = () => {
+    updateSettings({ hideEnabled: !settings.hideEnabled });
+  };
+  
   const toggleMute = () => {
     if (settings.volume > 0) {
       setPreviousVolume(settings.volume);
@@ -43,7 +48,18 @@ const Header: React.FC = () => {
   return (
     <div className="bg-white flex items-center justify-between p-1 sticky top-0 z-50">
       <div className="text-base font-bold mx-2">Soundboard</div>
+      
       <div className="flex items-center gap-2">
+        <button
+          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
+            settings.hideEnabled ? 'text-red-500' : ''
+          }`}
+          onClick={toggleHide}
+        >
+          <div className="w-5 h-5">
+            <Hide className="w-full h-full" />
+          </div>
+        </button>
         <Slider
           value={[settings.volume * 100]}
           onValueChange={(value) => handleVolumeChange(value[0] / 100)}

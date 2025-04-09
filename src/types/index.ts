@@ -4,6 +4,8 @@ export interface Settings {
     alwaysOnTop: boolean;
     volume: number;
     maxPlaybackSounds?: number;
+    hideEnabled: boolean;
+    hiddenSounds: string[];
 }
 
 export interface SoundData {
