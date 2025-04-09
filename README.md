@@ -102,7 +102,11 @@ soundboard/
 │   ├── app/            # Main app components
 │   ├── components/     # Reusable UI components
 │   ├── context/        # React contexts
+│   ├── data/           # Sound data
 │   ├── hooks/          # Custom React hooks
+│   ├── lib/            # Utility libraries
+│   ├── styles/         # Global styles
+│   ├── types/          # Type definitions
 │   └── utils/          # Utility functions
 ├── sound/              # Sound effect files
 └── dist/               # Build output
