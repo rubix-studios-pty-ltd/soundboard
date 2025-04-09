@@ -6,13 +6,61 @@ Một ứng dụng soundboard dành cho máy tính, được xây dựng bằng 
 
 ![Soundboard Interface](screenshot/main-interface.png)
 
-## Features
+## Features | Tính năng
 
 - Modern, responsive UI built with TailwindCSS
 - Hotkey support for quick sound playback
+- Advanced sound management:
+  - Hide/Show sounds with checkbox toggles
+  - Custom color coding for sound organization
+  - Multi-sound and repeat playback options
 - Audio settings management
 - 130+ built-in sound effects
 - Customizable sound organization
+- Persistent settings across sessions
+
+---
+
+- Giao diện hiện đại, đáp ứng được xây dựng với TailwindCSS
+- Hỗ trợ phím tắt để phát âm thanh nhanh chóng
+- Quản lý âm thanh nâng cao:
+  - Ẩn/Hiện âm thanh với các hộp kiểm
+  - Mã màu tùy chỉnh để tổ chức âm thanh
+  - Tùy chọn phát đa âm thanh và lặp lại
+- Quản lý cài đặt âm thanh
+- Hơn 130+ hiệu ứng âm thanh tích hợp sẵn
+- Tổ chức âm thanh tùy chỉnh
+- Lưu cài đặt giữa các phiên
+
+## Sound Organization | Tổ chức âm thanh
+
+### Hide/Show Sounds | Ẩn/Hiện âm thanh
+
+- Click the hide button in the header to enter hide mode
+- Use checkboxes to select sounds to hide
+- Click hide again to hide selected sounds
+- Hidden sounds remain hidden until unhidden
+
+---
+
+- Nhấp vào nút ẩn trên thanh header để vào chế độ ẩn
+- Sử dụng hộp kiểm để chọn âm thanh cần ẩn
+- Nhấp lại nút ẩn để ẩn các âm thanh đã chọn
+- Âm thanh bị ẩn sẽ giữ trạng thái ẩn cho đến khi được hiện lại
+
+### Color Coding | Mã màu
+
+- Click the color button to enter color mode
+- Click the color picker on any sound to choose from preset colors
+- Colors persist between sessions
+- Use the ✕ button to remove a color
+
+---
+
+- Nhấp vào nút màu để vào chế độ màu
+- Nhấp vào bộ chọn màu trên bất kỳ âm thanh nào để chọn từ các màu có sẵn
+- Màu sắc được lưu giữa các phiên
+- Sử dụng nút ✕ để xóa màu
 
 ## Technical Stack
 
