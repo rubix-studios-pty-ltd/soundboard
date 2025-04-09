@@ -5,6 +5,7 @@ import { generateSoundId } from '@/utils/sound-id';
 import SoundButton from '@/components/sounds/button';
 import HotkeyModal from '@/components/modals/hotkey';
 import { useAudio } from '@/context/audio';
+import { useSettings } from '@/context/setting';
 
 interface SoundGridProps {
   sounds: SoundData[];
@@ -12,6 +13,7 @@ interface SoundGridProps {
 }
 
 const SoundGrid: React.FC<SoundGridProps> = ({ sounds: rawSounds, containerId }) => {
+  const { settings, updateSettings } = useSettings();
   const sounds = rawSounds.map(sound => {
     const soundWithId = {
       ...sound,
@@ -38,6 +40,15 @@ const SoundGrid: React.FC<SoundGridProps> = ({ sounds: rawSounds, containerId })
     closeModal
   } = useHotkeys(sounds, handleSoundPlay);
 
+  const handleToggleHide = (soundId: string) => {
+    const currentHiddenSounds = settings.hiddenSounds || [];
+    updateSettings({
+      hiddenSounds: currentHiddenSounds.includes(soundId)
+        ? currentHiddenSounds.filter(id => id !== soundId)
+        : [...currentHiddenSounds, soundId]
+    });
+  };
+
   return (
     <div id={containerId} className="flex flex-wrap gap-1 p-0">
       {sounds.map(sound => (
@@ -47,6 +58,9 @@ const SoundGrid: React.FC<SoundGridProps> = ({ sounds: rawSounds, containerId })
           file={sound.file}
           title={sound.title}
           onHotkeyAssign={showHotkeyModal}
+          isHideMode={settings.hideEnabled}
+          isHidden={settings.hiddenSounds?.includes(sound.id) || false}
+          onToggleHide={handleToggleHide}
         />
       ))}
       <HotkeyModal

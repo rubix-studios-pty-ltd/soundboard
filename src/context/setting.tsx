@@ -11,6 +11,10 @@ const defaultSettings: Settings = {
   repeatSoundEnabled: false,
   alwaysOnTop: false,
   volume: 1,
+  hideEnabled: false,
+  hiddenSounds: [] as string[],
+  colorEnabled: false,
+  buttonColors: {},
 };
 
 const SettingsContext = createContext<SettingsContextType>({
@@ -29,7 +33,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const updateSettings = (newSettings: Partial<Settings>) => {
     setSettings((prev) => {
-      const updated = { ...prev, ...newSettings };
+      const updated = { 
+        ...prev, 
+        ...newSettings,
+        hiddenSounds: Array.isArray(newSettings.hiddenSounds) ? newSettings.hiddenSounds : (prev.hiddenSounds || [])
+      };
       window.electronAPI.saveSettings(updated);
       if ('alwaysOnTop' in newSettings) {
         window.electronAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false);

@@ -5,9 +5,11 @@ import ToggleSwitch from '@/components/controls/toggles';
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
 import {
+  Color,
   Volume,
   Mute,
   StopIcon,
+  Hide,
   Windows,
   Multi,
   Repeat
@@ -18,12 +20,20 @@ const Header: React.FC = () => {
   const { settings, updateSettings } = useSettings();
   const [previousVolume, setPreviousVolume] = useState(1);
 
+  const toggleColor = () => {
+    updateSettings({ colorEnabled: !settings.colorEnabled });
+  };
+
   const handleVolumeChange = (newVolume: number) => {
     if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
       updateSettings({ volume: newVolume });
     }
   };
 
+  const toggleHide = () => {
+    updateSettings({ hideEnabled: !settings.hideEnabled });
+  };
+  
   const toggleMute = () => {
     if (settings.volume > 0) {
       setPreviousVolume(settings.volume);
@@ -43,7 +53,28 @@ const Header: React.FC = () => {
   return (
     <div className="bg-white flex items-center justify-between p-1 sticky top-0 z-50">
       <div className="text-base font-bold mx-2">Soundboard</div>
+      
       <div className="flex items-center gap-2">
+        <button
+          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
+            settings.hideEnabled ? 'text-red-500' : ''
+          }`}
+          onClick={toggleHide}
+        >
+          <div className="w-5 h-5">
+            <Hide className="w-full h-full" />
+          </div>
+        </button>
+        <button
+          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
+            settings.colorEnabled ? 'text-red-500' : ''
+          }`}
+          onClick={toggleColor}
+        >
+          <div className="w-5 h-5">
+            <Color className="w-full h-full" />
+          </div>
+        </button>
         <Slider
           value={[settings.volume * 100]}
           onValueChange={(value) => handleVolumeChange(value[0] / 100)}

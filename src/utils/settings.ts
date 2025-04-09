@@ -26,7 +26,11 @@ class SettingsManager {
             multiSoundEnabled: true,
             repeatSoundEnabled: false,
             alwaysOnTop: false,
-            volume: 1
+            volume: 1,
+            hideEnabled: false,
+            hiddenSounds: [],
+            colorEnabled: false,
+            buttonColors: {}
         };
 
         this.initialized = this.initializeSettings();
@@ -54,6 +58,19 @@ class SettingsManager {
         this.alwaysOnTopSwitch.checked = settings.alwaysOnTop;
         this.volumeSlider.value = settings.volume.toString();
         this.updateMuteButtonIcon(settings.volume);
+        
+        if (typeof settings.hideEnabled === 'undefined') {
+            settings.hideEnabled = false;
+        }
+        if (!Array.isArray(settings.hiddenSounds)) {
+            settings.hiddenSounds = [];
+        }
+        if (typeof settings.colorEnabled === 'undefined') {
+            settings.colorEnabled = false;
+        }
+        if (typeof settings.buttonColors !== 'object' || settings.buttonColors === null) {
+            settings.buttonColors = {};
+        }
     }
 
     async waitForInitialization(): Promise<void> {
