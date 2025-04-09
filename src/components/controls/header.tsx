@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAudio } from '@/context/audio';
 import { useSettings } from '@/context/setting';
+import type { Settings } from '@/types';
 import ToggleSwitch from '@/components/controls/toggles';
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
@@ -20,27 +21,32 @@ const Header: React.FC = () => {
   const { settings, updateSettings } = useSettings();
   const [previousVolume, setPreviousVolume] = useState(1);
 
-  const toggleColor = () => {
-    updateSettings({ colorEnabled: !settings.colorEnabled });
+const toggleColor = () => {
+    const update: Partial<Settings> = { colorEnabled: !settings.colorEnabled };
+    updateSettings(update);
   };
 
   const handleVolumeChange = (newVolume: number) => {
     if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
-      updateSettings({ volume: newVolume });
+      const update: Partial<Settings> = { volume: newVolume };
+      updateSettings(update);
     }
   };
 
   const toggleHide = () => {
-    updateSettings({ hideEnabled: !settings.hideEnabled });
+    const update: Partial<Settings> = { hideEnabled: !settings.hideEnabled };
+    updateSettings(update);
   };
   
   const toggleMute = () => {
     if (settings.volume > 0) {
       setPreviousVolume(settings.volume);
-      updateSettings({ volume: 0 });
+      const update: Partial<Settings> = { volume: 0 };
+      updateSettings(update);
     } else {
       const volumeToRestore = previousVolume > 0 ? previousVolume : 1;
-      updateSettings({ volume: volumeToRestore });
+      const update: Partial<Settings> = { volume: volumeToRestore };
+      updateSettings(update);
     }
   };
 
@@ -108,21 +114,30 @@ const Header: React.FC = () => {
         <div className="flex gap-3">
           <ToggleSwitch
             checked={settings.alwaysOnTop}
-            onChange={(checked) => updateSettings({ alwaysOnTop: checked })}
+            onChange={(checked) => {
+              const update: Partial<Settings> = { alwaysOnTop: checked };
+              updateSettings(update);
+            }}
             icon={<Windows className="w-full h-full" />}
             title="Luôn hiển thị trên cùng"
             text="Giữ cửa sổ này luôn nằm trên các cửa sổ khác."
           />
           <ToggleSwitch
             checked={settings.multiSoundEnabled}
-            onChange={(checked) => updateSettings({ multiSoundEnabled: checked })}
+            onChange={(checked) => {
+              const update: Partial<Settings> = { multiSoundEnabled: checked };
+              updateSettings(update);
+            }}
             icon={<Multi className="w-full h-full" />}
             title="Phát nhiều âm thanh"
             text="Cho phép phát nhiều hiệu ứng âm thanh cùng lúc."
           />
           <ToggleSwitch
             checked={settings.repeatSoundEnabled}
-            onChange={(checked) => updateSettings({ repeatSoundEnabled: checked })}
+            onChange={(checked) => {
+              const update: Partial<Settings> = { repeatSoundEnabled: checked };
+              updateSettings(update);
+            }}
             icon={<Repeat className="w-full h-full" />}
             title="Lặp âm thanh"
             text="Cho phép âm thanh phát chồng lên khi nhấn nhiều lần."

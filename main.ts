@@ -10,7 +10,11 @@ const DEFAULT_SETTINGS = {
     multiSoundEnabled: true,
     repeatSoundEnabled: false,
     alwaysOnTop: false,
-    volume: 1
+    volume: 1,
+    hideEnabled: false,
+    hiddenSounds: [] as string[],
+    colorEnabled: false,
+    buttonColors: {}
 };
 
 interface StoreSchema {
@@ -39,7 +43,11 @@ const store = new Store({
                     multiSoundEnabled: Boolean(settings?.multiSoundEnabled ?? true),
                     repeatSoundEnabled: Boolean(settings?.repeatSoundEnabled ?? false),
                     alwaysOnTop: Boolean(settings?.alwaysOnTop ?? false),
-                    volume: Math.min(1, Math.max(0, Number(settings?.volume) || 1))
+                    volume: Math.min(1, Math.max(0, Number(settings?.volume) || 1)),
+                    hideEnabled: Boolean(settings?.hideEnabled ?? false),
+                    hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],
+                    colorEnabled: Boolean(settings?.colorEnabled ?? false),
+                    buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {}
                 });
             } catch (error) {
                 if (shouldLog()) console.error('Migration failed, resetting to defaults:', error);
@@ -51,11 +59,20 @@ const store = new Store({
 
 try {
     const settings = store.get('settings');
-    if (!settings || typeof settings.volume !== 'number' || isNaN(settings.volume) || settings.volume < 0 || settings.volume > 1) {
+    if (!settings || 
+        typeof settings.volume !== 'number' || 
+        isNaN(settings.volume) || 
+        settings.volume < 0 || 
+        settings.volume > 1 ||
+        !Array.isArray(settings.hiddenSounds) ||
+        typeof settings.buttonColors !== 'object'
+    ) {
         store.set('settings', {
             ...DEFAULT_SETTINGS,
             ...settings,
-            volume: 1
+            volume: settings && typeof settings.volume === 'number' && !isNaN(settings.volume) && settings.volume >= 0 && settings.volume <= 1 ? settings.volume : 1,
+            hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],
+            buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {}
         });
     }
 } catch (error) {
@@ -68,8 +85,8 @@ const ROOT_PATH = path.join(__dirname, '..');
 
 function createWindow(): void {
     win = new BrowserWindow({
-        width: 620,
-        height: 986,
+        width: 630,
+        height: 1005,
         resizable: true,
         alwaysOnTop: store.get('settings')?.alwaysOnTop ?? false,
         autoHideMenuBar: true,
@@ -128,7 +145,11 @@ function setupIPC(): void {
                 multiSoundEnabled: Boolean(settings.multiSoundEnabled),
                 repeatSoundEnabled: Boolean(settings.repeatSoundEnabled),
                 alwaysOnTop: Boolean(settings.alwaysOnTop),
-                volume: Number(settings.volume)
+                volume: Number(settings.volume),
+                hideEnabled: Boolean(settings.hideEnabled),
+                hiddenSounds: Array.isArray(settings.hiddenSounds) ? settings.hiddenSounds : [],
+                colorEnabled: Boolean(settings.colorEnabled),
+                buttonColors: typeof settings.buttonColors === 'object' ? settings.buttonColors || {} : {}
             };
 
             if (isNaN(validatedSettings.volume) || validatedSettings.volume < 0 || validatedSettings.volume > 1) {
@@ -151,7 +172,15 @@ function setupIPC(): void {
             if (win) {
                 win.setAlwaysOnTop(isEnabled);
                 const currentSettings = store.get('settings') ?? DEFAULT_SETTINGS;
-                store.set('settings', { ...currentSettings, alwaysOnTop: isEnabled });
+                const updatedSettings = {
+                    ...currentSettings,
+                    alwaysOnTop: isEnabled,
+                    hideEnabled: currentSettings.hideEnabled ?? false,
+                    hiddenSounds: Array.isArray(currentSettings.hiddenSounds) ? currentSettings.hiddenSounds : [],
+                    colorEnabled: currentSettings.colorEnabled ?? false,
+                    buttonColors: typeof currentSettings.buttonColors === 'object' ? currentSettings.buttonColors || {} : {}
+                };
+                store.set('settings', updatedSettings);
             }
         } catch (error) {
             if (shouldLog()) console.error('Error toggling always-on-top:', error);
