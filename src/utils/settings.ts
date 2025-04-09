@@ -28,7 +28,9 @@ class SettingsManager {
             alwaysOnTop: false,
             volume: 1,
             hideEnabled: false,
-            hiddenSounds: []
+            hiddenSounds: [],
+            colorEnabled: false,
+            buttonColors: {}
         };
 
         this.initialized = this.initializeSettings();
@@ -63,6 +65,12 @@ class SettingsManager {
         }
         if (!Array.isArray(settings.hiddenSounds)) {
             settings.hiddenSounds = [];
+        }
+        if (typeof settings.colorEnabled === 'undefined') {
+            settings.colorEnabled = false;
+        }
+        if (typeof settings.buttonColors !== 'object' || settings.buttonColors === null) {
+            settings.buttonColors = {};
         }
     }
 

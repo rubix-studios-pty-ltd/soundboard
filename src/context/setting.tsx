@@ -13,6 +13,8 @@ const defaultSettings: Settings = {
   volume: 1,
   hideEnabled: false,
   hiddenSounds: [] as string[],
+  colorEnabled: false,
+  buttonColors: {},
 };
 
 const SettingsContext = createContext<SettingsContextType>({

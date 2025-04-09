@@ -6,6 +6,8 @@ export interface Settings {
     maxPlaybackSounds?: number;
     hideEnabled: boolean;
     hiddenSounds: string[];
+    colorEnabled: boolean;
+    buttonColors: { [soundId: string]: string | undefined };
 }
 
 export interface SoundData {

@@ -5,6 +5,7 @@ import ToggleSwitch from '@/components/controls/toggles';
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
 import {
+  Color,
   Volume,
   Mute,
   StopIcon,
@@ -18,6 +19,10 @@ const Header: React.FC = () => {
   const { stopAll } = useAudio();
   const { settings, updateSettings } = useSettings();
   const [previousVolume, setPreviousVolume] = useState(1);
+
+  const toggleColor = () => {
+    updateSettings({ colorEnabled: !settings.colorEnabled });
+  };
 
   const handleVolumeChange = (newVolume: number) => {
     if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
@@ -58,6 +63,16 @@ const Header: React.FC = () => {
         >
           <div className="w-5 h-5">
             <Hide className="w-full h-full" />
+          </div>
+        </button>
+        <button
+          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
+            settings.colorEnabled ? 'text-red-500' : ''
+          }`}
+          onClick={toggleColor}
+        >
+          <div className="w-5 h-5">
+            <Color className="w-full h-full" />
           </div>
         </button>
         <Slider
