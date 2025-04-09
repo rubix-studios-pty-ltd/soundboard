@@ -58,7 +58,9 @@ class AudioCache {
 
     async getFromDB(source: string): Promise<Blob | null> {
         await this.initPromise;
-        if (!this.initialized) return null;
+        if (!this.initialized) {
+            return null;
+        }
         return audioDB.get(source);
     }
 

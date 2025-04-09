@@ -1,7 +1,5 @@
 import AudioCache from '@/utils/audio-cache';
 
-const silentAudio = 'data:audio/wav;base64,UklGRjIAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAAABmYWN0BAAAAAAAAABkYXRhAAAAAA==';
-
 export interface AudioPoolItem {
     audio: HTMLAudioElement;
     source: string;
@@ -44,7 +42,9 @@ class AudioPool {
     }
 
     private async initializeAudioSystem(): Promise<void> {
-        if (this.initialized) return;
+        if (this.initialized) {
+            return;
+        }
 
         const silentAudio = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA=";
         const warmupCount = Math.min(5, this.maxPoolSize);
@@ -87,7 +87,9 @@ class AudioPool {
 
     private getAudioElement(): HTMLAudioElement {
         const audio = this.unusedAudioElements.pop();
-        if (audio) return audio;
+        if (audio) {
+            return audio;
+        }
 
         const newAudio = new Audio();
         newAudio.preload = 'auto';
