@@ -27,7 +27,7 @@ const AppContent: React.FC = () => {
       } as React.CSSProperties;
     }
     return {};
-  }, [settings?.colorEnabled, settings?.theme]);
+  }, [settings?.theme]);
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={themeStyles}>
