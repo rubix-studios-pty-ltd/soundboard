@@ -59,7 +59,6 @@ class SettingsManager {
         this.volumeSlider.value = settings.volume.toString();
         this.updateMuteButtonIcon(settings.volume);
         
-        // Initialize hide settings if they don't exist
         if (typeof settings.hideEnabled === 'undefined') {
             settings.hideEnabled = false;
         }

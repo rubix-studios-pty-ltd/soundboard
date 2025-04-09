@@ -36,7 +36,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const updated = { 
         ...prev, 
         ...newSettings,
-        // Ensure hiddenSounds is always an array
         hiddenSounds: Array.isArray(newSettings.hiddenSounds) ? newSettings.hiddenSounds : (prev.hiddenSounds || [])
       };
       window.electronAPI.saveSettings(updated);

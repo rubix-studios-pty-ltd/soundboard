@@ -1,7 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Close } from '@/components/icons';
 
-const PRESET_COLORS = [
+const Preset = [
   '#ef4444',
   '#3b82f6',
   '#22c55e',
@@ -29,7 +29,7 @@ export function ColorPicker({ color, onColorChange, triggerClassName }: ColorPic
       </PopoverTrigger>
       <PopoverContent className="w-auto p-2">
         <div className="grid grid-cols-4 gap-2">
-          {PRESET_COLORS.map((presetColor) => (
+          {Preset.map((presetColor) => (
             <button
               key={presetColor}
               className="size-6 rounded-full border transition-transform hover:scale-110 cursor-pointer"
