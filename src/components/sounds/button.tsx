@@ -87,14 +87,40 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       <Button
         variant="outline"
         size="sm"
-        className={`h-7 w-24 rounded text-[9px] font-bold items-center justify-center p-1 overflow-hidden transition-colors ${
-          isActive ? 'bg-black text-white hover:bg-gray-900 hover:text-white' 
-          : 'hover:bg-accent'
-        }`}
-        style={settings.buttonColors?.[id] ? { 
-          backgroundColor: settings.buttonColors[id],
-          '--tw-hover-opacity': '0.9'
-        } as React.CSSProperties : undefined}
+        className="h-7 w-24 rounded text-[9px] font-bold items-center justify-center p-1 overflow-hidden transition-all"
+        style={{
+          backgroundColor: settings?.buttonColors?.[id]
+            ? isActive
+              ? '#000'
+              : settings.buttonColors[id]
+            : settings?.theme?.enabled
+            ? isActive
+              ? settings.theme.buttonActive
+              : settings.theme.buttonColor
+            : isActive
+            ? '#000'
+            : undefined,
+          color: settings?.buttonColors?.[id]
+            ? '#fff'
+            : settings?.theme?.enabled
+            ? settings.theme.buttonText
+            : isActive
+            ? '#fff'
+            : undefined,
+          ':hover': settings?.buttonColors?.[id]
+            ? {
+                backgroundColor: isActive ? '#000' : '#404040'
+              }
+            : settings?.theme?.enabled
+            ? {
+                backgroundColor: isActive
+                  ? settings.theme.buttonActive
+                  : settings.theme.buttonHoverColor
+              }
+            : isActive
+            ? { backgroundColor: '#404040' }
+            : { backgroundColor: '#f3f4f6' }
+        } as React.CSSProperties}
         onClick={handleClick}
         onContextMenu={handleContextMenu}
         data-sound-id={id}
