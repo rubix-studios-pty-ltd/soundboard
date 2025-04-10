@@ -1,5 +1,5 @@
 export function generateSoundId(filename: string): string {
-  const baseName = filename.replace(/^sound\//, "").replace(/\.mp3$/, "")
+  const baseName = filename.replace(/^sound\//, "").replace(/\.opus$/, "")
 
   let nameWithoutPrefix = baseName.replace(/^\d+/, "")
 
