@@ -64,14 +64,13 @@ const SoundButton: React.FC<SoundButtonProps> = ({
     <div className={`relative ${isHidden && !isHideMode ? "hidden" : ""}`}>
       {isHideMode && (
         <Checkbox
-          className="absolute top-1.5 right-1 z-10"
+          className="absolute top-1.5 right-1 z-10 cursor-pointer"
           checked={isHidden}
           onCheckedChange={() => onToggleHide?.(id)}
         />
       )}
       {settings.colorEnabled && (
         <ColorPicker
-          color={settings.buttonColors?.[id]}
           onColorChange={(color) =>
             updateSettings({
               buttonColors: {
@@ -80,7 +79,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
               },
             })
           }
-          triggerClassName="absolute left-1 top-1.5 z-10"
+          triggerClassName="absolute left-1 top-1.5 z-10 cursor-pointer"
         />
       )}
       <Button

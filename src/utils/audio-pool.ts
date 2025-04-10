@@ -99,7 +99,7 @@ class AudioPool {
         this.stopAll()
       }
     } else if (!this.repeatSoundEnabled) {
-        this.stopSpecific(source)
+      this.stopSpecific(source)
     }
 
     try {
