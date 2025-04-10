@@ -181,8 +181,8 @@ const Header: React.FC = () => {
           <HoverCard>
             <HoverCardTrigger asChild>
               <button
-                className={`cursor-pointer text-white transition-all duration-300 hover:text-red-500 ${
-                  settings.colorEnabled ? "text-red-500" : ""
+                className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+                  settings.colorEnabled ? "text-red-500" : "text-white"
                 }`}
                 onClick={toggleColor}
               >
@@ -199,8 +199,8 @@ const Header: React.FC = () => {
           <HoverCard>
             <HoverCardTrigger asChild>
               <button
-                className={`cursor-pointer text-white transition-all duration-300 hover:text-red-500 ${
-                  settings.hideEnabled ? "text-red-500" : ""
+                className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+                  settings.hideEnabled ? "text-red-500" : "text-white"
                 }`}
                 onClick={toggleHide}
               >
