@@ -100,14 +100,8 @@ class AudioPool {
         }
 
         else if (repeat && !this.multiSoundEnabled) {
-            const currentSounds = new Set<string>();
             for (const [key, item] of this.pool.entries()) {
-                if (key.startsWith(source)) {
-                    currentSounds.add(key);
-                }
-            }
-            for (const [key, item] of this.pool.entries()) {
-                if (!currentSounds.has(key)) {
+                if (item.source !== source) {
                     this.cleanupAudioItem(item);
                     this.pool.delete(key);
                 }
