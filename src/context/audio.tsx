@@ -27,10 +27,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [settings.volume]);
 
-  useEffect(() => {
-    audioPoolRef.current.updateMultiSoundEnabled(settings.multiSoundEnabled);
-  }, [settings.multiSoundEnabled]);
-
   const playSound = async (soundId: string, file: string) => {
     try {
       if (!settings.repeatSoundEnabled && audioPoolRef.current.isPlaying(file)) {
