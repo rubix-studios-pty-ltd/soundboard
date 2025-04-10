@@ -22,7 +22,7 @@ class AudioPool {
     private initialized: boolean;
     private loadingSounds: Set<string>;
 
-    constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 10, multiSoundEnabled: boolean = true) {
+    constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 20, multiSoundEnabled: boolean = true) {
         this.pool = new Map();
         this.maxPoolSize = maxPoolSize;
         this.maxInstancesPerSound = maxInstancesPerSound;
@@ -186,8 +186,8 @@ class AudioPool {
     }
 
     private async playFromUrl(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
-            const instanceId = repeat ? `${source}_${Date.now()}` : source;
-            if (repeat) {
+            const instanceId = (repeat || this.multiSoundEnabled) ? `${source}_${Date.now()}` : source;
+            if (repeat || this.multiSoundEnabled) {
                 const currentCount = this.instanceCounts.get(source) || 0;
                 if (currentCount >= this.maxInstancesPerSound) {
                 let oldestKey: string | undefined;
