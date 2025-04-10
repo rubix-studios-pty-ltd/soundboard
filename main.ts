@@ -214,7 +214,9 @@ function setupIPC(): void {
                 store.set('settings', updatedSettings);
             }
         } catch (error) {
-            if (shouldLog()) console.error('Error toggling always-on-top:', error);
+            if (shouldLog()) {
+                console.error('Error toggling always-on-top:', error);
+            };
         }
     });
 }

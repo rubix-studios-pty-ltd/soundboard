@@ -29,13 +29,13 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const playSound = async (soundId: string, file: string) => {
     try {
-      if (!settings.repeatSoundEnabled && !settings.multiSoundEnabled) {
-        if (audioPoolRef.current.isPlaying(file)) {
-          audioPoolRef.current.stopSpecific(file);
-          return;
-        } else {
-          audioPoolRef.current.stopAll();
-        }
+      if (!settings.repeatSoundEnabled && audioPoolRef.current.isPlaying(file)) {
+        audioPoolRef.current.stopSpecific(file);
+        return;
+      }
+
+      if (!settings.multiSoundEnabled) {
+        audioPoolRef.current.stopAll();
       }
 
       if (!audioPoolRef.current.isPreloaded(file)) {
