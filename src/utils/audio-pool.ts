@@ -98,10 +98,8 @@ class AudioPool {
       } else {
         this.stopAll()
       }
-    } else {
-      if (!this.repeatSoundEnabled) {
+    } else if (!this.repeatSoundEnabled) {
         this.stopSpecific(source)
-      }
     }
 
     try {

@@ -48,12 +48,10 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   const handleClick = async () => {
     if (settings.repeatSoundEnabled) {
       await playSound(id, file)
+    } else if (isActive) {
+      stopSound(file)
     } else {
-      if (isActive) {
-        stopSound(file)
-      } else {
-        await playSound(id, file)
-      }
+      await playSound(id, file)
     }
   }
 
