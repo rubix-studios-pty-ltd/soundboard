@@ -102,7 +102,7 @@ const Header: React.FC = () => {
       <div className="draggable flex flex-1 flex-row items-center">
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex h-8 w-8 items-center justify-center transition-colors duration-300 hover:bg-[#333333]">
+            <button className="flex h-8 w-8 cursor-pointer items-center justify-center transition-colors duration-300 hover:bg-[#333333]">
               <Menu className="h-5 w-5 text-white" />
             </button>
           </PopoverTrigger>

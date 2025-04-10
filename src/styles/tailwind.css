@@ -149,7 +149,7 @@ input,
 
 @layer components {
   .toggle-switch {
-    @apply appearance-none w-[14px] h-[24px] bg-gray-300 rounded-[30px] relative outline-none cursor-pointer transition-colors duration-300 mb-[5px];
+    @apply appearance-none w-[14px] h-[24px] bg-red-600 rounded-[30px] relative outline-none cursor-pointer transition-colors duration-300 mb-[5px];
   }
 
   .toggle-switch::before {
