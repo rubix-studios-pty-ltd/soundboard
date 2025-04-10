@@ -98,7 +98,7 @@ class AudioPool {
         else if (!repeat && this.multiSoundEnabled) {
             this.stopSpecific(source);
         }
-        
+
         else if (repeat && !this.multiSoundEnabled) {
             const currentSounds = new Set<string>();
             for (const [key, item] of this.pool.entries()) {
@@ -205,7 +205,6 @@ class AudioPool {
     }
 
     private async playFromUrl(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
-        // Always create unique IDs - needed for both repeat stacking and multi-sound playing together
         const instanceId = `${source}_${Date.now()}`;
         
         if (repeat) {
