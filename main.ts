@@ -1,6 +1,6 @@
 import type { Settings as SettingsType, HotkeyMap as HotkeyMapType } from '@/types';
 import type { BrowserWindow as BrowserWindowType } from 'electron';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, ProtocolRequest } from 'electron';
 import path from 'path';
 import Store from 'electron-store';
 
@@ -93,6 +93,30 @@ function createWindow(): void {
     if (win) {
         win.once('ready-to-show', () => {
             win?.show();
+        });
+
+        const { protocol } = require('electron');
+        protocol.handle('app', async (request: ProtocolRequest) => {
+            const filePath = new URL(request.url).pathname;
+            const extension = path.extname(filePath).toLowerCase();
+
+            const skipCompression = ['.opus', '.mp3', '.ogg'].includes(extension);
+            
+            const compressionOptions = {
+                enableBrotli: !skipCompression,
+                enableGzip: !skipCompression
+            };
+
+            try {
+                const response = await protocol.Response.fromFileStream(
+                    path.join(ROOT_PATH, filePath),
+                    compressionOptions
+                );
+                return response;
+            } catch (error) {
+                if (shouldLog()) console.error('Protocol handler error:', error);
+                return new protocol.Response();
+            }
         });
 
         win.loadFile(path.join(ROOT_PATH, 'index.html'));

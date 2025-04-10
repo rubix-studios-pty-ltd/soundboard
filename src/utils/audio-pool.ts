@@ -20,6 +20,7 @@ class AudioPool {
     private instanceCounts: Map<string, number>;
     private audioContext: AudioContext;
     private initialized: boolean;
+    private loadingSounds: Set<string>;
 
     constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 10, multiSoundEnabled: boolean = true) {
         this.pool = new Map();
@@ -32,6 +33,7 @@ class AudioPool {
         this.multiSoundEnabled = multiSoundEnabled;
         this.initialized = false;
         this.audioContext = new AudioContext();
+        this.loadingSounds = new Set();
         this.initializeAudioSystem();
 
         document.addEventListener('click', () => {
@@ -70,19 +72,35 @@ class AudioPool {
     }
 
     preloadSound(url: string, source: string): void {
-        this.preloadedSounds.set(source, url);
+        if (!this.loadingSounds.has(source)) {
+            this.preloadedSounds.set(source, url);
+        }
     }
 
     isPreloaded(source: string): boolean {
-        return this.preloadedSounds.has(source);
+        return this.preloadedSounds.has(source) && !this.loadingSounds.has(source);
     }
 
     async play(source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
+        if (this.loadingSounds.has(source)) {
+            return;
+        }
+
         const url = this.preloadedSounds.get(source);
         if (!url) {
             throw new Error(`Sound ${source} not preloaded`);
         }
-        return this.playFromUrl(url, source, volume, repeat, onEnd);
+        
+        if (!repeat && !this.multiSoundEnabled) {
+            this.stopSpecific(source);
+        }
+        
+        try {
+            this.loadingSounds.add(source);
+            await this.playFromUrl(url, source, volume, repeat, onEnd);
+        } finally {
+            this.loadingSounds.delete(source);
+        }
     }
 
     private getAudioElement(): HTMLAudioElement {
@@ -190,14 +208,7 @@ class AudioPool {
                     }
                 }
             }
-    } else if (!this.multiSoundEnabled) {
-            for (const [key, item] of this.pool.entries()) {
-                if (key.startsWith(source)) {
-                    this.cleanupAudioItem(item);
-                    this.pool.delete(key);
-                }
-            }
-        }
+    }
 
         if (this.pool.size >= this.maxPoolSize) {
             let lruItem: [string, AudioPoolItem] | undefined;
