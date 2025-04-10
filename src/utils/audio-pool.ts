@@ -14,6 +14,7 @@ class AudioPool {
     private maxPoolSize: number;
     private maxInstancesPerSound: number;
     private multiSoundEnabled: boolean;
+    private repeatSoundEnabled: boolean;
     private audioCache: AudioCache;
     private unusedAudioElements: HTMLAudioElement[];
     private preloadedSounds: Map<string, string>;
@@ -22,7 +23,7 @@ class AudioPool {
     private initialized: boolean;
     private loadingSounds: Set<string>;
 
-    constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 20, multiSoundEnabled: boolean = true) {
+    constructor(maxPoolSize: number = 100, maxInstancesPerSound: number = 20, multiSoundEnabled: boolean = true, repeatSoundEnabled: boolean = false) {
         this.pool = new Map();
         this.maxPoolSize = maxPoolSize;
         this.maxInstancesPerSound = maxInstancesPerSound;
@@ -31,6 +32,7 @@ class AudioPool {
         this.preloadedSounds = new Map();
         this.instanceCounts = new Map();
         this.multiSoundEnabled = multiSoundEnabled;
+        this.repeatSoundEnabled = repeatSoundEnabled;
         this.initialized = false;
         this.audioContext = new AudioContext();
         this.loadingSounds = new Set();
@@ -81,7 +83,7 @@ class AudioPool {
         return this.preloadedSounds.has(source) && !this.loadingSounds.has(source);
     }
 
-    async play(source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
+    async play(source: string, volume: number, onEnd?: () => void): Promise<void> {
         if (this.loadingSounds.has(source)) {
             return;
         }
@@ -91,15 +93,12 @@ class AudioPool {
             throw new Error(`Sound ${source} not preloaded`);
         }
 
-        if (!repeat && !this.multiSoundEnabled) {
+        if (!this.multiSoundEnabled && !this.repeatSoundEnabled) {
+            // Neither enabled: everything stops each other
             this.stopAll();
-        }
-
-        else if (!repeat && this.multiSoundEnabled) {
-            this.stopSpecific(source);
-        }
-
-        else if (repeat && !this.multiSoundEnabled) {
+        } 
+        else if (!this.multiSoundEnabled && this.repeatSoundEnabled) {
+            // Repeat alone: same sound stacks, different sounds stop
             for (const [key, item] of this.pool.entries()) {
                 if (item.source !== source) {
                     this.cleanupAudioItem(item);
@@ -107,10 +106,15 @@ class AudioPool {
                 }
             }
         }
+        else if (this.multiSoundEnabled && !this.repeatSoundEnabled) {
+            // Multi-sound alone: different sounds play together, same sound replaces
+            this.stopSpecific(source);
+        }
+        // Both enabled: everything stacks - no stoppage needed
         
         try {
             this.loadingSounds.add(source);
-            await this.playFromUrl(url, source, volume, repeat, onEnd);
+            await this.playFromUrl(url, source, volume, this.repeatSoundEnabled, onEnd);
         } finally {
             this.loadingSounds.delete(source);
         }
@@ -323,6 +327,10 @@ class AudioPool {
 
     updateMultiSoundEnabled(enabled: boolean): void {
         this.multiSoundEnabled = enabled;
+    }
+
+    updateRepeatSoundEnabled(enabled: boolean): void {
+        this.repeatSoundEnabled = enabled;
     }
 
     isPlaying(source: string): boolean {

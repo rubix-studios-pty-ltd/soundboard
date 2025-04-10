@@ -27,16 +27,16 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [settings.volume]);
 
+  useEffect(() => {
+    audioPoolRef.current.updateMultiSoundEnabled(settings.multiSoundEnabled);
+  }, [settings.multiSoundEnabled]);
+
+  useEffect(() => {
+    audioPoolRef.current.updateRepeatSoundEnabled(settings.repeatSoundEnabled);
+  }, [settings.repeatSoundEnabled]);
+
   const playSound = async (soundId: string, file: string) => {
     try {
-      if (!settings.repeatSoundEnabled && audioPoolRef.current.isPlaying(file)) {
-        audioPoolRef.current.stopSpecific(file);
-        return;
-      }
-
-      if (!settings.multiSoundEnabled) {
-        audioPoolRef.current.stopAll();
-      }
 
       if (!audioPoolRef.current.isPreloaded(file)) {
         const response = await fetch(file);
@@ -52,7 +52,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         audioPoolRef.current.preloadSound(url, file);
       }
 
-      await audioPoolRef.current.play(file, settings.volume, settings.repeatSoundEnabled);
+      await audioPoolRef.current.play(file, settings.volume);
     } catch (error) {
       console.error('Error playing sound:', error);
       audioPoolRef.current.stopSpecific(file);
