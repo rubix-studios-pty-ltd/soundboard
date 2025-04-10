@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react"
+
 import {
   HoverCard,
   HoverCardContent,
@@ -6,45 +7,43 @@ import {
 } from "@/components/ui/hover-card"
 
 interface ToggleSwitchProps {
-  icon: React.ReactNode;
-  title?: string;
-  text?: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
+  icon: React.ReactNode
+  title?: string
+  text?: string
+  checked: boolean
+  onChange: (checked: boolean) => void
 }
 
-const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ icon, title, text, checked, onChange }) => {
+const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
+  icon,
+  title,
+  text,
+  checked,
+  onChange,
+}) => {
   return (
     <div className="flex flex-col items-center">
       <HoverCard>
         <HoverCardTrigger asChild>
-          <div className="w-4 h-4 text-black cursor-pointer">
-            {icon}
-          </div>
+          <div className="h-4 w-4 cursor-pointer text-black">{icon}</div>
         </HoverCardTrigger>
-        {text &&
+        {text && (
           <HoverCardContent className="max-w-80 p-3">
             <div className="flex flex-col justify-between gap-2">
-              {title &&
-                <span className="text-sm font-semibold">
-                  {title}
-                </span>
-              }
-              <p className="text-sm">
-                {text}
-              </p>
+              {title && <span className="text-sm font-semibold">{title}</span>}
+              <p className="text-sm">{text}</p>
             </div>
           </HoverCardContent>
-        }
+        )}
       </HoverCard>
-      <input 
-        type="checkbox" 
+      <input
+        type="checkbox"
         className="toggle-switch mt-1"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ToggleSwitch;
+export default ToggleSwitch

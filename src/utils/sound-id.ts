@@ -1,31 +1,42 @@
 export function generateSoundId(filename: string): string {
-  const baseName = filename.replace(/^sound\//, '').replace(/\.mp3$/, '');
+  const baseName = filename.replace(/^sound\//, "").replace(/\.mp3$/, "")
 
-  let nameWithoutPrefix = baseName.replace(/^\d+/, '');
+  let nameWithoutPrefix = baseName.replace(/^\d+/, "")
 
-  const parts = nameWithoutPrefix.split(/[-_]/);
+  const parts = nameWithoutPrefix.split(/[-_]/)
 
   const processedParts = parts.map((part, index) => {
-    if (!part) return '';
-    
+    if (!part) return ""
+
     if (/^\d+$/.test(part)) {
-      const num = parseInt(part);
-      const numberWords = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+      const num = parseInt(part)
+      const numberWords = [
+        "One",
+        "Two",
+        "Three",
+        "Four",
+        "Five",
+        "Six",
+        "Seven",
+        "Eight",
+        "Nine",
+        "Ten",
+      ]
       if (num > 0 && num <= 10) {
-        return numberWords[num - 1];
+        return numberWords[num - 1]
       }
     }
 
     const normalized = part
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/đ/g, 'd')
-      .replace(/Đ/g, 'D');
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
 
-    return index === 0 
+    return index === 0
       ? normalized.toLowerCase()
-      : normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase();
-  });
+      : normalized.charAt(0).toUpperCase() + normalized.slice(1).toLowerCase()
+  })
 
-  return processedParts.join('');
+  return processedParts.join("")
 }

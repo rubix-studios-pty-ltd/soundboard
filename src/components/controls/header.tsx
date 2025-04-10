@@ -1,84 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { useAudio } from '@/context/audio';
-import { useSettings } from '@/context/setting';
-import type { Settings } from '@/types';
-import ToggleSwitch from '@/components/controls/toggles';
-import { Slider } from "@/components/ui/slider"
+import React, { useEffect, useState } from "react"
+
+import type { Settings } from "@/types"
 import { Separator } from "@/components/ui/separator"
+import { Slider } from "@/components/ui/slider"
+import ToggleSwitch from "@/components/controls/toggles"
 import {
   Color,
-  Volume,
-  Mute,
-  StopIcon,
   Hide,
-  Windows,
   Multi,
-  Repeat
-} from '@/components/icons';
+  Mute,
+  Repeat,
+  StopIcon,
+  Volume,
+  Windows,
+} from "@/components/icons"
+import { useAudio } from "@/context/audio"
+import { useSettings } from "@/context/setting"
 
 const Header: React.FC = () => {
-  const { stopAll } = useAudio();
-  const { settings, updateSettings } = useSettings();
-  const [previousVolume, setPreviousVolume] = useState(1);
+  const { stopAll } = useAudio()
+  const { settings, updateSettings } = useSettings()
+  const [previousVolume, setPreviousVolume] = useState(1)
 
-const toggleColor = () => {
-    const update: Partial<Settings> = { colorEnabled: !settings.colorEnabled };
-    updateSettings(update);
-  };
+  const toggleColor = () => {
+    const update: Partial<Settings> = { colorEnabled: !settings.colorEnabled }
+    updateSettings(update)
+  }
 
   const handleVolumeChange = (newVolume: number) => {
     if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
-      const update: Partial<Settings> = { volume: newVolume };
-      updateSettings(update);
+      const update: Partial<Settings> = { volume: newVolume }
+      updateSettings(update)
     }
-  };
+  }
 
   const toggleHide = () => {
-    const update: Partial<Settings> = { hideEnabled: !settings.hideEnabled };
-    updateSettings(update);
-  };
-  
+    const update: Partial<Settings> = { hideEnabled: !settings.hideEnabled }
+    updateSettings(update)
+  }
+
   const toggleMute = () => {
     if (settings.volume > 0) {
-      setPreviousVolume(settings.volume);
-      const update: Partial<Settings> = { volume: 0 };
-      updateSettings(update);
+      setPreviousVolume(settings.volume)
+      const update: Partial<Settings> = { volume: 0 }
+      updateSettings(update)
     } else {
-      const volumeToRestore = previousVolume > 0 ? previousVolume : 1;
-      const update: Partial<Settings> = { volume: volumeToRestore };
-      updateSettings(update);
+      const volumeToRestore = previousVolume > 0 ? previousVolume : 1
+      const update: Partial<Settings> = { volume: volumeToRestore }
+      updateSettings(update)
     }
-  };
+  }
 
   useEffect(() => {
     if (settings.volume > 0) {
-      setPreviousVolume(settings.volume);
+      setPreviousVolume(settings.volume)
     }
-  }, []);
+  }, [])
 
   return (
-    <div className="bg-white flex items-center justify-between p-1 sticky top-0 z-50">
-      <div className="text-base font-bold mx-2">Soundboard</div>
-      
+    <div className="sticky top-0 z-50 flex items-center justify-between bg-white p-1">
+      <div className="mx-2 text-base font-bold">Soundboard</div>
+
       <div className="flex items-center gap-2">
         <button
-          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
-            settings.colorEnabled ? 'text-red-500' : ''
+          className={`cursor-pointer text-black transition-all duration-500 hover:text-red-500 ${
+            settings.colorEnabled ? "text-red-500" : ""
           }`}
           onClick={toggleColor}
         >
-          <div className="w-5 h-5">
-            <Color className="w-full h-full" />
+          <div className="h-5 w-5">
+            <Color className="h-full w-full" />
           </div>
         </button>
         <button
-          className={`cursor-pointer text-black hover:text-red-500 transition-all duration-500 ${
-            settings.hideEnabled ? 'text-red-500' : ''
+          className={`cursor-pointer text-black transition-all duration-500 hover:text-red-500 ${
+            settings.hideEnabled ? "text-red-500" : ""
           }`}
           onClick={toggleHide}
         >
-          <div className="w-5 h-5">
-            <Hide className="w-full h-full" />
+          <div className="h-5 w-5">
+            <Hide className="h-full w-full" />
           </div>
         </button>
         <Slider
@@ -86,26 +87,26 @@ const toggleColor = () => {
           onValueChange={(value) => handleVolumeChange(value[0] / 100)}
           max={100}
           step={1}
-          className="w-[70px] mr-1.5"
+          className="mr-1.5 w-[70px]"
         />
         <button
-          className="cursor-pointer text-black hover:text-red-500 transition-all duration-500"
+          className="cursor-pointer text-black transition-all duration-500 hover:text-red-500"
           onClick={toggleMute}
         >
-          <div className="w-5 h-5">
+          <div className="h-5 w-5">
             {settings.volume > 0 ? (
-              <Volume className="w-full h-full" />
+              <Volume className="h-full w-full" />
             ) : (
-              <Mute className="w-full h-full" />
+              <Mute className="h-full w-full" />
             )}
           </div>
         </button>
         <button
-          className="cursor-pointer text-black hover:text-red-500 transition-all duration-500"
+          className="cursor-pointer text-black transition-all duration-500 hover:text-red-500"
           onClick={stopAll}
         >
-          <div className="w-6 h-6">
-            <StopIcon className="w-full h-full" />
+          <div className="h-6 w-6">
+            <StopIcon className="h-full w-full" />
           </div>
         </button>
 
@@ -115,37 +116,37 @@ const toggleColor = () => {
           <ToggleSwitch
             checked={settings.alwaysOnTop}
             onChange={(checked) => {
-              const update: Partial<Settings> = { alwaysOnTop: checked };
-              updateSettings(update);
+              const update: Partial<Settings> = { alwaysOnTop: checked }
+              updateSettings(update)
             }}
-            icon={<Windows className="w-full h-full" />}
+            icon={<Windows className="h-full w-full" />}
             title="Luôn hiển thị trên cùng"
             text="Giữ cửa sổ này luôn nằm trên các cửa sổ khác."
           />
           <ToggleSwitch
             checked={settings.multiSoundEnabled}
             onChange={(checked) => {
-              const update: Partial<Settings> = { multiSoundEnabled: checked };
-              updateSettings(update);
+              const update: Partial<Settings> = { multiSoundEnabled: checked }
+              updateSettings(update)
             }}
-            icon={<Multi className="w-full h-full" />}
+            icon={<Multi className="h-full w-full" />}
             title="Phát nhiều âm thanh"
             text="Cho phép phát nhiều hiệu ứng âm thanh cùng lúc."
           />
           <ToggleSwitch
             checked={settings.repeatSoundEnabled}
             onChange={(checked) => {
-              const update: Partial<Settings> = { repeatSoundEnabled: checked };
-              updateSettings(update);
+              const update: Partial<Settings> = { repeatSoundEnabled: checked }
+              updateSettings(update)
             }}
-            icon={<Repeat className="w-full h-full" />}
+            icon={<Repeat className="h-full w-full" />}
             title="Lặp âm thanh"
             text="Cho phép âm thanh phát chồng lên khi nhấn nhiều lần."
           />
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
