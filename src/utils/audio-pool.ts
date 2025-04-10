@@ -90,9 +90,22 @@ class AudioPool {
         if (!url) {
             throw new Error(`Sound ${source} not preloaded`);
         }
-        
+
         if (!repeat && !this.multiSoundEnabled) {
+            this.stopAll();
+        }
+
+        else if (!repeat && this.multiSoundEnabled) {
             this.stopSpecific(source);
+        }
+
+        else if (repeat && !this.multiSoundEnabled) {
+            for (const [key, item] of this.pool.entries()) {
+                if (item.source !== source) {
+                    this.cleanupAudioItem(item);
+                    this.pool.delete(key);
+                }
+            }
         }
         
         try {
@@ -125,14 +138,16 @@ class AudioPool {
     }
 
     private setupAudioListeners(poolItem: AudioPoolItem): void {
+        const decrementInstanceCount = (source: string) => {
+            const currentCount = this.instanceCounts.get(source) || 0;
+            this.instanceCounts.set(source, Math.max(0, currentCount - 1));
+        };
+
         const endedListener = () => {
             poolItem.isPlaying = false;
             poolItem.onEnd?.();
             if (poolItem.source) {
-                const currentCount = this.instanceCounts.get(poolItem.source) || 0;
-                if (currentCount > 0) {
-                    this.instanceCounts.set(poolItem.source, currentCount - 1);
-                }
+                decrementInstanceCount(poolItem.source);
             }
             this.recycleAudioElement(poolItem.audio);
         };
@@ -141,6 +156,9 @@ class AudioPool {
             if (!poolItem.audio.ended) {
                 poolItem.isPlaying = false;
                 poolItem.onEnd?.();
+                if (poolItem.source) {
+                    decrementInstanceCount(poolItem.source);
+                }
             }
         };
 
@@ -148,10 +166,7 @@ class AudioPool {
             poolItem.isPlaying = false;
             poolItem.onEnd?.();
             if (poolItem.source) {
-                const currentCount = this.instanceCounts.get(poolItem.source) || 0;
-                if (currentCount > 0) {
-                    this.instanceCounts.set(poolItem.source, currentCount - 1);
-                }
+                decrementInstanceCount(poolItem.source);
             }
             const itemKey = Array.from(this.pool.entries())
                 .find(([_, item]) => item === poolItem)?.[0];
@@ -178,18 +193,17 @@ class AudioPool {
         item.isPlaying = false;
         if (item.source) {
             const currentCount = this.instanceCounts.get(item.source) || 0;
-            if (currentCount > 0) {
-                this.instanceCounts.set(item.source, currentCount - 1);
-            }
+            this.instanceCounts.set(item.source, Math.max(0, currentCount - 1));
         }
         this.recycleAudioElement(item.audio);
     }
 
     private async playFromUrl(url: string, source: string, volume: number, repeat: boolean = false, onEnd?: () => void): Promise<void> {
-            const instanceId = (repeat || this.multiSoundEnabled) ? `${source}_${Date.now()}` : source;
-            if (repeat || this.multiSoundEnabled) {
-                const currentCount = this.instanceCounts.get(source) || 0;
-                if (currentCount >= this.maxInstancesPerSound) {
+        const instanceId = `${source}_${Date.now()}`;
+        
+        if (repeat) {
+            const currentCount = this.instanceCounts.get(source) || 0;
+            if (currentCount >= this.maxInstancesPerSound) {
                 let oldestKey: string | undefined;
                 let oldestTime = Date.now();
 
@@ -203,12 +217,15 @@ class AudioPool {
                 if (oldestKey) {
                     const item = this.pool.get(oldestKey);
                     if (item) {
-                        this.cleanupAudioItem(item);
+                        item.cleanupListeners?.forEach(cleanup => cleanup());
+                        item.audio.src = '';
+                        item.isPlaying = false;
+                        this.recycleAudioElement(item.audio);
                         this.pool.delete(oldestKey);
                     }
                 }
             }
-    }
+        }
 
         if (this.pool.size >= this.maxPoolSize) {
             let lruItem: [string, AudioPoolItem] | undefined;
@@ -218,7 +235,10 @@ class AudioPool {
                 }
             }
             if (lruItem) {
-                this.cleanupAudioItem(lruItem[1]);
+                lruItem[1].cleanupListeners?.forEach(cleanup => cleanup());
+                lruItem[1].audio.src = '';
+                lruItem[1].isPlaying = false;
+                this.recycleAudioElement(lruItem[1].audio);
                 this.pool.delete(lruItem[0]);
             } else {
                 const stoppedItem = this.findStoppedAudio();
@@ -226,7 +246,10 @@ class AudioPool {
                     const stoppedKey = Array.from(this.pool.entries())
                         .find(([_, item]) => item === stoppedItem)?.[0];
                     if (stoppedKey) {
-                        this.cleanupAudioItem(stoppedItem);
+                        stoppedItem.cleanupListeners?.forEach(cleanup => cleanup());
+                        stoppedItem.audio.src = '';
+                        stoppedItem.isPlaying = false;
+                        this.recycleAudioElement(stoppedItem.audio);
                         this.pool.delete(stoppedKey);
                     }
                 } else {
@@ -260,18 +283,12 @@ class AudioPool {
             await audioElement.play();
             poolItem.isPlaying = true;
             poolItem.lastUsed = Date.now();
-
-            if (repeat || this.multiSoundEnabled) {
-                const currentCount = this.instanceCounts.get(source) || 0;
-                this.instanceCounts.set(source, currentCount + 1);
-            }
+            
+            const currentCount = this.instanceCounts.get(source) || 0;
+            this.instanceCounts.set(source, currentCount + 1);
         } catch (error) {
             console.error('Error playing audio:', error);
-            this.pool.delete(source);
-            const audioElement = this.pool.get(source)?.audio;
-            if (audioElement) {
-                this.recycleAudioElement(audioElement);
-            }
+            this.stopSpecific(source);
             throw error;
         }
     }
@@ -285,13 +302,17 @@ class AudioPool {
     }
 
     stopSpecific(source: string): void {
+        let itemsFound = false;
         for (const [key, item] of this.pool.entries()) {
             if (key.startsWith(source)) {
                 this.cleanupAudioItem(item);
                 this.pool.delete(key);
+                itemsFound = true;
             }
         }
-        this.instanceCounts.delete(source);
+        if (itemsFound) {
+            this.instanceCounts.set(source, 0);
+        }
     }
 
     updateVolume(volume: number): void {
