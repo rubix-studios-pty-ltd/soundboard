@@ -29,26 +29,27 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const playSound = async (soundId: string, file: string) => {
     try {
-      if (!audioPoolRef.current.isPreloaded(file)) {
-        const response = await fetch(file);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        audioPoolRef.current.preloadSound(url, file);
-
-        try {
-          await audioDB.store(file, blob);
-        } catch (error) {
-          console.error('Error storing sound in IndexedDB:', error);
-        }
+      if (!settings.repeatSoundEnabled && audioPoolRef.current.isPlaying(file)) {
+        audioPoolRef.current.stopSpecific(file);
+        return;
       }
 
       if (!settings.multiSoundEnabled) {
         audioPoolRef.current.stopAll();
       }
 
-      if (!settings.repeatSoundEnabled && audioPoolRef.current.isPlaying(file)) {
-        audioPoolRef.current.stopSpecific(file);
-        return;
+      if (!audioPoolRef.current.isPreloaded(file)) {
+        const response = await fetch(file);
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        
+        try {
+          await audioDB.store(file, blob);
+        } catch (error) {
+          console.error('Error storing sound in IndexedDB:', error);
+        }
+
+        audioPoolRef.current.preloadSound(url, file);
       }
 
       await audioPoolRef.current.play(file, settings.volume, settings.repeatSoundEnabled);

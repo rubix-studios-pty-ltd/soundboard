@@ -91,11 +91,7 @@ class SoundboardApp {
             const isPlaying = this.audioPool.isPlaying(file);
 
             if (settings.repeatSoundEnabled) {
-                if (!settings.multiSoundEnabled) {
-                    await this.stopActiveSounds();
-                }
-
-                await this.playSound(file, currentVolume, buttonElement);
+                await this.playSound(file, currentVolume, buttonElement, true);
                 return;
             }
 
@@ -109,7 +105,7 @@ class SoundboardApp {
                 await this.stopActiveSounds();
             }
 
-            await this.playSound(file, currentVolume, buttonElement);
+            await this.playSound(file, currentVolume, buttonElement, false);
 
         } catch (error) {
             console.error('Error playing sound:', error);
@@ -118,13 +114,13 @@ class SoundboardApp {
         }
     }
 
-    private async playSound(file: string, volume: number, buttonElement: HTMLButtonElement): Promise<void> {
+    private async playSound(file: string, volume: number, buttonElement: HTMLButtonElement, repeat: boolean): Promise<void> {
         try {
             const response = await fetch(file);
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
             this.audioPool.preloadSound(url, file);
-            await this.audioPool.play(file, volume, false, () => {
+            await this.audioPool.play(file, volume, repeat, () => {
                 buttonElement.classList.remove("active");
             });
             buttonElement.classList.add("active");
