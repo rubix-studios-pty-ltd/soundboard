@@ -32,13 +32,18 @@ const AppContent: React.FC = () => {
   }, [settings?.theme])
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={themeStyles}>
+    <div
+      className="flex min-h-screen flex-col overflow-x-hidden"
+      style={themeStyles}
+    >
       <Header />
-      <div className="flex flex-wrap items-start justify-around gap-2 p-1">
-        <SoundGrid sounds={soundData} containerId="container1" />
-        <Separator className="my-1" />
-        <SoundGrid sounds={musicData} containerId="container2" />
-      </div>
+      <main className="flex-1">
+        <div className="flex flex-wrap items-start justify-around gap-2 p-1">
+          <SoundGrid sounds={soundData} containerId="container1" />
+          <Separator className="my-1" />
+          <SoundGrid sounds={musicData} containerId="container2" />
+        </div>
+      </main>
       <Footer />
     </div>
   )

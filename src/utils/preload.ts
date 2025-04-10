@@ -3,6 +3,27 @@ import { contextBridge, ipcRenderer } from "electron"
 import type { HotkeyMap, IpcApi, Settings } from "@/types"
 
 const electronAPI: IpcApi = {
+  minimizeWindow: () => {
+    try {
+      ipcRenderer.send("window-control", "minimize")
+    } catch (error) {
+      console.error("Error minimizing window:", error)
+    }
+  },
+  maximizeWindow: () => {
+    try {
+      ipcRenderer.send("window-control", "maximize")
+    } catch (error) {
+      console.error("Error maximizing window:", error)
+    }
+  },
+  closeWindow: () => {
+    try {
+      ipcRenderer.send("window-control", "close")
+    } catch (error) {
+      console.error("Error closing window:", error)
+    }
+  },
   loadHotkeys: async () => {
     try {
       return await ipcRenderer.invoke("load-hotkeys")
