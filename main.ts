@@ -95,8 +95,8 @@ const ROOT_PATH = path.join(__dirname, "..")
 
 function createWindow(): void {
   win = new BrowserWindow({
-    width: 626,
-    height: 1005,
+    width: 610,
+    height: 940,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
     frame: false,
@@ -149,7 +149,9 @@ function createWindow(): void {
 function setupIPC(): void {
   ipcMain.on("window-control", (_: any, action: string) => {
     try {
-      if (!win) return
+      if (!win) {
+        return
+      }
 
       switch (action) {
         case "minimize":
@@ -167,7 +169,9 @@ function setupIPC(): void {
           break
       }
     } catch (error) {
-      if (shouldLog()) console.error("Error handling window control:", error)
+      if (shouldLog()) {
+        console.error("Error handling window control:", error)
+      }
     }
   })
 
@@ -287,7 +291,9 @@ if (!gotTheLock) {
 } else {
   app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
     if (win) {
-      if (win.isMinimized()) win.restore()
+      if (win.isMinimized()) {
+        win.restore()
+      }
       win.focus()
     }
   })
