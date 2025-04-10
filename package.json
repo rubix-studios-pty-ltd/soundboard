@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "2.0.10",
+  "version": "2.1.0",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
@@ -51,7 +51,6 @@
     "@types/react-dom": "^19.1.2",
     "class-variance-authority": "^0.7.1",
     "electron-store": "^10.0.1",
-    "lucide-react": "^0.487.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.2.0",
