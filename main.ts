@@ -108,11 +108,11 @@ function createWindow(): void {
             };
 
             try {
-                const response = await protocol.Response.fromFileStream(
-                    path.join(ROOT_PATH, filePath),
-                    compressionOptions
-                );
-                return response;
+                return await protocol.Response.fromFileStream(
+                                    path.join(ROOT_PATH, filePath),
+                                    compressionOptions
+                                );
+
             } catch (error) {
                 if (shouldLog()) console.error('Protocol handler error:', error);
                 return new protocol.Response();
