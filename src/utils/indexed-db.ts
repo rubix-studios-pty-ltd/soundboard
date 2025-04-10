@@ -36,7 +36,9 @@ export class AudioDB {
   }
 
   async store(url: string, blob: Blob): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized")
+    if (!this.db) {
+      throw new Error("Database not initialized")
+    }
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readwrite")
@@ -49,7 +51,9 @@ export class AudioDB {
   }
 
   async get(url: string): Promise<Blob | null> {
-    if (!this.db) throw new Error("Database not initialized")
+    if (!this.db) {
+      throw new Error("Database not initialized")
+    }
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readonly")
@@ -68,7 +72,9 @@ export class AudioDB {
   }
 
   async delete(url: string): Promise<void> {
-    if (!this.db) throw new Error("Database not initialized")
+    if (!this.db) {
+      throw new Error("Database not initialized")
+    }
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction([STORE_NAME], "readwrite")
