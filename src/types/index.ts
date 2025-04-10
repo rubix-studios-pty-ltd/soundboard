@@ -35,6 +35,9 @@ export interface AudioPoolItem {
 }
 
 export interface IpcApi {
+  minimizeWindow: () => void
+  maximizeWindow: () => void
+  closeWindow: () => void
   loadHotkeys: () => Promise<HotkeyMap>
   loadSettings: () => Promise<Settings>
   saveHotkeys: (hotkeys: HotkeyMap) => void

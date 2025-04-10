@@ -124,8 +124,27 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-[#F0E8E4] text-foreground;
+    @apply bg-[#1a1a1a] text-foreground font-sans;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   }
+}
+
+.draggable {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+button,
+input,
+.slider,
+[role="button"] {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
 }
 
 @layer components {
@@ -139,7 +158,7 @@
   }
 
   .toggle-switch:checked {
-    @apply bg-black;
+    @apply bg-green-500;
   }
 
   .toggle-switch:checked::before {
@@ -148,13 +167,13 @@
 }
 
 ::-webkit-scrollbar {
-  @apply w-[6px];
+  @apply w-[8px];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-black/40 rounded-[10px];
+  @apply bg-[#333333] rounded-[4px] hover:bg-[#404040];
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-black/10 rounded-[10px];
+  @apply bg-[#1a1a1a];
 }

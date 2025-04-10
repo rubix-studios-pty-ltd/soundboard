@@ -99,7 +99,8 @@ function createWindow(): void {
     height: 1005,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
-    autoHideMenuBar: true,
+    frame: false,
+    titleBarStyle: "hidden",
     show: false,
     webPreferences: {
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
@@ -146,6 +147,30 @@ function createWindow(): void {
 }
 
 function setupIPC(): void {
+  ipcMain.on("window-control", (_: any, action: string) => {
+    try {
+      if (!win) return
+
+      switch (action) {
+        case "minimize":
+          win.minimize()
+          break
+        case "maximize":
+          if (win.isMaximized()) {
+            win.unmaximize()
+          } else {
+            win.maximize()
+          }
+          break
+        case "close":
+          win.close()
+          break
+      }
+    } catch (error) {
+      if (shouldLog()) console.error("Error handling window control:", error)
+    }
+  })
+
   ipcMain.handle("load-hotkeys", (): HotkeyMapType => {
     try {
       return store.get("hotkeys") ?? {}
@@ -255,20 +280,33 @@ function setupIPC(): void {
   })
 }
 
-app.whenReady().then(() => {
-  try {
-    createWindow()
-    setupIPC()
-  } catch (error) {
-    if (shouldLog()) console.error("Error during startup:", error)
-  }
+const gotTheLock = app.requestSingleInstanceLock()
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
+    if (win) {
+      if (win.isMinimized()) win.restore()
+      win.focus()
     }
   })
-})
+
+  app.whenReady().then(() => {
+    try {
+      createWindow()
+      setupIPC()
+    } catch (error) {
+      if (shouldLog()) console.error("Error during startup:", error)
+    }
+
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow()
+      }
+    })
+  })
+}
 
 app.on("window-all-closed", () => {
   win = null
