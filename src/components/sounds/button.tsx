@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useAudio } from '@/context/audio';
-import { useSettings } from '@/context/setting';
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ColorPicker } from "@/components/ui/color-picker";
+import React, { useEffect, useState } from "react"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { ColorPicker } from "@/components/ui/color-picker"
+import { useAudio } from "@/context/audio"
+import { useSettings } from "@/context/setting"
 
 interface SoundButtonProps {
-  id: string;
-  file: string;
-  title: string;
-  onHotkeyAssign: (soundId: string) => void;
-  isHideMode?: boolean;
-  isHidden?: boolean;
-  onToggleHide?: (id: string) => void;
+  id: string
+  file: string
+  title: string
+  onHotkeyAssign: (soundId: string) => void
+  isHideMode?: boolean
+  isHidden?: boolean
+  onToggleHide?: (id: string) => void
 }
 
 const SoundButton: React.FC<SoundButtonProps> = ({
@@ -24,48 +25,48 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   isHidden = false,
   onToggleHide,
 }) => {
-  const { playSound, stopSound, isPlaying } = useAudio();
-  const [isActive, setIsActive] = useState(false);
+  const { playSound, stopSound, isPlaying } = useAudio()
+  const [isActive, setIsActive] = useState(false)
 
   useEffect(() => {
     const checkPlayingState = () => {
-      const playing = isPlaying(file);
+      const playing = isPlaying(file)
       if (isActive !== playing) {
-        setIsActive(playing);
+        setIsActive(playing)
       }
-    };
+    }
 
-    checkPlayingState();
+    checkPlayingState()
 
-    const interval = setInterval(checkPlayingState, 100);
+    const interval = setInterval(checkPlayingState, 100)
 
-    return () => clearInterval(interval);
-  }, [file, isPlaying, isActive]);
+    return () => clearInterval(interval)
+  }, [file, isPlaying, isActive])
 
-  const { settings, updateSettings } = useSettings();
+  const { settings, updateSettings } = useSettings()
 
   const handleClick = async () => {
     if (settings.repeatSoundEnabled) {
-      await playSound(id, file);
+      await playSound(id, file)
     } else {
       if (isActive) {
-        stopSound(file);
+        stopSound(file)
       } else {
-        await playSound(id, file);
+        await playSound(id, file)
       }
     }
-  };
+  }
 
   const handleContextMenu = (e: React.MouseEvent) => {
-    e.preventDefault();
-    onHotkeyAssign(id);
-  };
+    e.preventDefault()
+    onHotkeyAssign(id)
+  }
 
   return (
-    <div className={`relative ${isHidden && !isHideMode ? 'hidden' : ''}`}>
+    <div className={`relative ${isHidden && !isHideMode ? "hidden" : ""}`}>
       {isHideMode && (
         <Checkbox
-          className="absolute right-1 top-1.5 z-10"
+          className="absolute top-1.5 right-1 z-10"
           checked={isHidden}
           onCheckedChange={() => onToggleHide?.(id)}
         />
@@ -73,12 +74,12 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       {settings.colorEnabled && (
         <ColorPicker
           color={settings.buttonColors?.[id]}
-          onColorChange={(color) => 
+          onColorChange={(color) =>
             updateSettings({
               buttonColors: {
                 ...(settings.buttonColors || {}),
-                [id]: color || undefined
-              }
+                [id]: color || undefined,
+              },
             })
           }
           triggerClassName="absolute left-1 top-1.5 z-10"
@@ -87,48 +88,50 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       <Button
         variant="outline"
         size="sm"
-        className="h-7 w-24 rounded text-[9px] font-bold items-center justify-center p-1 overflow-hidden transition-all"
-        style={{
-          backgroundColor: settings?.buttonColors?.[id]
-            ? isActive
-              ? '#000'
-              : settings.buttonColors[id]
-            : settings?.theme?.enabled
-            ? isActive
-              ? settings.theme.buttonActive
-              : settings.theme.buttonColor
-            : isActive
-            ? '#000'
-            : undefined,
-          color: settings?.buttonColors?.[id]
-            ? '#fff'
-            : settings?.theme?.enabled
-            ? settings.theme.buttonText
-            : isActive
-            ? '#fff'
-            : undefined,
-          ':hover': settings?.buttonColors?.[id]
-            ? {
-                backgroundColor: isActive ? '#000' : '#404040'
-              }
-            : settings?.theme?.enabled
-            ? {
-                backgroundColor: isActive
+        className="h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all"
+        style={
+          {
+            backgroundColor: settings?.buttonColors?.[id]
+              ? isActive
+                ? "#000"
+                : settings.buttonColors[id]
+              : settings?.theme?.enabled
+                ? isActive
                   ? settings.theme.buttonActive
-                  : settings.theme.buttonHoverColor
-              }
-            : isActive
-            ? { backgroundColor: '#404040' }
-            : { backgroundColor: '#f3f4f6' }
-        } as React.CSSProperties}
+                  : settings.theme.buttonColor
+                : isActive
+                  ? "#000"
+                  : undefined,
+            color: settings?.buttonColors?.[id]
+              ? "#fff"
+              : settings?.theme?.enabled
+                ? settings.theme.buttonText
+                : isActive
+                  ? "#fff"
+                  : undefined,
+            ":hover": settings?.buttonColors?.[id]
+              ? {
+                  backgroundColor: isActive ? "#000" : "#404040",
+                }
+              : settings?.theme?.enabled
+                ? {
+                    backgroundColor: isActive
+                      ? settings.theme.buttonActive
+                      : settings.theme.buttonHoverColor,
+                  }
+                : isActive
+                  ? { backgroundColor: "#404040" }
+                  : { backgroundColor: "#f3f4f6" },
+          } as React.CSSProperties
+        }
         onClick={handleClick}
         onContextMenu={handleContextMenu}
         data-sound-id={id}
       >
-        <span className="truncate w-full text-center">{title}</span>
+        <span className="w-full truncate text-center">{title}</span>
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default SoundButton;
+export default SoundButton

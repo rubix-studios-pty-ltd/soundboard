@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react"
 
 export const Check = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -11,4 +11,4 @@ export const Check = (props: React.SVGProps<SVGSVGElement>) => (
   >
     <path d="M20 6 9 17l-5-5"></path>
   </svg>
-);
+)

@@ -2,9 +2,9 @@
 
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { Check } from "@/components/icons"
 
 import { cn } from "@/lib/utils"
+import { Check } from "@/components/icons"
 
 function Checkbox({
   className,

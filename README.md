@@ -62,6 +62,28 @@ Một ứng dụng soundboard dành cho máy tính, được xây dựng bằng 
 - Màu sắc được lưu giữa các phiên
 - Sử dụng nút ✕ để xóa màu
 
+### Themes | Giao diện màu
+
+- Click the theme button in the header to open theme picker
+- Choose from 5 preset themes:
+  - Green: Nature-inspired with cream background
+  - Pink: Light pastel theme
+  - Blue: Dark navy theme
+  - Light Green: Clean minimal theme
+  - Yellow: Dark mode with yellow accents
+- Theme selection persists between sessions
+
+---
+
+- Nhấp vào nút giao diện màu trên thanh header để mở bộ chọn giao diện
+- Chọn từ 5 giao diện màu có sẵn:
+  - Xanh lá: Lấy cảm hứng từ thiên nhiên với nền màu kem
+  - Hồng: Giao diện pastel nhẹ nhàng
+  - Xanh dương: Giao diện xanh đậm
+  - Xanh lá nhạt: Giao diện tối giản
+  - Vàng: Giao diện tối với điểm nhấn màu vàng
+- Lựa chọn giao diện được lưu giữa các phiên
+
 ## Technical Stack
 
 - **Frontend**: React 19 with TypeScript

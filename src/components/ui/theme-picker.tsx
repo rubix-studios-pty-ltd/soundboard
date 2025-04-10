@@ -1,10 +1,13 @@
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Close } from '@/components/icons';
-import { presetThemes } from '@/data/themes';
-import { Theme } from '@/components/icons';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Close, Theme } from "@/components/icons"
+import { presetThemes } from "@/data/themes"
 
 interface ThemePickerProps {
-  onThemeChange: (themeKey: string | null) => void;
+  onThemeChange: (themeKey: string | null) => void
 }
 
 export function ThemePicker({ onThemeChange }: ThemePickerProps) {
@@ -12,7 +15,7 @@ export function ThemePicker({ onThemeChange }: ThemePickerProps) {
     <Popover>
       <PopoverTrigger asChild>
         <div className="size-4 cursor-pointer">
-            <Theme className="w-full h-full" />
+          <Theme className="h-full w-full" />
         </div>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-2">
@@ -20,13 +23,13 @@ export function ThemePicker({ onThemeChange }: ThemePickerProps) {
           {Object.entries(presetThemes).map(([key, theme]) => (
             <button
               key={key}
-              className="size-6 rounded-full border transition-transform hover:scale-110 cursor-pointer"
+              className="size-6 cursor-pointer rounded-full border transition-transform hover:scale-110"
               style={{ backgroundColor: theme.buttonColor }}
               onClick={() => onThemeChange(key)}
             />
           ))}
           <button
-            className="size-6 rounded-full border flex items-center justify-center text-black bg-white hover:bg-gray-100 hover:scale-110 cursor-pointer"
+            className="flex size-6 cursor-pointer items-center justify-center rounded-full border bg-white text-black hover:scale-110 hover:bg-gray-100"
             onClick={() => onThemeChange(null)}
           >
             <Close className="size-4" />
@@ -34,5 +37,5 @@ export function ThemePicker({ onThemeChange }: ThemePickerProps) {
         </div>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

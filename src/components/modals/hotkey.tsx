@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -7,14 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from '@/components/ui/button';
 
 interface HotkeyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onClear: () => void;
-  currentHotkey?: string;
-  onAssign: (key: string) => void;
+  isOpen: boolean
+  onClose: () => void
+  onClear: () => void
+  currentHotkey?: string
+  onAssign: (key: string) => void
 }
 
 const HotkeyModal: React.FC<HotkeyModalProps> = ({
@@ -24,46 +25,49 @@ const HotkeyModal: React.FC<HotkeyModalProps> = ({
   currentHotkey,
   onAssign,
 }) => {
-  const [displayText, setDisplayText] = useState('Nhấn một phím bất kỳ để thiết lập phím tắt.');
+  const [displayText, setDisplayText] = useState(
+    "Nhấn một phím bất kỳ để thiết lập phím tắt."
+  )
 
   useEffect(() => {
     if (currentHotkey) {
-      setDisplayText(`Hiện tại: "${currentHotkey}". \nNhấn phím mới để thay đổi.`);
+      setDisplayText(
+        `Hiện tại: "${currentHotkey}". \nNhấn phím mới để thay đổi.`
+      )
     } else {
-      setDisplayText('Nhấn một phím bất kỳ để thiết lập phím tắt.');
+      setDisplayText("Nhấn một phím bất kỳ để thiết lập phím tắt.")
     }
-  }, [currentHotkey]);
+  }, [currentHotkey])
 
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (isOpen) {
-      event.preventDefault();
-      const key = event.key.toLowerCase();
-      onAssign(key);
-    }
-  }, [isOpen, onAssign]);
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (isOpen) {
+        event.preventDefault()
+        const key = event.key.toLowerCase()
+        onAssign(key)
+      }
+    },
+    [isOpen, onAssign]
+  )
 
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener("keydown", handleKeyDown)
       return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
+        document.removeEventListener("keydown", handleKeyDown)
+      }
     }
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen, handleKeyDown])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[280px]">
         <DialogHeader>
           <DialogTitle>Gán phím tắt</DialogTitle>
-          <DialogDescription>
-            {displayText}
-          </DialogDescription>
+          <DialogDescription>{displayText}</DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
-          <Button onClick={onClose}>
-            Đóng
-          </Button>
+          <Button onClick={onClose}>Đóng</Button>
           {currentHotkey && (
             <Button variant="destructive" onClick={onClear}>
               Xóa
@@ -72,7 +76,7 @@ const HotkeyModal: React.FC<HotkeyModalProps> = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default HotkeyModal;
+export default HotkeyModal

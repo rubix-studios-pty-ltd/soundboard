@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import type { Settings } from '@/types';
+import React, { createContext, useContext, useEffect, useState } from "react"
+
+import type { Settings } from "@/types"
 
 interface SettingsContextType {
-  settings: Settings;
-  updateSettings: (newSettings: Partial<Settings>) => void;
+  settings: Settings
+  updateSettings: (newSettings: Partial<Settings>) => void
 }
 
 const defaultSettings: Settings = {
@@ -17,56 +18,60 @@ const defaultSettings: Settings = {
   buttonColors: {},
   theme: {
     enabled: false,
-    backgroundColor: '#f3f4f6',
-    buttonColor: '#4b5563',
-    buttonText: '#ffffff',
-    buttonActive: '#374151',
-    buttonHoverColor: '#404040'
-  }
-};
+    backgroundColor: "#f3f4f6",
+    buttonColor: "#4b5563",
+    buttonText: "#ffffff",
+    buttonActive: "#374151",
+    buttonHoverColor: "#404040",
+  },
+}
 
 const SettingsContext = createContext<SettingsContextType>({
   settings: defaultSettings,
   updateSettings: () => {},
-});
+})
 
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState<Settings>(defaultSettings);
+export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [settings, setSettings] = useState<Settings>(defaultSettings)
 
   useEffect(() => {
     window.electronAPI.loadSettings().then((savedSettings) => {
-      setSettings(savedSettings);
-    });
-  }, []);
+      setSettings(savedSettings)
+    })
+  }, [])
 
   const updateSettings = (newSettings: Partial<Settings>) => {
     setSettings((prev) => {
-      const updated = { 
-        ...prev, 
+      const updated = {
+        ...prev,
         ...newSettings,
-        hiddenSounds: Array.isArray(newSettings.hiddenSounds) ? newSettings.hiddenSounds : (prev.hiddenSounds || [])
-      };
-      window.electronAPI.saveSettings(updated);
-      if ('alwaysOnTop' in newSettings) {
-        window.electronAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false);
+        hiddenSounds: Array.isArray(newSettings.hiddenSounds)
+          ? newSettings.hiddenSounds
+          : prev.hiddenSounds || [],
       }
-      return updated;
-    });
-  };
+      window.electronAPI.saveSettings(updated)
+      if ("alwaysOnTop" in newSettings) {
+        window.electronAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false)
+      }
+      return updated
+    })
+  }
 
   return (
     <SettingsContext.Provider value={{ settings, updateSettings }}>
       {children}
     </SettingsContext.Provider>
-  );
-};
+  )
+}
 
 export const useSettings = () => {
-  const context = useContext(SettingsContext);
+  const context = useContext(SettingsContext)
   if (!context) {
-    throw new Error('useSettings must be used within a SettingsProvider');
+    throw new Error("useSettings must be used within a SettingsProvider")
   }
-  return context;
-};
+  return context
+}
 
-export default SettingsContext;
+export default SettingsContext
