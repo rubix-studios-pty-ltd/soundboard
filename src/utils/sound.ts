@@ -166,7 +166,9 @@ class SoundboardApp {
     const foundSound = soundData.find(
       (s) => s.id === id || generateSoundId(s.file) === id
     )
-    if (foundSound) return foundSound.file
+    if (foundSound) {
+      return foundSound.file
+    }
 
     const foundMusic = musicData.find(
       (s) => s.id === id || generateSoundId(s.file) === id
