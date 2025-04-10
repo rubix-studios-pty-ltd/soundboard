@@ -2,7 +2,6 @@ import React, { createContext, useContext, useEffect, useRef } from "react"
 
 import { useSettings } from "@/context/setting"
 import AudioPool from "@/utils/audio-pool"
-import { audioDB } from "@/utils/indexed-db"
 
 interface AudioContextType {
   playSound: (soundId: string, file: string) => Promise<void>
@@ -40,21 +39,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const playSound = async (soundId: string, file: string) => {
     try {
-      if (!audioPoolRef.current.isPreloaded(file)) {
-        const response = await fetch(file)
-        const blob = await response.blob()
-        const url = URL.createObjectURL(blob)
-
-        try {
-          await audioDB.store(file, blob)
-        } catch (error) {
-          console.error("Error storing sound in IndexedDB:", error)
-        }
-
-        audioPoolRef.current.preloadSound(url, file)
-      }
-
-      await audioPoolRef.current.play(file, settings.volume)
+      await audioPoolRef.current.play(
+        file,
+        settings.volume,
+        settings.repeatSoundEnabled
+      )
     } catch (error) {
       console.error("Error playing sound:", error)
       audioPoolRef.current.stopSpecific(file)

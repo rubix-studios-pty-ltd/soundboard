@@ -1,5 +1,3 @@
-import AudioCache from "@/utils/audio-cache"
-
 export interface AudioPoolItem {
   audio: HTMLAudioElement
   source: string
@@ -15,9 +13,7 @@ class AudioPool {
   private maxInstancesPerSound: number
   private multiSoundEnabled: boolean
   private repeatSoundEnabled: boolean
-  private audioCache: AudioCache
   private unusedAudioElements: HTMLAudioElement[]
-  private preloadedSounds: Map<string, string>
   private instanceCounts: Map<string, number>
   private audioContext: AudioContext
   private initialized: boolean
@@ -32,9 +28,7 @@ class AudioPool {
     this.pool = new Map()
     this.maxPoolSize = maxPoolSize
     this.maxInstancesPerSound = maxInstancesPerSound
-    this.audioCache = new AudioCache()
     this.unusedAudioElements = []
-    this.preloadedSounds = new Map()
     this.instanceCounts = new Map()
     this.multiSoundEnabled = multiSoundEnabled
     this.repeatSoundEnabled = repeatSoundEnabled
@@ -83,47 +77,42 @@ class AudioPool {
     this.initialized = true
   }
 
-  preloadSound(url: string, source: string): void {
-    if (!this.loadingSounds.has(source)) {
-      this.preloadedSounds.set(source, url)
-    }
-  }
-
-  isPreloaded(source: string): boolean {
-    return this.preloadedSounds.has(source) && !this.loadingSounds.has(source)
-  }
-
   async play(
     source: string,
     volume: number,
-    repeat: boolean = true,
+    repeat: boolean = false,
     onEnd?: () => void
   ): Promise<void> {
     if (this.loadingSounds.has(source)) {
       return
     }
 
-    const url = this.preloadedSounds.get(source)
-    if (!url) {
-      throw new Error(`Sound ${source} not preloaded`)
-    }
-
-    if (!this.multiSoundEnabled && !this.repeatSoundEnabled) {
-      this.stopAll()
-    } else if (!this.multiSoundEnabled && this.repeatSoundEnabled) {
-      for (const [key, item] of this.pool.entries()) {
-        if (item.source !== source) {
-          this.cleanupAudioItem(item)
-          this.pool.delete(key)
+    if (!this.multiSoundEnabled) {
+      if (this.repeatSoundEnabled) {
+        for (const [key, item] of this.pool.entries()) {
+          if (item.source !== source) {
+            this.cleanupAudioItem(item)
+            this.pool.delete(key)
+          }
         }
+      } else {
+        this.stopAll()
       }
-    } else if (this.multiSoundEnabled && !this.repeatSoundEnabled) {
-      this.stopSpecific(source)
+    } else {
+      if (!this.repeatSoundEnabled) {
+        this.stopSpecific(source)
+      }
     }
 
     try {
       this.loadingSounds.add(source)
-      await this.playFromUrl(url, source, volume, repeat, onEnd)
+      await this.playFromUrl(
+        source,
+        source,
+        volume,
+        this.repeatSoundEnabled && repeat,
+        onEnd
+      )
     } finally {
       this.loadingSounds.delete(source)
     }
@@ -287,7 +276,6 @@ class AudioPool {
 
     try {
       const audioElement = this.getAudioElement()
-      const blobUrl = await this.audioCache.getOrCreate(url)
 
       const poolItem: AudioPoolItem = {
         audio: audioElement,
@@ -302,7 +290,7 @@ class AudioPool {
       this.pool.set(instanceId, poolItem)
 
       audioElement.currentTime = 0
-      audioElement.src = blobUrl
+      audioElement.src = url
       audioElement.volume = volume
       audioElement.loop = false
 

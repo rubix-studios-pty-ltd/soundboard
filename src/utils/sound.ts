@@ -37,13 +37,11 @@ class SoundboardApp {
     )
     this.hotkeyManager = new HotkeyManager()
 
-    Promise.all([this.initializeSettings(), this.preloadFrequentSounds()]).then(
-      () => {
-        this.initializeSoundboard()
-        this.setupEventListeners()
-        this.setupSettingsListeners()
-      }
-    )
+    Promise.all([this.initializeSettings()]).then(() => {
+      this.initializeSoundboard()
+      this.setupEventListeners()
+      this.setupSettingsListeners()
+    })
   }
 
   private setupSettingsListeners(): void {
@@ -58,30 +56,6 @@ class SoundboardApp {
         settings.multiSoundEnabled ?? false
       )
     })
-  }
-
-  private async preloadFrequentSounds(): Promise<void> {
-    const frequentSounds = [
-      ...soundData.slice(0, 5),
-      ...musicData.slice(0, 5),
-    ].filter((sound) => sound.frequent !== false)
-
-    const batchSize = 3
-    for (let i = 0; i < frequentSounds.length; i += batchSize) {
-      const batch = frequentSounds.slice(i, i + batchSize)
-      await Promise.all(
-        batch.map(async (sound) => {
-          try {
-            const response = await fetch(sound.file)
-            const blob = await response.blob()
-            const url = URL.createObjectURL(blob)
-            this.audioPool.preloadSound(url, sound.file)
-          } catch (error) {
-            console.warn(`Failed to preload sound: ${sound.file}`, error)
-          }
-        })
-      )
-    }
   }
 
   private async initializeSettings(): Promise<void> {
@@ -127,10 +101,6 @@ class SoundboardApp {
     repeat: boolean
   ): Promise<void> {
     try {
-      const response = await fetch(file)
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      this.audioPool.preloadSound(url, file)
       await this.audioPool.play(file, volume, repeat, () => {
         buttonElement.classList.remove("active")
       })
