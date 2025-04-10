@@ -8,3 +8,4 @@ export { Hide } from '@/components/icons/toggle/hide';
 export { Color } from '@/components/icons/toggle/color';
 export { Close } from '@/components/icons/control/close';
 export { Theme } from '@/components/icons/toggle/theme';
+export { Check } from '@/components/icons/control/check';
