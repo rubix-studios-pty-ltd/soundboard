@@ -5,6 +5,8 @@ const prettierConfig = {
   singleQuote: false,
   tabWidth: 2,
   trailingComma: "es5",
+  arrowParens: "always",
+  bracketSpacing: true,
   plugins: [
     "@ianvs/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss",
