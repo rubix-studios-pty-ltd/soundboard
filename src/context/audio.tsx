@@ -33,7 +33,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    if (!settingsInitialized) return
+    if (!settingsInitialized) {
+      return
+    }
 
     if (audioPoolRef.current) {
       audioPoolRef.current.stopAll()
@@ -58,7 +60,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   ])
 
   useEffect(() => {
-    if (!audioPoolRef.current || !isReady) return
+    if (!audioPoolRef.current || !isReady) {
+      return
+    }
 
     if (settings.volume >= 0 && settings.volume <= 1) {
       audioPoolRef.current.updateVolume(settings.volume)
@@ -86,17 +90,26 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   const stopAll = () => {
-    if (!audioPoolRef.current || !isReady) return
+    if (!audioPoolRef.current || !isReady) {
+      return
+    }
+
     audioPoolRef.current.stopAll()
   }
 
   const stopSound = (file: string) => {
-    if (!audioPoolRef.current || !isReady) return
+    if (!audioPoolRef.current || !isReady) {
+      return
+    }
+
     audioPoolRef.current.stopSpecific(file)
   }
 
   const isPlaying = (file: string) => {
-    if (!audioPoolRef.current || !isReady) return false
+    if (!audioPoolRef.current || !isReady) {
+      return false
+    }
+
     return audioPoolRef.current.isPlaying(file)
   }
 
@@ -114,6 +127,7 @@ export const useAudio = () => {
   if (!context) {
     throw new Error("useAudio must be used within an AudioProvider")
   }
+  
   return context
 }
 

@@ -26,7 +26,9 @@ export const useHotkeys = (
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
-      if (modalOpen) return
+      if (modalOpen) {
+        return
+      }
 
       const key = event.key.toLowerCase()
       const soundId = Object.entries(hotkeyMap).find(
@@ -54,7 +56,9 @@ export const useHotkeys = (
 
   const assignHotkey = useCallback(
     (key: string) => {
-      if (!currentSoundId) return
+      if (!currentSoundId) {
+        return
+      }
 
       setHotkeyMap((prev) => {
         const newMap = Object.fromEntries(
@@ -74,7 +78,9 @@ export const useHotkeys = (
   )
 
   const clearHotkey = useCallback(() => {
-    if (!currentSoundId) return
+    if (!currentSoundId) {
+      return
+    }
 
     setHotkeyMap((prev) => {
       const newMap = { ...prev }
