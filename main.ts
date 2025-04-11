@@ -11,7 +11,7 @@ import type {
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
-const DEFAULT_SETTINGS = {
+const defaultSettings = {
   multiSoundEnabled: true,
   repeatSoundEnabled: false,
   alwaysOnTop: false,
@@ -41,7 +41,7 @@ const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
   },
   defaults: {
     hotkeys: {},
-    settings: DEFAULT_SETTINGS,
+    settings: defaultSettings,
   },
 })
 
@@ -60,7 +60,7 @@ try {
     typeof settings.theme?.buttonActive !== "string"
   ) {
     store.set("settings", {
-      ...DEFAULT_SETTINGS,
+      ...defaultSettings,
       ...settings,
       volume:
         settings &&
@@ -82,12 +82,12 @@ try {
         typeof settings.theme?.buttonText === "string" &&
         typeof settings.theme?.buttonActive === "string"
           ? settings.theme
-          : DEFAULT_SETTINGS.theme,
+          : defaultSettings.theme,
     })
   }
 } catch (error) {
   if (shouldLog()) console.error("Error validating settings:", error)
-  store.set("settings", DEFAULT_SETTINGS)
+  store.set("settings", defaultSettings)
 }
 
 let win: BrowserWindowType | null = null
@@ -186,10 +186,10 @@ function setupIPC(): void {
 
   ipcMain.handle("load-settings", (): SettingsType => {
     try {
-      return store.get("settings") ?? DEFAULT_SETTINGS
+      return store.get("settings") ?? defaultSettings
     } catch (error) {
       if (shouldLog()) console.error("Error loading settings:", error)
-      return DEFAULT_SETTINGS
+      return defaultSettings
     }
   })
 
@@ -225,7 +225,7 @@ function setupIPC(): void {
           typeof settings.theme?.backgroundColor === "string" &&
           typeof settings.theme?.buttonHoverColor === "string"
             ? settings.theme
-            : DEFAULT_SETTINGS.theme,
+            : defaultSettings.theme,
       }
 
       if (
@@ -240,7 +240,7 @@ function setupIPC(): void {
     } catch (error) {
       if (shouldLog()) console.error("Error saving settings:", error)
       try {
-        store.set("settings", DEFAULT_SETTINGS)
+        store.set("settings", defaultSettings)
       } catch (e) {
         if (shouldLog()) console.error("Failed to save default settings:", e)
       }
@@ -251,7 +251,7 @@ function setupIPC(): void {
     try {
       if (win) {
         win.setAlwaysOnTop(isEnabled)
-        const currentSettings = store.get("settings") ?? DEFAULT_SETTINGS
+        const currentSettings = store.get("settings") ?? defaultSettings
         const updatedSettings = {
           ...currentSettings,
           alwaysOnTop: isEnabled,
@@ -272,7 +272,7 @@ function setupIPC(): void {
             typeof currentSettings.theme?.backgroundColor === "string" &&
             typeof currentSettings.theme?.buttonHoverColor === "string"
               ? currentSettings.theme
-              : DEFAULT_SETTINGS.theme,
+              : defaultSettings.theme,
         }
         store.set("settings", updatedSettings)
       }

@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator"
 import Footer from "@/components/controls/footer"
 import Header from "@/components/controls/header"
 import SoundGrid from "@/components/sounds/grid"
-import { AudioProvider } from "@/context/audio"
+import { AudioProvider, useAudio } from "@/context/audio"
 import { SettingsProvider, useSettings } from "@/context/setting"
 import { soundData } from "@/data/audio"
 import { musicData } from "@/data/music"
@@ -19,8 +19,15 @@ const App: React.FC = () => (
   </SettingsProvider>
 )
 
+const LoadingScreen: React.FC = () => (
+  <div className="flex min-h-screen items-center justify-center">
+    <div className="text-gray-400">Loading</div>
+  </div>
+)
+
 const AppContent: React.FC = () => {
-  const { settings } = useSettings()
+  const { settings, isInitialized: settingsInitialized } = useSettings()
+  const { isReady: audioReady } = useAudio()
 
   const themeStyles = useMemo(() => {
     if (settings?.theme?.enabled) {
@@ -30,6 +37,10 @@ const AppContent: React.FC = () => {
     }
     return {}
   }, [settings?.theme])
+
+  if (!settingsInitialized || !audioReady) {
+    return <LoadingScreen />
+  }
 
   return (
     <div
