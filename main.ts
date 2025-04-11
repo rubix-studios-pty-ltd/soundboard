@@ -16,6 +16,8 @@ const defaultSettings = {
   repeatSoundEnabled: false,
   alwaysOnTop: false,
   volume: 1,
+  maxPoolSize: 100,
+  maxInstancesPerSound: 20,
   hideEnabled: false,
   hiddenSounds: [] as string[],
   colorEnabled: false,
@@ -53,6 +55,10 @@ try {
     isNaN(settings.volume) ||
     settings.volume < 0 ||
     settings.volume > 1 ||
+    typeof settings.maxPoolSize !== "number" ||
+    isNaN(settings.maxPoolSize) ||
+    typeof settings.maxInstancesPerSound !== "number" ||
+    isNaN(settings.maxInstancesPerSound) ||
     !Array.isArray(settings.hiddenSounds) ||
     typeof settings.buttonColors !== "object" ||
     typeof settings.theme !== "object" ||
@@ -70,6 +76,18 @@ try {
         settings.volume <= 1
           ? settings.volume
           : 1,
+      maxPoolSize:
+        settings &&
+        typeof settings.maxPoolSize === "number" &&
+        !isNaN(settings.maxPoolSize)
+          ? settings.maxPoolSize
+          : 100,
+      maxInstancesPerSound:
+        settings &&
+        typeof settings.maxInstancesPerSound === "number" &&
+        !isNaN(settings.maxInstancesPerSound)
+          ? settings.maxInstancesPerSound
+          : 20,
       hiddenSounds: Array.isArray(settings?.hiddenSounds)
         ? settings.hiddenSounds
         : [],
@@ -208,6 +226,12 @@ function setupIPC(): void {
         repeatSoundEnabled: Boolean(settings.repeatSoundEnabled),
         alwaysOnTop: Boolean(settings.alwaysOnTop),
         volume: Number(settings.volume),
+        maxPoolSize:
+          settings.maxPoolSize === undefined ||
+          isNaN(Number(settings.maxPoolSize))
+            ? 100
+            : Number(settings.maxPoolSize),
+        maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
         hideEnabled: Boolean(settings.hideEnabled),
         hiddenSounds: Array.isArray(settings.hiddenSounds)
           ? settings.hiddenSounds
@@ -255,6 +279,9 @@ function setupIPC(): void {
         const updatedSettings = {
           ...currentSettings,
           alwaysOnTop: isEnabled,
+          maxPoolSize: Number(currentSettings.maxPoolSize) || 100,
+          maxInstancesPerSound:
+            Number(currentSettings.maxInstancesPerSound) || 20,
           hideEnabled: currentSettings.hideEnabled ?? false,
           hiddenSounds: Array.isArray(currentSettings.hiddenSounds)
             ? currentSettings.hiddenSounds

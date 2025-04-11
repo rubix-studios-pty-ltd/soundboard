@@ -63,16 +63,16 @@ const Header: React.FC = () => {
     updateSettings(update)
   }
 
+  const toggleHide = () => {
+    const update: Partial<Settings> = { hideEnabled: !settings.hideEnabled }
+    updateSettings(update)
+  }
+
   const handleVolumeChange = (newVolume: number) => {
     if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
       const update: Partial<Settings> = { volume: newVolume }
       updateSettings(update)
     }
-  }
-
-  const toggleHide = () => {
-    const update: Partial<Settings> = { hideEnabled: !settings.hideEnabled }
-    updateSettings(update)
   }
 
   const toggleMute = () => {
@@ -110,8 +110,9 @@ const Header: React.FC = () => {
             <div className="flex flex-col gap-4">
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-col items-start gap-1">
-                  <div className="flex flex-row items-center gap-1 text-sm font-semibold">
-                    <Windows className="h-4 w-4 text-white" /> Giữ trên cùng
+                  <div className="flex flex-row items-center gap-2 text-sm font-semibold">
+                    <Windows className="h-4 w-4 text-white" />
+                    <span>Giữ trên cùng</span>
                   </div>
                   <p className="text-foreground-muted text-xs">
                     Giữ cửa sổ luôn trên cùng.
@@ -127,8 +128,9 @@ const Header: React.FC = () => {
               </div>
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-col items-start gap-1">
-                  <div className="flex flex-row items-center gap-1 text-sm font-semibold">
-                    <Multi className="h-4 w-4 text-white" /> Phát đồng thời
+                  <div className="flex flex-row items-center gap-2 text-sm font-semibold">
+                    <Multi className="h-4 w-4 text-white" />
+                    <span>Phát đồng thời</span>
                   </div>
                   <p className="text-foreground-muted text-xs">
                     Phát nhiều âm thanh cùng lúc.
@@ -146,8 +148,9 @@ const Header: React.FC = () => {
               </div>
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-col items-start gap-1">
-                  <div className="flex flex-row items-center gap-1 text-sm font-semibold">
-                    <Repeat className="h-4 w-4 text-white" /> Lặp âm thanh
+                  <div className="flex flex-row items-center gap-2 text-sm font-semibold">
+                    <Repeat className="h-4 w-4 text-white" />
+                    <span>Lặp âm thanh</span>
                   </div>
                   <p className="text-foreground-muted text-xs">
                     Phát chồng âm thanh.
@@ -164,8 +167,8 @@ const Header: React.FC = () => {
                 />
               </div>
               <Separator />
-              <div className="flex items-center gap-2">
-                <div className="text-sm">Giao diện</div>
+              <div className="flex gap-2">
+                <div className="text-sm font-semibold">Giao diện</div>
                 <ThemePicker onThemeChange={handleThemeChange} />
               </div>
             </div>

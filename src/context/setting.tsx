@@ -19,6 +19,8 @@ const defaultSettings: Settings = {
   repeatSoundEnabled: false,
   alwaysOnTop: false,
   volume: 1,
+  maxPoolSize: 100,
+  maxInstancesPerSound: 20,
   hideEnabled: false,
   hiddenSounds: [] as string[],
   colorEnabled: false,
