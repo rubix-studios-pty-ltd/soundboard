@@ -226,9 +226,11 @@ function setupIPC(): void {
         repeatSoundEnabled: Boolean(settings.repeatSoundEnabled),
         alwaysOnTop: Boolean(settings.alwaysOnTop),
         volume: Number(settings.volume),
-        maxPoolSize: settings.maxPoolSize === undefined || isNaN(Number(settings.maxPoolSize)) 
-          ? 100 
-          : Number(settings.maxPoolSize),
+        maxPoolSize:
+          settings.maxPoolSize === undefined ||
+          isNaN(Number(settings.maxPoolSize))
+            ? 100
+            : Number(settings.maxPoolSize),
         maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
         hideEnabled: Boolean(settings.hideEnabled),
         hiddenSounds: Array.isArray(settings.hiddenSounds)
