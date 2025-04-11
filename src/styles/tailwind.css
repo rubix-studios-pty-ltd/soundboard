@@ -177,3 +177,11 @@ input,
 ::-webkit-scrollbar-track {
   @apply bg-[#1a1a1a];
 }
+
+.sound-button {
+  transition: background-color 0.3s ease;
+}
+
+.sound-button:hover {
+  background-color: var(--button-hover) !important;
+}

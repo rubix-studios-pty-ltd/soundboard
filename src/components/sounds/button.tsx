@@ -64,7 +64,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
     <div className={`relative ${isHidden && !isHideMode ? "hidden" : ""}`}>
       {isHideMode && (
         <Checkbox
-          className="absolute top-1.5 right-1 z-10 cursor-pointer"
+          className="absolute top-1.5 right-1 z-10 cursor-pointer border-0 bg-black text-white"
           checked={isHidden}
           onCheckedChange={() => onToggleHide?.(id)}
         />
@@ -85,7 +85,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       <Button
         variant="outline"
         size="sm"
-        className="h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all"
+        className="sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all"
         style={
           {
             backgroundColor: settings?.buttonColors?.[id]
@@ -106,19 +106,17 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                 : isActive
                   ? "#fff"
                   : undefined,
-            ":hover": settings?.buttonColors?.[id]
-              ? {
-                  backgroundColor: isActive ? "#000" : "#404040",
-                }
+            "--button-hover": settings?.buttonColors?.[id]
+              ? isActive
+                ? "#000"
+                : "#404040"
               : settings?.theme?.enabled
-                ? {
-                    backgroundColor: isActive
-                      ? settings.theme.buttonActive
-                      : settings.theme.buttonHoverColor,
-                  }
+                ? isActive
+                  ? settings.theme.buttonActive
+                  : settings.theme.buttonHoverColor
                 : isActive
-                  ? { backgroundColor: "#404040" }
-                  : { backgroundColor: "#f3f4f6" },
+                  ? "#404040"
+                  : "#f3f4f6",
           } as React.CSSProperties
         }
         onClick={handleClick}

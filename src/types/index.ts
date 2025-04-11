@@ -3,7 +3,8 @@ export interface Settings {
   repeatSoundEnabled: boolean
   alwaysOnTop: boolean
   volume: number
-  maxPlaybackSounds?: number
+  maxPoolSize: number
+  maxInstancesPerSound: number
   hideEnabled: boolean
   hiddenSounds: string[]
   colorEnabled: boolean
