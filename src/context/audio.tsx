@@ -33,7 +33,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    if (!settingsInitialized || audioPoolRef.current) return
+    if (!settingsInitialized) return
+
+    if (audioPoolRef.current) {
+      audioPoolRef.current.stopAll()
+    }
 
     audioPoolRef.current = new AudioPool(
       100,
@@ -41,6 +45,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
       settings.multiSoundEnabled,
       settings.repeatSoundEnabled
     )
+
+    if (settings.volume >= 0 && settings.volume <= 1) {
+      audioPoolRef.current.updateVolume(settings.volume)
+    }
+
     setIsReady(true)
   }, [
     settingsInitialized,
@@ -51,18 +60,10 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!audioPoolRef.current || !isReady) return
 
-    const pool = audioPoolRef.current
     if (settings.volume >= 0 && settings.volume <= 1) {
-      pool.updateVolume(settings.volume)
+      audioPoolRef.current.updateVolume(settings.volume)
     }
-    pool.updateMultiSoundEnabled(settings.multiSoundEnabled)
-    pool.updateRepeatSoundEnabled(settings.repeatSoundEnabled)
-  }, [
-    settings.volume,
-    settings.multiSoundEnabled,
-    settings.repeatSoundEnabled,
-    isReady,
-  ])
+  }, [settings.volume, isReady])
 
   const playSound = async (soundId: string, file: string) => {
     if (!audioPoolRef.current || !isReady) {
