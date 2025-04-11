@@ -18,6 +18,7 @@ class AudioPool {
   private audioContext: AudioContext
   private initialized: boolean
   private loadingSounds: Set<string>
+  private initializationPromise: Promise<void> | null
 
   constructor(
     maxPoolSize: number = 100,
@@ -35,7 +36,7 @@ class AudioPool {
     this.initialized = false
     this.audioContext = new AudioContext()
     this.loadingSounds = new Set()
-    this.initializeAudioSystem()
+    this.initializationPromise = null
 
     document.addEventListener(
       "click",
@@ -46,6 +47,8 @@ class AudioPool {
       },
       { once: true }
     )
+
+    this.initializationPromise = this.initializeAudioSystem()
   }
 
   private async initializeAudioSystem(): Promise<void> {
@@ -83,6 +86,15 @@ class AudioPool {
     repeat: boolean = false,
     onEnd?: () => void
   ): Promise<void> {
+    if (this.initializationPromise) {
+      await this.initializationPromise
+    }
+
+    if (!this.initialized) {
+      console.warn("Audio system not initialized yet")
+      return
+    }
+
     if (this.loadingSounds.has(source)) {
       return
     }
@@ -335,10 +347,59 @@ class AudioPool {
 
   updateMultiSoundEnabled(enabled: boolean): void {
     this.multiSoundEnabled = enabled
+    if (!enabled) {
+      const playingSounds = Array.from(this.pool.entries())
+        .filter(([_, item]) => item.isPlaying)
+        .sort((a, b) => b[1].lastUsed - a[1].lastUsed)
+
+      if (playingSounds.length > 1) {
+        const [mostRecentKey] = playingSounds[0]
+        playingSounds.slice(1).forEach(([key]) => {
+          const item = this.pool.get(key)
+          if (item) {
+            this.cleanupAudioItem(item)
+            this.pool.delete(key)
+          }
+        })
+
+        this.instanceCounts.clear()
+        if (mostRecentKey) {
+          const source = mostRecentKey.split("_")[0]
+          this.instanceCounts.set(source, 1)
+        }
+      }
+    }
   }
 
   updateRepeatSoundEnabled(enabled: boolean): void {
     this.repeatSoundEnabled = enabled
+    if (!enabled) {
+      const soundGroups = new Map<string, [string, AudioPoolItem][]>()
+
+      for (const entry of this.pool.entries()) {
+        const [key, item] = entry
+        if (item.isPlaying) {
+          const source = key.split("_")[0]
+          if (!soundGroups.has(source)) {
+            soundGroups.set(source, [])
+          }
+          soundGroups.get(source)?.push(entry)
+        }
+      }
+
+      for (const [source, instances] of soundGroups) {
+        if (instances.length > 1) {
+          instances.sort((a, b) => b[1].lastUsed - a[1].lastUsed)
+
+          instances.slice(1).forEach(([key, item]) => {
+            this.cleanupAudioItem(item)
+            this.pool.delete(key)
+          })
+
+          this.instanceCounts.set(source, 1)
+        }
+      }
+    }
   }
 
   isPlaying(source: string): boolean {

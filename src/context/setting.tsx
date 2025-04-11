@@ -1,10 +1,17 @@
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 
 import type { Settings } from "@/types"
 
 interface SettingsContextType {
   settings: Settings
   updateSettings: (newSettings: Partial<Settings>) => void
+  isInitialized: boolean
 }
 
 const defaultSettings: Settings = {
@@ -26,41 +33,78 @@ const defaultSettings: Settings = {
   },
 }
 
+const validateSettings = (settings: any): Settings => {
+  return {
+    ...defaultSettings,
+    ...settings,
+    hiddenSounds: Array.isArray(settings.hiddenSounds)
+      ? settings.hiddenSounds
+      : [],
+    buttonColors:
+      typeof settings.buttonColors === "object" && settings.buttonColors
+        ? settings.buttonColors
+        : {},
+    theme: {
+      ...defaultSettings.theme,
+      ...(typeof settings.theme === "object" && settings.theme
+        ? settings.theme
+        : {}),
+    },
+  }
+}
+
 const SettingsContext = createContext<SettingsContextType>({
   settings: defaultSettings,
   updateSettings: () => {},
+  isInitialized: false,
 })
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings)
+  const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    window.electronAPI.loadSettings().then((savedSettings) => {
-      setSettings(savedSettings)
-    })
+    const initializeSettings = async () => {
+      try {
+        const savedSettings = await window.electronAPI.loadSettings()
+        const validatedSettings = validateSettings(savedSettings)
+        setSettings(validatedSettings)
+      } catch (error: unknown) {
+        console.error("Failed to load settings:", error)
+      } finally {
+        setIsInitialized(true)
+      }
+    }
+    initializeSettings()
   }, [])
 
-  const updateSettings = (newSettings: Partial<Settings>) => {
+  const updateSettings = useCallback((newSettings: Partial<Settings>) => {
     setSettings((prev) => {
-      const updated = {
+      const updated = validateSettings({
         ...prev,
         ...newSettings,
-        hiddenSounds: Array.isArray(newSettings.hiddenSounds)
-          ? newSettings.hiddenSounds
-          : prev.hiddenSounds || [],
-      }
-      window.electronAPI.saveSettings(updated)
+      })
+
+      Promise.resolve(window.electronAPI.saveSettings(updated)).catch(
+        (error: unknown) => {
+          console.error("Failed to save settings:", error)
+        }
+      )
+
       if ("alwaysOnTop" in newSettings) {
         window.electronAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false)
       }
+
       return updated
     })
-  }
+  }, [])
 
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings }}>
+    <SettingsContext.Provider
+      value={{ settings, updateSettings, isInitialized }}
+    >
       {children}
     </SettingsContext.Provider>
   )

@@ -192,7 +192,9 @@ const Header: React.FC = () => {
               </button>
             </HoverCardTrigger>
             <HoverCardContent className="border-[#333333] bg-[#1a1a1a] p-3 text-white">
-              <span className="text-sm font-semibold leading-0">Tùy chỉnh màu nút</span>
+              <span className="text-sm leading-0 font-semibold">
+                Tùy chỉnh màu nút
+              </span>
               <p className="text-xs">Gán màu riêng cho từng nút.</p>
             </HoverCardContent>
           </HoverCard>
@@ -210,7 +212,7 @@ const Header: React.FC = () => {
               </button>
             </HoverCardTrigger>
             <HoverCardContent className="border-[#333333] bg-[#1a1a1a] p-3 text-white">
-              <span className="text-sm font-semibold leading-0">Ẩn nút</span>
+              <span className="text-sm leading-0 font-semibold">Ẩn nút</span>
               <p className="text-xs">
                 Tùy chọn ẩn hoặc hiện từng nút âm thanh.
               </p>

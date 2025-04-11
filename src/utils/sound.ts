@@ -1,10 +1,15 @@
 import type { SoundData } from "@/types"
 import AudioPool from "@/utils/audio-pool"
 import HotkeyManager from "@/utils/hotkeys"
-import getSettingsManager from "@/utils/settings"
 import { generateSoundId } from "@/utils/sound-id"
 import { soundData } from "@/data/audio"
 import { musicData } from "@/data/music"
+
+interface SoundAppConfig {
+  multiSoundEnabled: boolean
+  repeatSoundEnabled: boolean
+  volume: number
+}
 
 class SoundboardApp {
   private container1: HTMLElement
@@ -14,8 +19,9 @@ class SoundboardApp {
   private stopAllButton: HTMLButtonElement
   private template: HTMLTemplateElement
   private volumeSlider: HTMLInputElement
+  private config: SoundAppConfig
 
-  constructor() {
+  constructor(initialConfig: SoundAppConfig) {
     this.container1 = document.getElementById("container1") as HTMLElement
     this.container2 = document.getElementById("container2") as HTMLElement
     this.stopAllButton = document.getElementById(
@@ -28,50 +34,44 @@ class SoundboardApp {
       "volumeSlider"
     ) as HTMLInputElement
 
-    const settingsManager = getSettingsManager()
-    const settings = settingsManager.getSettings()
+    this.config = initialConfig
     this.audioPool = new AudioPool(
-      settings.maxPlaybackSounds ?? 100,
+      100,
       10,
-      settings.multiSoundEnabled ?? false
+      initialConfig.multiSoundEnabled,
+      initialConfig.repeatSoundEnabled
     )
     this.hotkeyManager = new HotkeyManager()
 
-    Promise.all([this.initializeSettings()]).then(() => {
-      this.initializeSoundboard()
-      this.setupEventListeners()
-      this.setupSettingsListeners()
-    })
+    this.initializeSoundboard()
+    this.setupEventListeners()
   }
 
-  private setupSettingsListeners(): void {
-    const settingsManager = getSettingsManager()
-    settingsManager.onSettingsChange((settings) => {
-      if (parseFloat(this.volumeSlider.value) !== settings.volume) {
-        this.volumeSlider.value = settings.volume.toString()
-        this.audioPool.updateVolume(settings.volume)
-      }
+  updateConfig(newConfig: Partial<SoundAppConfig>): void {
+    this.config = { ...this.config, ...newConfig }
 
-      this.audioPool.updateMultiSoundEnabled(
-        settings.multiSoundEnabled ?? false
-      )
-    })
-  }
+    if ("volume" in newConfig && typeof newConfig.volume === "number") {
+      this.volumeSlider.value = newConfig.volume.toString()
+      this.audioPool.updateVolume(newConfig.volume)
+    }
 
-  private async initializeSettings(): Promise<void> {
-    const settingsManager = getSettingsManager()
-    await settingsManager.waitForInitialization()
+    if ("multiSoundEnabled" in newConfig) {
+      this.audioPool.updateMultiSoundEnabled(!!newConfig.multiSoundEnabled)
+    }
+
+    if ("repeatSoundEnabled" in newConfig) {
+      this.audioPool.updateRepeatSoundEnabled(!!newConfig.repeatSoundEnabled)
+    }
   }
 
   private async toggleSound(file: string, buttonId: string): Promise<void> {
     const buttonElement = document.getElementById(buttonId) as HTMLButtonElement
-    const settings = getSettingsManager().getSettings()
     const currentVolume = parseFloat(this.volumeSlider.value)
 
     try {
       const isPlaying = this.audioPool.isPlaying(file)
 
-      if (settings.repeatSoundEnabled) {
+      if (this.config.repeatSoundEnabled) {
         await this.playSound(file, currentVolume, buttonElement, true)
         return
       }
@@ -82,7 +82,7 @@ class SoundboardApp {
         return
       }
 
-      if (!settings.multiSoundEnabled) {
+      if (!this.config.multiSoundEnabled) {
         await this.stopActiveSounds()
       }
 
@@ -199,13 +199,12 @@ class SoundboardApp {
       })
     })
 
-    const settingsManager = getSettingsManager()
-    settingsManager.onSettingsChange((settings) => {
-      this.audioPool.updateVolume(settings.volume)
+    this.volumeSlider.addEventListener("input", () => {
+      const volume = parseFloat(this.volumeSlider.value)
+      this.audioPool.updateVolume(volume)
     })
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  new SoundboardApp()
-})
+export type { SoundAppConfig }
+export default SoundboardApp
