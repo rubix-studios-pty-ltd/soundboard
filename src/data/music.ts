@@ -13,6 +13,7 @@ export const musicData: SoundData[] = [
   { file: "sound/sad-violin.opus", title: "Buồn Violin" },
   { file: "sound/monocat.opus", title: "Mono Cat" },
   { file: "sound/sexy-sax.opus", title: "Sexy Sax" },
+  { file: "sound/rizz.opus", title: "Lãng Mạn Rizz" },
   { file: "sound/waitaminute.opus", title: "Lãng Mạn" },
   { file: "sound/ohno.opus", title: "Oh No" },
   { file: "sound/danhlon.opus", title: "Đánh Lộn" },
