@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
@@ -79,16 +79,15 @@
     "win": {
       "target": "portable",
       "icon": "icon.ico",
-      "artifactName": "Soundboard.exe",
-      "verifyUpdateCodeSignature": false
+      "artifactName": "Soundboard.exe"
     },
     "mac": {
       "target": "dmg",
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
-      "artifactName": "Soundboard.dmg",
-      "verifyUpdateCodeSignature": false
+      "artifactName": "Soundboard.dmg"
     },
+    "electronUpdaterCompatibility": ">=2.15",
     "asar": {
       "smartUnpack": true
     },
