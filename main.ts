@@ -120,19 +120,27 @@ const configureAutoUpdater = () => {
   }
 
   autoUpdater.on('checking-for-update', () => {
-    if (shouldLog()) console.log('Checking for updates...')
+    if (shouldLog()) {
+      console.log('Checking for updates...')
+    }
   })
 
   autoUpdater.on('update-available', (info) => {
-    if (shouldLog()) console.log('Update available:', info.version)
+    if (shouldLog()) {
+      console.log('Update available:', info.version)
+    }
   })
 
   autoUpdater.on('update-not-available', () => {
-    if (shouldLog()) console.log('Update not available')
+    if (shouldLog()) {
+      console.log('Update not available')
+    }
   })
 
   autoUpdater.on('error', (error) => {
-    if (shouldLog()) console.error('Update error:', error)
+    if (shouldLog()) {
+      console.error('Update error:', error)
+    }
   })
 
   autoUpdater.on('download-progress', (progress) => {
