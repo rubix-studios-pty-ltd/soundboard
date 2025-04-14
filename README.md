@@ -1,17 +1,14 @@
 # Soundboard
 
-<!-- Project Info -->
 ![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Top Language](https://img.shields.io/github/languages/top/rubixvi/soundboard)](https://github.com/rubixvi/soundboard)
 
-<!-- Activity & Quality -->
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rubixvi/soundboard)
 [![Last Commit](https://img.shields.io/github/last-commit/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/commits)
 [![GitHub issues](https://img.shields.io/github/issues/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/pulls)
 
-<!-- Community -->
 [![GitHub stars](https://img.shields.io/github/stars/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/network)
 [![GitHub repo size](https://img.shields.io/github/repo-size/rubixvi/soundboard)](https://github.com/rubixvi/soundboard)
