@@ -3,6 +3,7 @@ import path from "path"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
+import { autoUpdater } from "electron-updater"
 
 import type {
   HotkeyMap as HotkeyMapType,
@@ -18,9 +19,8 @@ const defaultSettings = {
   volume: 1,
   maxPoolSize: 100,
   maxInstancesPerSound: 20,
-  hideEnabled: false,
+  buttonSettings: false,
   hiddenSounds: [] as string[],
-  colorEnabled: false,
   buttonColors: {},
   theme: {
     enabled: false,
@@ -104,12 +104,69 @@ try {
     })
   }
 } catch (error) {
-  if (shouldLog()) console.error("Error validating settings:", error)
+  if (shouldLog()) {
+    console.error("Error validating settings:", error)
+  }
   store.set("settings", defaultSettings)
 }
 
 let win: BrowserWindowType | null = null
 const ROOT_PATH = path.join(__dirname, "..")
+
+const configureAutoUpdater = () => {
+  autoUpdater.autoDownload = true
+  autoUpdater.autoInstallOnAppQuit = true
+
+  if (process.argv.includes("--enable-logging")) {
+    autoUpdater.autoDownload = false
+  }
+
+  autoUpdater.on('checking-for-update', () => {
+    if (shouldLog()) {
+      console.log('Checking for updates...')
+    }
+  })
+
+  autoUpdater.on('update-available', (info) => {
+    if (shouldLog()) {
+      console.log('Update available:', info.version)
+    }
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    if (shouldLog()) {
+      console.log('Update not available')
+    }
+  })
+
+  autoUpdater.on('error', (error) => {
+    if (shouldLog()) {
+      console.error('Update error:', error)
+    }
+  })
+
+  autoUpdater.on('download-progress', (progress) => {
+    if (shouldLog()) {
+      console.log(`Download progress: ${Math.round(progress.percent)}%`)
+    }
+  })
+
+  autoUpdater.on('update-downloaded', (info) => {
+    if (shouldLog()) {
+      console.log(`Update downloaded. Version: ${info.version}`)
+    }
+  })
+
+  if (!process.argv.includes("--enable-logging")) {
+    setInterval(() => {
+      autoUpdater.checkForUpdates().catch(error => {
+        if (shouldLog()) {
+          console.error('Update check failed:', error)
+        }
+      })
+    }, 4 * 60 * 60 * 1000)
+  }
+}
 
 function createWindow(): void {
   win = new BrowserWindow({
@@ -151,7 +208,9 @@ function createWindow(): void {
           compressionOptions
         )
       } catch (error) {
-        if (shouldLog()) console.error("Protocol handler error:", error)
+        if (shouldLog()) {
+          console.error("Protocol handler error:", error)
+        }
         return new protocol.Response()
       }
     })
@@ -197,7 +256,9 @@ function setupIPC(): void {
     try {
       return store.get("hotkeys") ?? {}
     } catch (error) {
-      if (shouldLog()) console.error("Error loading hotkeys:", error)
+      if (shouldLog()) {
+        console.error("Error loading hotkeys:", error)
+      }
       return {}
     }
   })
@@ -206,7 +267,9 @@ function setupIPC(): void {
     try {
       return store.get("settings") ?? defaultSettings
     } catch (error) {
-      if (shouldLog()) console.error("Error loading settings:", error)
+      if (shouldLog()) {
+        console.error("Error loading settings:", error)
+      }
       return defaultSettings
     }
   })
@@ -215,7 +278,9 @@ function setupIPC(): void {
     try {
       store.set("hotkeys", newHotkeys)
     } catch (error) {
-      if (shouldLog()) console.error("Error saving hotkeys:", error)
+      if (shouldLog()) {
+        console.error("Error saving hotkeys:", error)
+      }
     }
   })
 
@@ -232,11 +297,10 @@ function setupIPC(): void {
             ? 100
             : Number(settings.maxPoolSize),
         maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
-        hideEnabled: Boolean(settings.hideEnabled),
+        buttonSettings: Boolean(settings.buttonSettings),
         hiddenSounds: Array.isArray(settings.hiddenSounds)
           ? settings.hiddenSounds
           : [],
-        colorEnabled: Boolean(settings.colorEnabled),
         buttonColors:
           typeof settings.buttonColors === "object"
             ? settings.buttonColors || {}
@@ -262,11 +326,15 @@ function setupIPC(): void {
 
       store.set("settings", validatedSettings)
     } catch (error) {
-      if (shouldLog()) console.error("Error saving settings:", error)
+      if (shouldLog()) {
+        console.error("Error saving settings:", error)
+      }
       try {
         store.set("settings", defaultSettings)
       } catch (e) {
-        if (shouldLog()) console.error("Failed to save default settings:", e)
+        if (shouldLog()) {
+          console.error("Failed to save default settings:", e)
+        }
       }
     }
   })
@@ -282,11 +350,10 @@ function setupIPC(): void {
           maxPoolSize: Number(currentSettings.maxPoolSize) || 100,
           maxInstancesPerSound:
             Number(currentSettings.maxInstancesPerSound) || 20,
-          hideEnabled: currentSettings.hideEnabled ?? false,
+          buttonSettings: currentSettings.buttonSettings ?? false,
           hiddenSounds: Array.isArray(currentSettings.hiddenSounds)
             ? currentSettings.hiddenSounds
             : [],
-          colorEnabled: currentSettings.colorEnabled ?? false,
           buttonColors:
             typeof currentSettings.buttonColors === "object"
               ? currentSettings.buttonColors || {}
@@ -325,12 +392,20 @@ if (!gotTheLock) {
     }
   })
 
-  app.whenReady().then(() => {
-    try {
-      createWindow()
-      setupIPC()
+app.whenReady().then(() => {
+  try {
+    createWindow()
+    setupIPC()
+    configureAutoUpdater()
+    autoUpdater.checkForUpdates().catch(error => {
+      if (shouldLog()) {
+        console.error('Initial update check failed:', error)
+      }
+    })
     } catch (error) {
-      if (shouldLog()) console.error("Error during startup:", error)
+      if (shouldLog()) {
+        console.error("Error during startup:", error)
+      }
     }
 
     app.on("activate", () => {

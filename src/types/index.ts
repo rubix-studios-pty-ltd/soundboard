@@ -5,9 +5,8 @@ export interface Settings {
   volume: number
   maxPoolSize: number
   maxInstancesPerSound: number
-  hideEnabled: boolean
+  buttonSettings: boolean
   hiddenSounds: string[]
-  colorEnabled: boolean
   buttonColors: { [soundId: string]: string | undefined }
   theme: {
     enabled: boolean

@@ -2,11 +2,6 @@ import React, { useEffect, useState } from "react"
 
 import type { Settings } from "@/types"
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -16,9 +11,8 @@ import { Slider } from "@/components/ui/slider"
 import { ThemePicker } from "@/components/ui/theme-picker"
 import ToggleSwitch from "@/components/controls/toggles"
 import {
-  Color,
+  Cog,
   Exit,
-  Hide,
   Maximize,
   Menu,
   Minimize,
@@ -58,13 +52,10 @@ const Header: React.FC = () => {
     })
   }
 
-  const toggleColor = () => {
-    const update: Partial<Settings> = { colorEnabled: !settings.colorEnabled }
-    updateSettings(update)
-  }
-
-  const toggleHide = () => {
-    const update: Partial<Settings> = { hideEnabled: !settings.hideEnabled }
+  const buttonSettings = () => {
+    const update: Partial<Settings> = {
+      buttonSettings: !settings.buttonSettings,
+    }
     updateSettings(update)
   }
 
@@ -181,46 +172,16 @@ const Header: React.FC = () => {
 
       <div className="flex items-center">
         <div className="flex items-center gap-2">
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <button
-                className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-                  settings.colorEnabled ? "text-red-500" : "text-white"
-                }`}
-                onClick={toggleColor}
-              >
-                <div className="mr-0.5 h-4 w-4">
-                  <Color className="h-full w-full" />
-                </div>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent className="border-[#333333] bg-[#1a1a1a] p-3 text-white">
-              <span className="text-sm leading-none font-semibold">
-                Tùy chỉnh màu nút
-              </span>
-              <p className="text-xs">Gán màu riêng cho từng nút.</p>
-            </HoverCardContent>
-          </HoverCard>
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <button
-                className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-                  settings.hideEnabled ? "text-red-500" : "text-white"
-                }`}
-                onClick={toggleHide}
-              >
-                <div className="h-4 w-4">
-                  <Hide className="h-full w-full" />
-                </div>
-              </button>
-            </HoverCardTrigger>
-            <HoverCardContent className="border-[#333333] bg-[#1a1a1a] p-3 text-white">
-              <span className="text-sm leading-none font-semibold">Ẩn nút</span>
-              <p className="text-xs">
-                Tùy chọn ẩn hoặc hiện từng nút âm thanh.
-              </p>
-            </HoverCardContent>
-          </HoverCard>
+          <button
+            className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+              settings.buttonSettings ? "text-red-500" : "text-white"
+            }`}
+            onClick={buttonSettings}
+          >
+            <div className="mr-0.5 h-4 w-4">
+              <Cog className="h-full w-full" />
+            </div>
+          </button>
           <Separator orientation="vertical" />
           <button
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"

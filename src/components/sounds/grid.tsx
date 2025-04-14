@@ -65,7 +65,6 @@ const SoundGrid: React.FC<SoundGridProps> = ({
           file={sound.file}
           title={sound.title}
           onHotkeyAssign={showHotkeyModal}
-          isHideMode={settings.hideEnabled}
           isHidden={settings.hiddenSounds?.includes(sound.id) || false}
           onToggleHide={handleToggleHide}
         />

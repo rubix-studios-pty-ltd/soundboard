@@ -21,9 +21,8 @@ const defaultSettings: Settings = {
   volume: 1,
   maxPoolSize: 100,
   maxInstancesPerSound: 20,
-  hideEnabled: false,
+  buttonSettings: false,
   hiddenSounds: [] as string[],
-  colorEnabled: false,
   buttonColors: {},
   theme: {
     enabled: false,

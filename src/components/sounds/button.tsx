@@ -2,16 +2,32 @@ import React, { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ColorPicker } from "@/components/ui/color-picker"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Separator } from "@/components/ui/separator"
+import { Chevron, Close } from "@/components/icons"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
+
+const Preset = [
+  "#ef4444",
+  "#3b82f6",
+  "#22c55e",
+  "#eab308",
+  "#a855f7",
+  "#f97316",
+  "#ec4899",
+  "#06b6d4",
+]
 
 interface SoundButtonProps {
   id: string
   file: string
   title: string
   onHotkeyAssign: (soundId: string) => void
-  isHideMode?: boolean
   isHidden?: boolean
   onToggleHide?: (id: string) => void
 }
@@ -21,7 +37,6 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   file,
   title,
   onHotkeyAssign,
-  isHideMode = false,
   isHidden = false,
   onToggleHide,
 }) => {
@@ -61,31 +76,68 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   }
 
   return (
-    <div className={`relative ${isHidden && !isHideMode ? "hidden" : ""}`}>
-      {isHideMode && (
-        <Checkbox
-          className="absolute top-1.5 right-1 z-10 cursor-pointer border-0 bg-black text-white"
-          checked={isHidden}
-          onCheckedChange={() => onToggleHide?.(id)}
-        />
-      )}
-      {settings.colorEnabled && (
-        <ColorPicker
-          onColorChange={(color) =>
-            updateSettings({
-              buttonColors: {
-                ...(settings.buttonColors || {}),
-                [id]: color || undefined,
-              },
-            })
-          }
-          triggerClassName="absolute left-1 top-1.5 z-10 cursor-pointer"
-        />
+    <div
+      className={`relative ${isHidden && !settings.buttonSettings ? "hidden" : ""}`}
+    >
+      {settings.buttonSettings && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Chevron className="absolute top-1.5 right-1 z-10 h-4 w-4 cursor-pointer border-0" />
+          </PopoverTrigger>
+          <PopoverContent
+            align="start"
+            className="max-w-[200px] border-[#333333] bg-[#1a1a1a] p-4 text-white"
+          >
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-row items-center justify-between">
+                <div className="text-sm font-semibold">Ẩn nút</div>
+                <Checkbox
+                  className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
+                  checked={isHidden}
+                  onCheckedChange={() => onToggleHide?.(id)}
+                />
+              </div>
+              <Separator />
+              <div className="grid grid-cols-5 gap-2">
+                {Preset.map((presetColor) => (
+                  <button
+                    key={presetColor}
+                    className="size-6 cursor-pointer rounded-full border transition-transform hover:scale-110"
+                    style={{ backgroundColor: presetColor }}
+                    onClick={() =>
+                      updateSettings({
+                        buttonColors: {
+                          ...(settings.buttonColors || {}),
+                          [id]: presetColor,
+                        },
+                      })
+                    }
+                  />
+                ))}
+                <button
+                  className="flex size-6 cursor-pointer items-center justify-center rounded-full border bg-white text-black hover:scale-110 hover:bg-gray-100"
+                  onClick={() =>
+                    updateSettings({
+                      buttonColors: {
+                        ...(settings.buttonColors || {}),
+                        [id]: undefined,
+                      },
+                    })
+                  }
+                >
+                  <Close className="size-4" />
+                </button>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
       )}
       <Button
         variant="outline"
         size="sm"
-        className="sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all"
+        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all ${
+          settings.buttonSettings && isHidden ? "opacity-50" : ""
+        }`}
         style={
           {
             backgroundColor: settings?.buttonColors?.[id]
