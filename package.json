@@ -57,6 +57,7 @@
     "@radix-ui/react-separator": "^1.1.3",
     "@radix-ui/react-slider": "^1.2.4",
     "electron-store": "^10.0.1",
+    "electron-updater": "^6.6.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
@@ -64,6 +65,11 @@
     "appId": "com.rubixstudios.soundboard",
     "productName": "Soundboard",
     "compression": "maximum",
+    "publish": [{
+      "provider": "github",
+      "owner": "rubixvi",
+      "repo": "soundboard"
+    }],
     "win": {
       "target": "portable",
       "icon": "icon.ico",

@@ -3,6 +3,7 @@ import path from "path"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
+import { autoUpdater } from "electron-updater"
 
 import type {
   HotkeyMap as HotkeyMapType,
@@ -109,6 +110,51 @@ try {
 
 let win: BrowserWindowType | null = null
 const ROOT_PATH = path.join(__dirname, "..")
+
+const configureAutoUpdater = () => {
+  autoUpdater.autoDownload = true
+  autoUpdater.autoInstallOnAppQuit = true
+
+  if (process.argv.includes("--enable-logging")) {
+    autoUpdater.autoDownload = false
+  }
+
+  autoUpdater.on('checking-for-update', () => {
+    if (shouldLog()) console.log('Checking for updates...')
+  })
+
+  autoUpdater.on('update-available', (info) => {
+    if (shouldLog()) console.log('Update available:', info.version)
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    if (shouldLog()) console.log('Update not available')
+  })
+
+  autoUpdater.on('error', (error) => {
+    if (shouldLog()) console.error('Update error:', error)
+  })
+
+  autoUpdater.on('download-progress', (progress) => {
+    if (shouldLog()) {
+      console.log(`Download progress: ${Math.round(progress.percent)}%`)
+    }
+  })
+
+  autoUpdater.on('update-downloaded', (info) => {
+    if (shouldLog()) {
+      console.log(`Update downloaded. Version: ${info.version}`)
+    }
+  })
+
+  if (!process.argv.includes("--enable-logging")) {
+    setInterval(() => {
+      autoUpdater.checkForUpdates().catch(error => {
+        if (shouldLog()) console.error('Update check failed:', error)
+      })
+    }, 4 * 60 * 60 * 1000)
+  }
+}
 
 function createWindow(): void {
   win = new BrowserWindow({
@@ -322,10 +368,14 @@ if (!gotTheLock) {
     }
   })
 
-  app.whenReady().then(() => {
-    try {
-      createWindow()
-      setupIPC()
+app.whenReady().then(() => {
+  try {
+    createWindow()
+    setupIPC()
+    configureAutoUpdater()
+    autoUpdater.checkForUpdates().catch(error => {
+      if (shouldLog()) console.error('Initial update check failed:', error)
+    })
     } catch (error) {
       if (shouldLog()) console.error("Error during startup:", error)
     }
