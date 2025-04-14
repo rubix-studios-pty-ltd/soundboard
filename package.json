@@ -17,8 +17,10 @@
     "watch:app": "node build.mjs --watch",
     "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/app/styles.css --watch",
     "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
-    "build:win": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --win portable",
-    "build:mac": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --mac dmg"
+    "build:win": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --win portable --publish always",
+    "build:mac": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --mac dmg --publish always",
+    "build:win:local": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --win portable",
+    "build:mac:local": "npm run clean && cross-env NODE_ENV=production npm run build:prod && electron-builder --mac dmg"
   },
   "author": "Rubix Studios Pty. Ltd.",
   "license": "MIT",
