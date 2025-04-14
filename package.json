@@ -66,12 +66,14 @@
     "compression": "maximum",
     "win": {
       "target": "portable",
-      "icon": "icon.ico"
+      "icon": "icon.ico",
+      "artifactName": "Soundboard.exe"
     },
     "mac": {
       "target": "dmg",
       "icon": "icon.icns",
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "artifactName": "Soundboard.dmg"
     },
     "asar": {
       "smartUnpack": true
