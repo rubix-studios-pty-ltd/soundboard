@@ -1,13 +1,13 @@
 {
   "name": "soundboard",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
   "scripts": {
-    "release": "standard-version && git push rubix electron --follow-tags",
-    "release:minor": "standard-version --release-as minor && git push rubix electron --follow-tags",
-    "release:major": "standard-version --release-as major && git push rubix electron --follow-tags",
+    "release": "standard-version && git push rubix master --follow-tags",
+    "release:minor": "standard-version --release-as minor && git push rubix master --follow-tags",
+    "release:major": "standard-version --release-as major && git push rubix master --follow-tags",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" --ignore-path .prettierignore --log-level warn",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" --ignore-path .prettierignore --log-level warn",
     "clean": "rimraf dist && rimraf release",
