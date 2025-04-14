@@ -18,9 +18,8 @@ const defaultSettings = {
   volume: 1,
   maxPoolSize: 100,
   maxInstancesPerSound: 20,
-  hideEnabled: false,
+  buttonSettings: false,
   hiddenSounds: [] as string[],
-  colorEnabled: false,
   buttonColors: {},
   theme: {
     enabled: false,
@@ -232,11 +231,10 @@ function setupIPC(): void {
             ? 100
             : Number(settings.maxPoolSize),
         maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
-        hideEnabled: Boolean(settings.hideEnabled),
+        buttonSettings: Boolean(settings.buttonSettings),
         hiddenSounds: Array.isArray(settings.hiddenSounds)
           ? settings.hiddenSounds
           : [],
-        colorEnabled: Boolean(settings.colorEnabled),
         buttonColors:
           typeof settings.buttonColors === "object"
             ? settings.buttonColors || {}
@@ -282,11 +280,10 @@ function setupIPC(): void {
           maxPoolSize: Number(currentSettings.maxPoolSize) || 100,
           maxInstancesPerSound:
             Number(currentSettings.maxInstancesPerSound) || 20,
-          hideEnabled: currentSettings.hideEnabled ?? false,
+          buttonSettings: currentSettings.buttonSettings ?? false,
           hiddenSounds: Array.isArray(currentSettings.hiddenSounds)
             ? currentSettings.hiddenSounds
             : [],
-          colorEnabled: currentSettings.colorEnabled ?? false,
           buttonColors:
             typeof currentSettings.buttonColors === "object"
               ? currentSettings.buttonColors || {}
