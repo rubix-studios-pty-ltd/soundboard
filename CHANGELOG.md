@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](///compare/v3.2.0...v3.1.0) (2025-04-14)
+
+
+### Bug Fixes
+
+* revert version number to 3.0.5 in package.json f3c712b
+
+## [3.2.0](///compare/v3.1.0...v3.2.0) (2025-04-14)
+
 ## [3.1.0](https://github.com/rubixvi/soundboard/compare/v3.0.5...v3.1.0) (2025-04-14)
 
 
