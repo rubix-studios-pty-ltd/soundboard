@@ -121,50 +121,53 @@ const configureAutoUpdater = () => {
     autoUpdater.autoDownload = false
   }
 
-  autoUpdater.on('checking-for-update', () => {
+  autoUpdater.on("checking-for-update", () => {
     if (shouldLog()) {
-      console.log('Checking for updates...')
+      console.log("Checking for updates...")
     }
   })
 
-  autoUpdater.on('update-available', (info) => {
+  autoUpdater.on("update-available", (info) => {
     if (shouldLog()) {
-      console.log('Update available:', info.version)
+      console.log("Update available:", info.version)
     }
   })
 
-  autoUpdater.on('update-not-available', () => {
+  autoUpdater.on("update-not-available", () => {
     if (shouldLog()) {
-      console.log('Update not available')
+      console.log("Update not available")
     }
   })
 
-  autoUpdater.on('error', (error) => {
+  autoUpdater.on("error", (error) => {
     if (shouldLog()) {
-      console.error('Update error:', error)
+      console.error("Update error:", error)
     }
   })
 
-  autoUpdater.on('download-progress', (progress) => {
+  autoUpdater.on("download-progress", (progress) => {
     if (shouldLog()) {
       console.log(`Download progress: ${Math.round(progress.percent)}%`)
     }
   })
 
-  autoUpdater.on('update-downloaded', (info) => {
+  autoUpdater.on("update-downloaded", (info) => {
     if (shouldLog()) {
       console.log(`Update downloaded. Version: ${info.version}`)
     }
   })
 
   if (!process.argv.includes("--enable-logging")) {
-    setInterval(() => {
-      autoUpdater.checkForUpdates().catch(error => {
-        if (shouldLog()) {
-          console.error('Update check failed:', error)
-        }
-      })
-    }, 4 * 60 * 60 * 1000)
+    setInterval(
+      () => {
+        autoUpdater.checkForUpdates().catch((error) => {
+          if (shouldLog()) {
+            console.error("Update check failed:", error)
+          }
+        })
+      },
+      4 * 60 * 60 * 1000
+    )
   }
 }
 
@@ -392,16 +395,16 @@ if (!gotTheLock) {
     }
   })
 
-app.whenReady().then(() => {
-  try {
-    createWindow()
-    setupIPC()
-    configureAutoUpdater()
-    autoUpdater.checkForUpdates().catch(error => {
-      if (shouldLog()) {
-        console.error('Initial update check failed:', error)
-      }
-    })
+  app.whenReady().then(() => {
+    try {
+      createWindow()
+      setupIPC()
+      configureAutoUpdater()
+      autoUpdater.checkForUpdates().catch((error) => {
+        if (shouldLog()) {
+          console.error("Initial update check failed:", error)
+        }
+      })
     } catch (error) {
       if (shouldLog()) {
         console.error("Error during startup:", error)
