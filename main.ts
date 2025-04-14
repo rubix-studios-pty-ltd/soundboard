@@ -3,7 +3,6 @@ import path from "path"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
-import { autoUpdater } from "electron-updater"
 
 import type {
   HotkeyMap as HotkeyMapType,
@@ -112,98 +111,6 @@ try {
 
 let win: BrowserWindowType | null = null
 const ROOT_PATH = path.join(__dirname, "..")
-
-const configureAutoUpdater = () => {
-  try {
-    autoUpdater.autoDownload = process.env.NODE_ENV === "production"
-    autoUpdater.autoInstallOnAppQuit = true
-    autoUpdater.allowDowngrade = true
-    autoUpdater.allowPrerelease = false
-    autoUpdater.logger = console
-
-    if (process.env.NODE_ENV === "development") {
-      autoUpdater.autoDownload = false
-    }
-
-    const safeEmit = (event: string, ...args: any[]) => {
-      try {
-        if (event === "error") {
-          console.error("[Updater] Error:", ...args)
-          return
-        }
-        console.log(`[Updater] ${event}:`, ...args)
-      } catch (err) {
-        console.error("[Updater] Error in event handling:", err)
-      }
-    }
-
-    autoUpdater.on("checking-for-update", () => {
-      safeEmit("Checking for updates...")
-    })
-
-    autoUpdater.on("update-available", (info) => {
-      safeEmit("Update available", info.version)
-      if (process.env.NODE_ENV === "production") {
-        safeEmit("Downloading update automatically...")
-      }
-    })
-
-    autoUpdater.on("update-not-available", () => {
-      safeEmit("No updates available")
-    })
-
-    autoUpdater.on("error", (error) => {
-      safeEmit("error", error)
-    })
-
-    autoUpdater.on("download-progress", (progress) => {
-      safeEmit("Download progress", `${Math.round(progress.percent)}%`)
-    })
-
-    autoUpdater.on("update-downloaded", (info) => {
-      safeEmit("Update downloaded", info.version)
-      if (process.env.NODE_ENV === "production") {
-        try {
-          autoUpdater.autoInstallOnAppQuit = true
-        } catch (err) {
-          console.error("[Updater] Failed to set auto install:", err)
-        }
-      }
-    })
-
-    let retryCount = 0
-    const maxRetries = 3
-    const checkForUpdatesWithRetry = async () => {
-      try {
-        await autoUpdater.checkForUpdates()
-        retryCount = 0
-      } catch (error) {
-        console.error("[Updater] Update check failed:", error)
-        if (retryCount < maxRetries) {
-          retryCount++
-          console.log(`[Updater] Retrying update check (${retryCount}/${maxRetries})...`)
-          setTimeout(checkForUpdatesWithRetry, 60000 * retryCount) // Exponential backoff
-        }
-      }
-    }
-
-    if (process.env.NODE_ENV === "production") {
-      setTimeout(() => {
-        checkForUpdatesWithRetry().catch(err => {
-          console.error("[Updater] Initial update check failed:", err)
-        })
-      }, 10000)
-
-      setInterval(() => {
-        checkForUpdatesWithRetry().catch(err => {
-          console.error("[Updater] Periodic update check failed:", err)
-        })
-      }, 4 * 60 * 60 * 1000)
-    }
-  } catch (error) {
-    console.error("[Updater] Failed to configure auto-updater:", error)
-  }
-}
 
 function createWindow(): void {
   win = new BrowserWindow({
@@ -433,12 +340,6 @@ if (!gotTheLock) {
     try {
       createWindow()
       setupIPC()
-      configureAutoUpdater()
-      autoUpdater.checkForUpdates().catch((error) => {
-        if (shouldLog()) {
-          console.error("Initial update check failed:", error)
-        }
-      })
     } catch (error) {
       if (shouldLog()) {
         console.error("Error during startup:", error)
