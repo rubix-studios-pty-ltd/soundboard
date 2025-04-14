@@ -10,7 +10,7 @@
     {"type": "build", "section": "Build System"},
     {"type": "ci", "section": "Continuous Integration"}
   ],
-  "releaseCommitMessageFormat": "chore(release): {{currentTag}} [skip ci]",
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
   "bumpFiles": [
     {
       "filename": "package.json",
