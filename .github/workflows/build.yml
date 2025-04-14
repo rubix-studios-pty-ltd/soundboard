@@ -1,11 +1,11 @@
 name: Build and Release
 on:
   push:
-    branches: [master]
+    branches: [master, electron]
     tags:
       - 'v*'
   pull_request:
-    branches: [master]
+    branches: [master, electron]
 
 permissions:
   contents: write
