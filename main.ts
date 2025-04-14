@@ -104,7 +104,9 @@ try {
     })
   }
 } catch (error) {
-  if (shouldLog()) console.error("Error validating settings:", error)
+  if (shouldLog()) {
+    console.error("Error validating settings:", error)
+  }
   store.set("settings", defaultSettings)
 }
 
@@ -158,7 +160,9 @@ const configureAutoUpdater = () => {
   if (!process.argv.includes("--enable-logging")) {
     setInterval(() => {
       autoUpdater.checkForUpdates().catch(error => {
-        if (shouldLog()) console.error('Update check failed:', error)
+        if (shouldLog()) {
+          console.error('Update check failed:', error)
+        }
       })
     }, 4 * 60 * 60 * 1000)
   }
@@ -204,7 +208,9 @@ function createWindow(): void {
           compressionOptions
         )
       } catch (error) {
-        if (shouldLog()) console.error("Protocol handler error:", error)
+        if (shouldLog()) {
+          console.error("Protocol handler error:", error)
+        }
         return new protocol.Response()
       }
     })
@@ -250,7 +256,9 @@ function setupIPC(): void {
     try {
       return store.get("hotkeys") ?? {}
     } catch (error) {
-      if (shouldLog()) console.error("Error loading hotkeys:", error)
+      if (shouldLog()) {
+        console.error("Error loading hotkeys:", error)
+      }
       return {}
     }
   })
@@ -259,7 +267,9 @@ function setupIPC(): void {
     try {
       return store.get("settings") ?? defaultSettings
     } catch (error) {
-      if (shouldLog()) console.error("Error loading settings:", error)
+      if (shouldLog()) {
+        console.error("Error loading settings:", error)
+      }
       return defaultSettings
     }
   })
@@ -268,7 +278,9 @@ function setupIPC(): void {
     try {
       store.set("hotkeys", newHotkeys)
     } catch (error) {
-      if (shouldLog()) console.error("Error saving hotkeys:", error)
+      if (shouldLog()) {
+        console.error("Error saving hotkeys:", error)
+      }
     }
   })
 
@@ -314,11 +326,15 @@ function setupIPC(): void {
 
       store.set("settings", validatedSettings)
     } catch (error) {
-      if (shouldLog()) console.error("Error saving settings:", error)
+      if (shouldLog()) {
+        console.error("Error saving settings:", error)
+      }
       try {
         store.set("settings", defaultSettings)
       } catch (e) {
-        if (shouldLog()) console.error("Failed to save default settings:", e)
+        if (shouldLog()) {
+          console.error("Failed to save default settings:", e)
+        }
       }
     }
   })
@@ -382,10 +398,14 @@ app.whenReady().then(() => {
     setupIPC()
     configureAutoUpdater()
     autoUpdater.checkForUpdates().catch(error => {
-      if (shouldLog()) console.error('Initial update check failed:', error)
+      if (shouldLog()) {
+        console.error('Initial update check failed:', error)
+      }
     })
     } catch (error) {
-      if (shouldLog()) console.error("Error during startup:", error)
+      if (shouldLog()) {
+        console.error("Error during startup:", error)
+      }
     }
 
     app.on("activate", () => {
