@@ -24,11 +24,13 @@ When making changes, use conventional commit messages:
    - `npm run release:minor` - minor version (new features)
    - `npm run release:major` - major version (breaking changes)
 3. Push the changes and tag:
+
    ```bash
    git push --follow-tags origin master
    ```
 
 The GitHub Action will automatically:
+
 1. Build the application for Windows and macOS
 2. Create a GitHub release with the changelog
 3. Upload the build artifacts

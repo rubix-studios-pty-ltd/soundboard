@@ -1,8 +1,25 @@
 # Soundboard
 
+![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)
+
 A feature-rich desktop soundboard application built with Electron and React — perfect for livestreaming on TikTok Live, Bigo Live, Twitch, and Nimo TV.
 
 Một ứng dụng soundboard dành cho máy tính, được xây dựng bằng Electron và React — lý tưởng cho các buổi livestream trên TikTok Live, Bigo Live, Twitch và Nimo TV.
+
+## System Requirements
+
+- Windows 10 or later
+- macOS 10.13 or later
+- 4GB RAM minimum
+- 500MB disk space
+
+## Security
+
+Please see our [Security Policy](SECURITY.md) for information about:
+
+- Supported versions
+- Reporting vulnerabilities
+- Security best practices
 
 ![Soundboard Interface](screenshot/main-interface.webp)
 
@@ -150,6 +167,15 @@ npm run build:mac
 
 The built application will be available in the `release` directory.
 
+## Contributing
+
+Contributions are welcome! Please read our:
+
+- [Security Policy](SECURITY.md) for reporting vulnerabilities
+- [Code of Conduct](CODE_OF_CONDUCT.md) for community guidelines
+- Create issues for bugs or feature requests
+- Submit pull requests for any improvements
+
 ## License
 
 MIT License - See full license in LICENSE file.
@@ -160,7 +186,8 @@ Rubix Studios Pty. Ltd.
 
 ## Contact
 
-For support or inquiries, contact Vincent Vu 
+For support or inquiries, contact Vincent Vu
+
 - Tiktok: [@rubixvi](https://www.tiktok.com/@rubixvi)
 - BigoTV: [@a.vinh](https://www.bigo.tv/a.vinh)
 - Facebook: [@rubixvi](https://www.facebook.com/rubixvi/)

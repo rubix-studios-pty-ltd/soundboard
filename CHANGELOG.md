@@ -4,13 +4,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [3.1.0](///compare/v3.0.4...v3.1.0) (2025-04-14)
 
-
 ### Features
 
 * add standard-version for versioning and changelog generation 4c77733
 * integrate auto-updater for automatic updates; add GitHub publish configuration 7066394
 * replace color and hide settings with buttonSettings; update related components and remove unused icons fbd5ecf
-
 
 ### Bug Fixes
 
