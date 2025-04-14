@@ -5,15 +5,11 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Top Language](https://img.shields.io/github/languages/top/rubixvi/soundboard)](https://github.com/rubixvi/soundboard)
 
-<!-- Build & Quality -->
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rubixvi/soundboard/builds.yml?label=builds)](https://github.com/rubixvi/soundboard/actions)
-[![Dependencies](https://img.shields.io/librariesio/github/rubixvi/soundboard)](https://libraries.io/github/rubixvi/soundboard)
-[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/rubixvi/soundboard)](https://www.codefactor.io/repository/github/rubixvi/soundboard)
-
-<!-- Activity -->
+<!-- Activity & Quality -->
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/rubixvi/soundboard)
+[![Last Commit](https://img.shields.io/github/last-commit/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/commits)
 [![GitHub issues](https://img.shields.io/github/issues/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/pulls)
-[![Last Commit](https://img.shields.io/github/last-commit/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/commits)
 
 <!-- Community -->
 [![GitHub stars](https://img.shields.io/github/stars/rubixvi/soundboard)](https://github.com/rubixvi/soundboard/stargazers)
