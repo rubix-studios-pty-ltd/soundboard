@@ -5,10 +5,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### [3.4.1](///compare/v3.2.0...v3.4.1) (2025-04-15)
 
 
-### Code Refactoring
-
-* clean up import order and format sound play function 35d1de7
-
 ### Features
 
 * enhance sound management by adding validation, user-added sound support, and improved file handling 418328f
@@ -16,9 +12,15 @@ All notable changes to this project will be documented in this file. See [standa
 * add changelog reading and GitHub release creation steps to build workflow 2f0225d
 * integrate hotkey management in favorites grid with sound playback support e5fa71c
 
+
 ### Documentation
 
 * update README to include favorites management and custom sound import features fa0ce4b
+
+
+### Code Refactoring
+
+* clean up import order and format sound play function 35d1de7
 
 
 ### Bug Fixes
