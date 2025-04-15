@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](///compare/v3.2.0...v3.3.0) (2025-04-15)
+
+
+### Features
+
+* enhance sound management by adding validation, user-added sound support, and improved file handling 418328f
+* enhance sound management with user-added sounds, implement loading and deletion features 42ce969
+
 ## [3.2.0](///compare/v3.1.0...v3.2.0) (2025-04-15)
 
 
