@@ -27,7 +27,7 @@ const defaultSettings: Settings = {
   dragAndDropEnabled: false,
   favorites: {
     items: [],
-    maxItems: 12,
+    maxItems: 18,
   },
   theme: {
     enabled: false,

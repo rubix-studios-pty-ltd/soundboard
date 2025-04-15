@@ -27,7 +27,7 @@ const defaultSettings: SettingsType = {
   dragAndDropEnabled: false,
   favorites: {
     items: [],
-    maxItems: 12,
+    maxItems: 18,
   },
   theme: {
     enabled: false,
@@ -234,10 +234,12 @@ function createWindow(): void {
     titleBarStyle: "hidden",
     show: false,
     webPreferences: {
+      partition: 'persist:soundboard',
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
       nodeIntegration: false,
       contextIsolation: true,
       backgroundThrottling: false,
+      spellcheck: false,
     },
   })
 
@@ -406,7 +408,7 @@ function setupIPC(): void {
           items: Array.isArray(settings.favorites?.items)
             ? settings.favorites.items
             : [],
-          maxItems: Number(settings.favorites?.maxItems) || 12,
+          maxItems: Number(settings.favorites?.maxItems) || 18,
         },
         theme:
           typeof settings.theme === "object" &&
@@ -475,7 +477,7 @@ function setupIPC(): void {
             items: Array.isArray(currentSettings.favorites?.items)
               ? currentSettings.favorites.items
               : [],
-            maxItems: Number(currentSettings.favorites?.maxItems) || 12,
+            maxItems: Number(currentSettings.favorites?.maxItems) || 18,
           },
         }
         store.set("settings", updatedSettings)
@@ -576,6 +578,8 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
 } else {
+  app.commandLine.appendSwitch('disable-features', 'AutofillServerCommunication,AutofillUpstreamSendDetectedValues')
+
   app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
     if (win) {
       if (win.isMinimized()) {
