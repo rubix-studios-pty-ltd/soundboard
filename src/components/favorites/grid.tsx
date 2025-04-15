@@ -1,16 +1,39 @@
-import React from "react"
+import React, { useCallback } from "react"
 
 import { Exit } from "@/components/icons"
+import HotkeyModal from "@/components/modals/hotkey"
 import SoundButton from "@/components/sounds/button"
+import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
+import { useHotkeys } from "@/hooks/usehotkey"
 import { generateSoundId } from "@/utils/sound-id"
 
 const FavoriteGrid: React.FC = () => {
   const { settings, updateSettings } = useSettings()
   const { dragAndDropEnabled, favorites } = settings
   const { sounds, music } = useSounds()
+  const { playSound } = useAudio()
   const allSounds = [...sounds, ...music]
+
+  const handleSoundPlay = useCallback(
+    (soundId: string) => {
+      const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
+      if (sound) {
+        playSound(sound.id, sound.file, sound.isUserAdded || false)
+      }
+    },
+    [allSounds, playSound]
+  )
+
+  const {
+    modalOpen,
+    currentHotkey,
+    showHotkeyModal,
+    assignHotkey,
+    clearHotkey,
+    closeModal,
+  } = useHotkeys(allSounds, handleSoundPlay)
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
@@ -120,7 +143,7 @@ const FavoriteGrid: React.FC = () => {
                   id={sound.id}
                   file={sound.file}
                   title={sound.title}
-                  onHotkeyAssign={() => {}}
+                  onHotkeyAssign={showHotkeyModal}
                   isDraggable={dragAndDropEnabled}
                   isInFavorites={true}
                   isUserAdded={sound.isUserAdded}
@@ -139,6 +162,13 @@ const FavoriteGrid: React.FC = () => {
           </div>
         ))}
       </div>
+      <HotkeyModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onClear={clearHotkey}
+        currentHotkey={currentHotkey}
+        onAssign={assignHotkey}
+      />
     </div>
   )
 }
