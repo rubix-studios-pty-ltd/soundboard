@@ -42,6 +42,8 @@ Please see our [Security Policy](SECURITY.md) for information about:
   - Hide/Show sounds with checkbox toggles
   - Custom color coding for sound organization
   - Multi-sound and repeat playback options
+- Favorites system with drag & drop functionality
+- Import custom sounds with automatic MP3 to Opus conversion
 - Audio settings management
 - 130+ built-in sound effects
 - Customizable sound organization
@@ -55,6 +57,8 @@ Please see our [Security Policy](SECURITY.md) for information about:
   - Ẩn/Hiện âm thanh với các hộp kiểm
   - Mã màu tùy chỉnh để tổ chức âm thanh
   - Tùy chọn phát đa âm thanh và lặp lại
+- Hệ thống yêu thích với chức năng kéo và thả
+- Nhập âm thanh tùy chỉnh với tự động chuyển đổi MP3 sang Opus
 - Quản lý cài đặt âm thanh
 - Hơn 130+ hiệu ứng âm thanh tích hợp sẵn
 - Tổ chức âm thanh tùy chỉnh
@@ -111,6 +115,52 @@ Please see our [Security Policy](SECURITY.md) for information about:
   - Xanh lá nhạt: Giao diện tối giản
   - Vàng: Giao diện tối với điểm nhấn màu vàng
 - Lựa chọn giao diện được lưu giữa các phiên
+
+## Favorites Management | Quản lý yêu thích
+
+### Adding Favorites | Thêm vào yêu thích
+
+- Drag any sound to the favorites zone at the top
+- Rearrange favorites by dragging them to different positions
+- Quick access to your most used sounds
+- Favorites persist between sessions
+
+---
+
+- Kéo bất kỳ âm thanh nào vào vùng yêu thích ở phía trên
+- Sắp xếp lại các mục yêu thích bằng cách kéo chúng vào các vị trí khác nhau
+- Truy cập nhanh vào các âm thanh bạn thường xuyên sử dụng
+- Các mục yêu thích được lưu giữa các phiên
+
+## Adding Custom Sounds | Thêm âm thanh tùy chỉnh
+
+### Import Process | Quy trình nhập
+
+- Click the "+" button to open the Add Sound dialog
+- Choose MP3 files from your computer
+- Files are automatically converted to Opus format
+- Set a custom name and color for each sound
+
+---
+
+- Nhấp vào nút "+" để mở hộp thoại Thêm âm thanh
+- Chọn tệp MP3 từ máy tính của bạn
+- Tệp được tự động chuyển đổi sang định dạng Opus
+- Đặt tên và màu sắc tùy chỉnh cho từng âm thanh
+
+### Sound Management | Quản lý âm thanh
+
+- Custom sounds appear alongside built-in sounds
+- All features (hotkeys, colors, favorites) work with custom sounds
+- Custom sounds are stored locally
+- Remove custom sounds through the sound menu
+
+---
+
+- Âm thanh tùy chỉnh xuất hiện cùng với âm thanh có sẵn
+- Tất cả tính năng (phím tắt, màu sắc, yêu thích) hoạt động với âm thanh tùy chỉnh
+- Âm thanh tùy chỉnh được lưu trữ cục bộ
+- Xóa âm thanh tùy chỉnh thông qua menu âm thanh
 
 ## Technical Stack
 
