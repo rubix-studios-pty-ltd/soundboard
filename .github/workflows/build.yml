@@ -82,26 +82,47 @@ jobs:
           path: release/*
           retention-days: 5
           
+          
+  create-release:
+    needs: [release]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Download Windows Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-latest-build
+          path: release/windows
+          
+      - name: Download Mac Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-latest-build
+          path: release/mac
+          
       - name: Read Changelog Entry
-        if: matrix.os == 'windows-latest'
         id: changelog
         uses: mindsers/changelog-reader-action@v2
         with:
           path: CHANGELOG.md
           version: ${{ github.ref_name }}
-
+          
       - name: Create GitHub Release
-        if: matrix.os == 'windows-latest' # Only run once
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: softprops/action-gh-release@v1
         with:
           draft: false
           generate_release_notes: true
-          fail_on_unmatched_files: false
+          fail_on_unmatched_files: true
           body: |
+            ## Changelog
             ${{ steps.changelog.outputs.changes }}
-
-            ## Additional Changes
-            ${{ github.event.repository.default_branch == github.ref_name && '(see below)' || '' }}
-          files: release/*
+            
+            For full details, please see the [CHANGELOG.md](./CHANGELOG.md)
+          files: |
+            release/windows/*
+            release/mac/*

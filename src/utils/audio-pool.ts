@@ -445,17 +445,17 @@ class AudioPool {
   }
 
   dispose(): void {
-    this.stopAll();
-    this.audioContext.close();
-    this.pool.clear();
-    this.instanceCounts.clear();
-    this.unusedAudioElements.forEach(audio => {
-      audio.src = '';
-      audio.load();
-    });
-    this.unusedAudioElements = [];
-    this.initialized = false;
-    this.initializationPromise = null;
+    this.stopAll()
+    this.audioContext.close()
+    this.pool.clear()
+    this.instanceCounts.clear()
+    this.unusedAudioElements.forEach((audio) => {
+      audio.src = ""
+      audio.load()
+    })
+    this.unusedAudioElements = []
+    this.initialized = false
+    this.initializationPromise = null
   }
 }
 

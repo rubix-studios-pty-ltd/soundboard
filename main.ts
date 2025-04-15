@@ -234,7 +234,7 @@ function createWindow(): void {
     titleBarStyle: "hidden",
     show: false,
     webPreferences: {
-      partition: 'persist:soundboard',
+      partition: "persist:soundboard",
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
       nodeIntegration: false,
       contextIsolation: true,
@@ -578,7 +578,10 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
 } else {
-  app.commandLine.appendSwitch('disable-features', 'AutofillServerCommunication,AutofillUpstreamSendDetectedValues')
+  app.commandLine.appendSwitch(
+    "disable-features",
+    "AutofillServerCommunication,AutofillUpstreamSendDetectedValues"
+  )
 
   app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
     if (win) {
