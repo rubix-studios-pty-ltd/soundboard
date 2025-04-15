@@ -1,3 +1,14 @@
+export const buttonPreset = [
+  "#ef4444",
+  "#3b82f6",
+  "#22c55e",
+  "#eab308",
+  "#a855f7",
+  "#f97316",
+  "#ec4899",
+  "#06b6d4",
+]
+
 export interface ThemePreset {
   name: string
   backgroundColor: string

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { buttonPreset } from "@/constants/themes"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -12,17 +13,6 @@ import { Chevron, Close } from "@/components/icons"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
-
-const Preset = [
-  "#ef4444",
-  "#3b82f6",
-  "#22c55e",
-  "#eab308",
-  "#a855f7",
-  "#f97316",
-  "#ec4899",
-  "#06b6d4",
-]
 
 interface SoundButtonProps {
   id: string
@@ -114,7 +104,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                 </>
               )}
               <div className="grid grid-cols-5 gap-2">
-                {Preset.map((presetColor) => (
+                {buttonPreset.map((presetColor) => (
                   <button
                     key={presetColor}
                     className="size-6 cursor-pointer rounded-full border transition-transform hover:scale-110"

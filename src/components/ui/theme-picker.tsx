@@ -1,5 +1,6 @@
+import { presetThemes } from "@/constants/themes"
+
 import { Close } from "@/components/icons"
-import { presetThemes } from "@/data/themes"
 
 interface ThemePickerProps {
   onThemeChange: (themeKey: string | null) => void

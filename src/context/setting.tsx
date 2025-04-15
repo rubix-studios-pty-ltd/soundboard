@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react"
+import { defaultSettings } from "@/constants/settings"
 
 import type { Settings } from "@/types"
 
@@ -12,31 +13,6 @@ interface SettingsContextType {
   settings: Settings
   updateSettings: (newSettings: Partial<Settings>) => void
   isInitialized: boolean
-}
-
-const defaultSettings: Settings = {
-  multiSoundEnabled: true,
-  repeatSoundEnabled: false,
-  alwaysOnTop: false,
-  volume: 1,
-  maxPoolSize: 100,
-  maxInstancesPerSound: 20,
-  buttonSettings: false,
-  hiddenSounds: [] as string[],
-  buttonColors: {},
-  dragAndDropEnabled: false,
-  favorites: {
-    items: [],
-    maxItems: 18,
-  },
-  theme: {
-    enabled: false,
-    backgroundColor: "#f3f4f6",
-    buttonColor: "#4b5563",
-    buttonText: "#ffffff",
-    buttonActive: "#374151",
-    buttonHoverColor: "#404040",
-  },
 }
 
 const validateSettings = (settings: any): Settings => {

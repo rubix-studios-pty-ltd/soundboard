@@ -1,3 +1,4 @@
+import { defaultSettings } from "@/constants/settings"
 import { contextBridge, ipcRenderer } from "electron"
 
 import type { HotkeyMap, IpcApi, Settings } from "@/types"
@@ -46,30 +47,7 @@ const electronAPI: IpcApi = {
       return await ipcRenderer.invoke("load-settings")
     } catch (error) {
       console.error("Error loading settings:", error)
-      return {
-        multiSoundEnabled: true,
-        repeatSoundEnabled: false,
-        alwaysOnTop: false,
-        volume: 1,
-        maxPoolSize: 100,
-        maxInstancesPerSound: 20,
-        buttonSettings: false,
-        hiddenSounds: [],
-        buttonColors: {},
-        dragAndDropEnabled: false,
-        favorites: {
-          items: [],
-          maxItems: 18,
-        },
-        theme: {
-          enabled: false,
-          backgroundColor: "#f3f4f6",
-          buttonColor: "#4b5563",
-          buttonText: "#ffffff",
-          buttonActive: "#374151",
-          buttonHoverColor: "#404040",
-        },
-      }
+      return defaultSettings
     }
   },
 

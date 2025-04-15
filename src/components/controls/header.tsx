@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { presetThemes } from "@/constants/themes"
 
 import type { Settings } from "@/types"
 import {
@@ -30,7 +31,6 @@ import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
 import { addNewSound } from "@/utils/audio-convert"
-import { presetThemes } from "@/data/themes"
 
 const Header: React.FC = () => {
   const { stopAll } = useAudio()
