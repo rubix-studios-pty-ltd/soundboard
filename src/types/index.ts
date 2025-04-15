@@ -51,7 +51,7 @@ export interface IpcApi {
   saveSettings: (settings: Settings) => void
   toggleAlwaysOnTop: (isEnabled: boolean) => void
   convertAudio: (params: {
-    url: string
+    buffer: ArrayBuffer
     originalName: string
     type: "sound" | "music"
   }) => Promise<{ outputPath: string }>

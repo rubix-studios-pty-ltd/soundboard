@@ -40,15 +40,9 @@ const Header: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
   const handleAddSound = async (type: "sound" | "music", file: File) => {
-    try {
-      const newSound = await addNewSound(file, type)
-      addSound(newSound, type)
-      setIsAddModalOpen(false)
-      alert("Sound added successfully!")
-    } catch (error) {
-      console.error("Failed to add sound:", error)
-      alert("Failed to add sound. Please try again.")
-    }
+    const newSound = await addNewSound(file, type)
+    addSound(newSound, type)
+    setIsAddModalOpen(false)
   }
 
   const handleThemeChange = (themeKey: string | null) => {

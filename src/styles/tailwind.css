@@ -126,6 +126,7 @@
   body {
     @apply bg-[#1a1a1a] text-foreground font-sans;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    overflow-y: scroll;
   }
 }
 

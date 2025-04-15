@@ -32,21 +32,21 @@ export const presetThemes: Record<string, ThemePreset> = {
     buttonActive: "#000000",
     buttonHoverColor: "#588684",
   },
-  pink: {
-    name: "Pink",
+  cream: {
+    name: "Cream",
     backgroundColor: "#FFFBFA",
     buttonColor: "#FEDBD0",
     buttonText: "#442C2E",
     buttonActive: "#e7baac",
     buttonHoverColor: "#FEEAE6",
   },
-  cream: {
-    name: "Cream",
+  pink: {
+    name: "Pink",
     backgroundColor: "#FBE0D5",
-    buttonColor: "#CB94BC",
+    buttonColor: "#c260a8",
     buttonText: "#FFFFFF",
-    buttonActive: "#DBBEE2",
-    buttonHoverColor: "#DBBEE2",
+    buttonActive: "#912c78",
+    buttonHoverColor: "#e684cd",
   },
   red: {
     name: "Red",
@@ -59,9 +59,9 @@ export const presetThemes: Record<string, ThemePreset> = {
   yellow: {
     name: "Yellow",
     backgroundColor: "#16171B",
-    buttonColor: "#F5C249",
+    buttonColor: "#ffce65",
     buttonText: "#16171B",
     buttonActive: "#f5ad02",
-    buttonHoverColor: "#F7C865",
+    buttonHoverColor: "#ffbc2b",
   },
 }

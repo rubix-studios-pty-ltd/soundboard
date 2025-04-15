@@ -17,10 +17,12 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
   const { settings, updateSettings } = useSettings()
   const { sounds: allSounds, music: allMusic } = useSounds()
   const rawSounds = type === "sound" ? allSounds : allMusic
-  const sounds = rawSounds.map((sound) => ({
-    ...sound,
-    id: sound.id ?? generateSoundId(sound.file),
-  }))
+  const sounds = rawSounds
+    .map((sound) => ({
+      ...sound,
+      id: sound.id ?? generateSoundId(sound.file),
+    }))
+    .filter((sound) => !settings.favorites.items.includes(sound.id))
 
   const { playSound } = useAudio()
 
@@ -65,6 +67,7 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
             isHidden={settings.hiddenSounds?.includes(sound.id) || false}
             onToggleHide={handleToggleHide}
             isDraggable={settings.dragAndDropEnabled}
+            isInFavorites={false}
           />
         ))}
       </div>

@@ -54,6 +54,29 @@ const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
   },
 })
 
+async function manageSoundsJson(type: "sound" | "music") {
+  const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
+  let sounds: SoundData[] = []
+  
+  try {
+    const exists = await fs.access(jsonPath).then(() => true).catch(() => false)
+    if (exists) {
+      const content = await fs.readFile(jsonPath, 'utf-8')
+      sounds = JSON.parse(content)
+    }
+  } catch (error) {
+    if (shouldLog()) console.error("Error reading sounds JSON:", error)
+  }
+  
+  return {
+    getAll: () => sounds,
+    add: async (sound: SoundData) => {
+      sounds.push(sound)
+      await fs.writeFile(jsonPath, JSON.stringify(sounds, null, 2), 'utf-8')
+    }
+  }
+}
+
 try {
   const settings = store.get("settings")
   if (
@@ -155,10 +178,19 @@ function createWindow(): void {
       }
 
       try {
-        return await protocol.Response.fromFileStream(
-          path.join(ROOT_PATH, filePath),
-          compressionOptions
-        )
+        const soundPath = path.join(app.getPath("userData"), filePath)
+        try {
+          await fs.access(soundPath)
+          return await protocol.Response.fromFileStream(
+            soundPath,
+            compressionOptions
+          )
+        } catch {
+          return await protocol.Response.fromFileStream(
+            path.join(ROOT_PATH, filePath),
+            compressionOptions
+          )
+        }
       } catch (error) {
         if (shouldLog()) {
           console.error("Protocol handler error:", error)
@@ -182,6 +214,14 @@ async function convertToOpus(
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
       .toFormat("opus")
+      .audioFilters([
+        "loudnorm=I=-16:TP=-1.5:LRA=11",
+        "dynaudnorm=f=150:g=5",
+        "silenceremove=1:0:-50dB"
+      ])
+      .audioFrequency(48000)
+      .audioBitrate("64k")
+      .outputOptions(["-map_metadata", "-1"])
       .save(outputPath)
       .on("end", resolve)
       .on("error", reject)
@@ -189,6 +229,11 @@ async function convertToOpus(
 }
 
 function setupIPC(): void {
+  ipcMain.handle("load-sounds", async (_, type: "sound" | "music") => {
+    const manager = await manageSoundsJson(type)
+    return manager.getAll()
+  })
+
   ipcMain.on("window-control", (_: any, action: string) => {
     try {
       if (!win) {
@@ -360,11 +405,15 @@ function setupIPC(): void {
     "convert-audio",
     async (
       _,
-      params: { url: string; originalName: string; type: "sound" | "music" }
+      params: { buffer: ArrayBuffer; originalName: string; type: "sound" | "music" }
     ) => {
       try {
         const tempDir = path.join(app.getPath("userData"), "temp")
         await fs.mkdir(tempDir, { recursive: true })
+
+        // Create sounds directory in AppData
+        const soundsDir = path.join(app.getPath("userData"), "sounds")
+        await fs.mkdir(soundsDir, { recursive: true })
 
         const inputPath = path.join(tempDir, params.originalName)
         const outputName =
@@ -372,17 +421,18 @@ function setupIPC(): void {
             params.originalName,
             path.extname(params.originalName)
           ) + ".opus"
-        const outputPath = path.join(ROOT_PATH, "sound", outputName)
+        const outputPath = path.join(soundsDir, outputName)
 
-        const response = await fetch(params.url)
-        const buffer = await response.arrayBuffer()
-        await fs.writeFile(inputPath, Buffer.from(buffer))
+        // Write the buffer directly to the input file
+        await fs.writeFile(inputPath, Buffer.from(params.buffer))
 
         await convertToOpus(inputPath, outputPath)
 
+        // Clean up temp file
         await fs.unlink(inputPath)
 
-        return { outputPath: outputName }
+        // Return path relative to sounds dir
+        return { outputPath: path.join("sounds", outputName) }
       } catch (error) {
         if (shouldLog()) {
           console.error("Error converting audio:", error)
@@ -396,25 +446,8 @@ function setupIPC(): void {
     "add-sound",
     async (_, params: { sound: SoundData; type: "sound" | "music" }) => {
       try {
-        const dataFile = params.type === "sound" ? "audio.ts" : "music.ts"
-        const dataPath = path.join(ROOT_PATH, "src", "data", dataFile)
-
-        const content = await fs.readFile(dataPath, "utf-8")
-
-        const match = content.match(/export const \w+ = (\[[\s\S]*\])/)
-        if (!match) {
-          throw new Error("Invalid data file format")
-        }
-
-        const sounds = JSON.parse(match[1].replace(/'/g, '"'))
-        sounds.push(params.sound)
-
-        const newContent = content.replace(
-          /export const \w+ = \[[\s\S]*\]/,
-          `export const ${params.type === "sound" ? "audio" : "music"} = ${JSON.stringify(sounds, null, 2)}`
-        )
-
-        await fs.writeFile(dataPath, newContent)
+        const manager = await manageSoundsJson(params.type)
+        await manager.add(params.sound)
       } catch (error) {
         if (shouldLog()) {
           console.error("Error adding sound:", error)

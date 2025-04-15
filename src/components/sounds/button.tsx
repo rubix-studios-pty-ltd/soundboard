@@ -32,6 +32,7 @@ interface SoundButtonProps {
   isHidden?: boolean
   onToggleHide?: (id: string) => void
   isDraggable?: boolean
+  isInFavorites?: boolean
 }
 
 const SoundButton: React.FC<SoundButtonProps> = ({
@@ -42,11 +43,10 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   isHidden = false,
   onToggleHide,
   isDraggable = false,
+  isInFavorites = false,
 }) => {
   const { playSound, stopSound, isPlaying } = useAudio()
   const [isActive, setIsActive] = useState(false)
-
-  // Ensure we have a valid ID
   const soundId = id || generateSoundId(file)
 
   useEffect(() => {
@@ -95,15 +95,19 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             className="max-w-[200px] border-[#333333] bg-[#1a1a1a] p-4 text-white"
           >
             <div className="flex flex-col gap-4">
-              <div className="flex flex-row items-center justify-between">
-                <div className="text-sm font-semibold">Ẩn nút</div>
-                <Checkbox
-                  className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
-                  checked={isHidden}
-                  onCheckedChange={() => onToggleHide?.(soundId)}
-                />
-              </div>
-              <Separator />
+              {!isInFavorites && (
+                <>
+                  <div className="flex flex-row items-center justify-between">
+                    <div className="text-sm font-semibold">Ẩn nút</div>
+                    <Checkbox
+                      className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
+                      checked={isHidden}
+                      onCheckedChange={() => onToggleHide?.(soundId)}
+                    />
+                  </div>
+                  <Separator />
+                </>
+              )}
               <div className="grid grid-cols-5 gap-2">
                 {Preset.map((presetColor) => (
                   <button
@@ -147,7 +151,6 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             const soundIdToUse = soundId
             e.dataTransfer.setData("text/sound-id", soundIdToUse)
             e.dataTransfer.effectAllowed = "move"
-            console.log("Dragging sound:", { id: soundIdToUse, file })
           }
         }}
         className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all ${
@@ -183,7 +186,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                   : settings.theme.buttonHoverColor
                 : isActive
                   ? "#404040"
-                  : "#f3f4f6",
+                  : "#e0e0e0",
           } as React.CSSProperties
         }
         onClick={handleClick}

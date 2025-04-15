@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -30,7 +31,15 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
     setType(defaultType)
   }, [defaultType])
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedFile(null)
+    }
+  }, [isOpen])
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -39,22 +48,41 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
       return
     }
 
-    onAdd(type, file)
+    setSelectedFile(file)
+  }
+
+  const handleAdd = () => {
+    if (selectedFile) {
+      onAdd(type, selectedFile)
+      setSelectedFile(null)
+    }
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[#1a1a1a] text-white max-w-[400px]">
+      <DialogContent className="bg-[#1a1a1a] text-white max-w-[300px]">
         <DialogHeader>
-          <DialogTitle className="text-left ">Thêm âm thanh</DialogTitle>
+          <DialogTitle className="text-left">Thêm âm thanh</DialogTitle>
+          <DialogDescription className="text-sm text-left text-gray-400">
+            Thêm tệp âm thanh mới.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <div>
-            <Label>Loại tiếng</Label>
+            <div className="mt-1 space-y-1">
+              <Input
+                type="file"
+                onChange={handleFileChange}
+                className="text-sm text-black bg-white cursor-pointer p-2"
+              />
+            </div>
+          </div>
+
+          <div>
             <RadioGroup
               value={type}
               onValueChange={(value: "sound" | "music") => setType(value)}
-              className="mt-2 flex gap-4"
+              className="mt-1 flex gap-4"
             >
               <div className="flex items-center gap-2">
                 <RadioGroupItem value="sound" id="sound" />
@@ -67,20 +95,14 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
             </RadioGroup>
           </div>
 
-          <div>
-            <div className="mt-1 space-y-1">
-              <Input
-                type="file"
-                onChange={handleFileChange}
-                className="text-sm text-black bg-white cursor-pointer p-2"
-              />
-              <p className="text-xs text-gray-400">
-                Tệp MP3 sẽ được chuyển thành định dạng Opus
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-2 flex justify-end">
+          <div className="mt-2 gap-2 flex justify-end">
+            <Button 
+              variant="secondary" 
+              onClick={handleAdd}
+              disabled={!selectedFile}
+            >
+              Thêm
+            </Button>
             <Button variant="secondary" onClick={onClose}>
               Hủy
             </Button>

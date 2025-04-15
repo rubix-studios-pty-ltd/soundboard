@@ -88,7 +88,6 @@ class SoundboardApp {
 
       await this.playSound(file, currentVolume, buttonElement, false)
     } catch (error) {
-      console.error("Error playing sound:", error)
       buttonElement.classList.remove("active")
       this.audioPool.stopSpecific(file)
     }
@@ -106,7 +105,6 @@ class SoundboardApp {
       })
       buttonElement.classList.add("active")
     } catch (error) {
-      console.error("Error in playSound:", error)
       throw error
     }
   }
@@ -168,7 +166,6 @@ class SoundboardApp {
 
   private initializeSoundboard(): void {
     if (!this.container1 || !this.container2) {
-      console.error("Could not find soundboard containers")
       return
     }
 
