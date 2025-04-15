@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.4](///compare/v3.4.3...v3.4.4) (2025-04-15)
+
+
+### Code Refactoring
+
+* disable React DevTools global hook in browser build options f85d5f2
+
 ### [3.4.3](///compare/v3.4.2...v3.4.3) (2025-04-15)
 
 
