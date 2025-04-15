@@ -39,7 +39,6 @@ const browserOptions = {
     "process.env.NODE_ENV": isDev ? '"development"' : '"production"',
     "process.env.RUNNING_IN_ELECTRON": "true",
     global: "window",
-    __REACT_DEVTOOLS_GLOBAL_HOOK__: "({ isDisabled: true })",
   },
 }
 
