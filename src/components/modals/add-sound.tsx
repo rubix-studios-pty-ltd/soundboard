@@ -80,6 +80,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
           />
           <Input
             type="file"
+            accept="audio/*"
             onChange={handleFileChange}
             className="cursor-pointer bg-white p-2 text-sm text-black"
           />
