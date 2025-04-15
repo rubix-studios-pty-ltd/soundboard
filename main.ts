@@ -56,20 +56,6 @@ const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
 
 function createSoundsManager(type: "sound" | "music") {
   const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
-  const lockPath = path.join(app.getPath("userData"), `${type}s.lock`)
-
-  const withLock = async <T>(operation: () => Promise<T>): Promise<T> => {
-    try {
-      await fs.writeFile(lockPath, Date.now().toString())
-      return await operation()
-    } finally {
-      try {
-        await fs.unlink(lockPath)
-      } catch (error) {
-        if (shouldLog()) console.error("Error releasing lock:", error)
-      }
-    }
-  }
 
   const validateSound = async (sound: SoundData): Promise<boolean> => {
     try {
@@ -117,7 +103,6 @@ function createSoundsManager(type: "sound" | "music") {
     try {
       const tempPath = `${jsonPath}.tmp`
       await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), "utf-8")
-
       await fs.rename(tempPath, jsonPath)
     } catch (error) {
       if (shouldLog()) console.error("Error saving sounds JSON:", error)
@@ -127,47 +112,43 @@ function createSoundsManager(type: "sound" | "music") {
 
   return {
     getAll: async () => {
-      return await withLock(loadSounds)
+      return await loadSounds()
     },
     add: async (sound: SoundData) => {
-      await withLock(async () => {
-        if (await validateSound(sound)) {
-          const sounds = await loadSounds()
-          sounds.push(sound)
-          await saveSounds(sounds)
-        } else {
-          throw new Error("Sound file does not exist")
-        }
-      })
+      if (await validateSound(sound)) {
+        const sounds = await loadSounds()
+        sounds.push(sound)
+        await saveSounds(sounds)
+      } else {
+        throw new Error("Sound file does not exist")
+      }
     },
     remove: async (soundId: string) => {
-      await withLock(async () => {
-        const sounds = await loadSounds()
-        const soundToRemove = sounds.find((s) => s.id === soundId)
-        if (!soundToRemove) {
-          return
-        }
+      const sounds = await loadSounds()
+      const soundToRemove = sounds.find((s) => s.id === soundId)
+      if (!soundToRemove) {
+        return
+      }
 
-        const filteredSounds = sounds.filter((s) => s.id !== soundId)
-        await saveSounds(filteredSounds)
+      const filteredSounds = sounds.filter((s) => s.id !== soundId)
+      await saveSounds(filteredSounds)
 
-        try {
-          const soundPath = path.join(
-            app.getPath("userData"),
-            "sounds",
-            soundToRemove.file
-          )
-          const exists = await fs
-            .access(soundPath)
-            .then(() => true)
-            .catch(() => false)
-          if (exists) {
-            await fs.unlink(soundPath)
-          }
-        } catch (error) {
-          if (shouldLog()) console.error("Error deleting sound file:", error)
+      try {
+        const soundPath = path.join(
+          app.getPath("userData"),
+          "sounds",
+          soundToRemove.file
+        )
+        const exists = await fs
+          .access(soundPath)
+          .then(() => true)
+          .catch(() => false)
+        if (exists) {
+          await fs.unlink(soundPath)
         }
-      })
+      } catch (error) {
+        if (shouldLog()) console.error("Error deleting sound file:", error)
+      }
     },
   }
 }
@@ -286,7 +267,6 @@ function createWindow(): void {
             compressionOptions
           )
         } catch {
-          // For built-in sounds
           const builtInPath = path.join(ROOT_PATH, filePath)
           try {
             await fs.access(builtInPath)

@@ -443,6 +443,20 @@ class AudioPool {
     }
     return undefined
   }
+
+  dispose(): void {
+    this.stopAll();
+    this.audioContext.close();
+    this.pool.clear();
+    this.instanceCounts.clear();
+    this.unusedAudioElements.forEach(audio => {
+      audio.src = '';
+      audio.load();
+    });
+    this.unusedAudioElements = [];
+    this.initialized = false;
+    this.initializationPromise = null;
+  }
 }
 
 export default AudioPool

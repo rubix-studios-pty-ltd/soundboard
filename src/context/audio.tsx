@@ -44,9 +44,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     if (audioPoolRef.current) {
-      audioPoolRef.current.updateMultiSoundEnabled(settings.multiSoundEnabled)
-      audioPoolRef.current.updateRepeatSoundEnabled(settings.repeatSoundEnabled)
-      audioPoolRef.current.stopAll()
+      audioPoolRef.current.dispose()
     }
 
     audioPoolRef.current = new AudioPool(
@@ -61,6 +59,12 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     setIsReady(true)
+
+    return () => {
+      if (audioPoolRef.current) {
+        audioPoolRef.current.dispose()
+      }
+    }
   }, [
     settingsInitialized,
     settings.multiSoundEnabled,
