@@ -6,7 +6,6 @@ import SoundButton from "@/components/sounds/button"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
-import { generateSoundId } from "@/utils/sound-id"
 
 interface SoundGridProps {
   type: "sound" | "music"
@@ -15,14 +14,11 @@ interface SoundGridProps {
 
 const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
   const { settings, updateSettings } = useSettings()
-  const { sounds: allSounds, music: allMusic } = useSounds()
+  const { sounds: allSounds, music: allMusic, isLoading } = useSounds()
   const rawSounds = type === "sound" ? allSounds : allMusic
-  const sounds = rawSounds
-    .map((sound) => ({
-      ...sound,
-      id: sound.id ?? generateSoundId(sound.file),
-    }))
-    .filter((sound) => !settings.favorites.items.includes(sound.id))
+  const sounds = rawSounds.filter(
+    (sound) => !settings.favorites.items.includes(sound.id)
+  )
 
   const { playSound } = useAudio()
 
@@ -68,6 +64,8 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
             onToggleHide={handleToggleHide}
             isDraggable={settings.dragAndDropEnabled}
             isInFavorites={false}
+            isUserAdded={sound.isUserAdded}
+            type={type}
           />
         ))}
       </div>

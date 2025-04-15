@@ -178,6 +178,7 @@ const Header: React.FC = () => {
             </div>
           </PopoverContent>
         </Popover>
+        
         <div className="draggable px-2 text-xs font-medium text-white">
           Soundboard
         </div>

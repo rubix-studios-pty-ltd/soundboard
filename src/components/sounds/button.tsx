@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { Chevron, Close } from "@/components/icons"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
-import { generateSoundId } from "@/utils/sound-id"
+import { useSounds } from "@/context/sounds"
 
 const Preset = [
   "#ef4444",
@@ -33,6 +33,8 @@ interface SoundButtonProps {
   onToggleHide?: (id: string) => void
   isDraggable?: boolean
   isInFavorites?: boolean
+  isUserAdded?: boolean
+  type: "sound" | "music"
 }
 
 const SoundButton: React.FC<SoundButtonProps> = ({
@@ -44,10 +46,13 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   onToggleHide,
   isDraggable = false,
   isInFavorites = false,
+  isUserAdded = false,
+  type
 }) => {
   const { playSound, stopSound, isPlaying } = useAudio()
   const [isActive, setIsActive] = useState(false)
-  const soundId = id || generateSoundId(file)
+  const { removeSound } = useSounds()
+  const soundId = id
 
   useEffect(() => {
     const checkPlayingState = () => {
@@ -62,7 +67,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
     const interval = setInterval(checkPlayingState, 100)
 
     return () => clearInterval(interval)
-  }, [file, isPlaying, isActive])
+  }, [file, isPlaying, isActive, id])
 
   const { settings, updateSettings } = useSettings()
 
@@ -138,6 +143,23 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                   <Close className="size-4" />
                 </button>
               </div>
+              {isUserAdded && (
+                <>
+                  <Separator />
+                  <Button 
+                    variant="secondary" 
+                    onClick={async () => {
+                      try {
+                        await removeSound({ id, file, title }, type)
+                      } catch (error) {
+                        console.error("Failed to delete sound:", error)
+                      }
+                    }}
+                  >
+                    Xóa
+                  </Button>
+                </>
+              )}
             </div>
           </PopoverContent>
         </Popover>

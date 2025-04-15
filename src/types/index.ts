@@ -24,7 +24,7 @@ export interface Settings {
 }
 
 export interface SoundData {
-  id?: string
+  id: string
   file: string
   title: string
   frequent?: boolean
@@ -50,12 +50,17 @@ export interface IpcApi {
   saveHotkeys: (hotkeys: HotkeyMap) => void
   saveSettings: (settings: Settings) => void
   toggleAlwaysOnTop: (isEnabled: boolean) => void
+  loadSounds: (type: "sound" | "music") => Promise<SoundData[]>
   convertAudio: (params: {
     buffer: ArrayBuffer
     originalName: string
     type: "sound" | "music"
   }) => Promise<{ outputPath: string }>
   addSound: (params: {
+    sound: SoundData
+    type: "sound" | "music"
+  }) => Promise<void>
+  deleteSound: (params: {
     sound: SoundData
     type: "sound" | "music"
   }) => Promise<void>

@@ -3,6 +3,14 @@ import { contextBridge, ipcRenderer } from "electron"
 import type { HotkeyMap, IpcApi, Settings } from "@/types"
 
 const electronAPI: IpcApi = {
+  loadSounds: async (type: "sound" | "music") => {
+    try {
+      return await ipcRenderer.invoke("load-sounds", type)
+    } catch (error) {
+      console.error(`Error loading ${type}s:`, error)
+      return []
+    }
+  },
   minimizeWindow: () => {
     try {
       ipcRenderer.send("window-control", "minimize")
@@ -103,6 +111,15 @@ const electronAPI: IpcApi = {
       await ipcRenderer.invoke("add-sound", params)
     } catch (error) {
       console.error("Error adding sound:", error)
+      throw error
+    }
+  },
+
+  deleteSound: async (params) => {
+    try {
+      await ipcRenderer.invoke("delete-sound", params)
+    } catch (error) {
+      console.error("Error deleting sound:", error)
       throw error
     }
   },

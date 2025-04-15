@@ -54,27 +54,61 @@ const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
   },
 })
 
-async function manageSoundsJson(type: "sound" | "music") {
-  const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
+function createSoundsManager(type: "sound" | "music") {
   let sounds: SoundData[] = []
-  
-  try {
-    const exists = await fs.access(jsonPath).then(() => true).catch(() => false)
-    if (exists) {
-      const content = await fs.readFile(jsonPath, 'utf-8')
-      sounds = JSON.parse(content)
+  let initialized = false
+  const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
+
+  const loadSounds = async () => {
+    try {
+      const exists = await fs.access(jsonPath).then(() => true).catch(() => false)
+      if (exists) {
+        const content = await fs.readFile(jsonPath, 'utf-8')
+        sounds = JSON.parse(content)
+      }
+      initialized = true
+    } catch (error) {
+      if (shouldLog()) console.error("Error reading sounds JSON:", error)
+      sounds = []
     }
-  } catch (error) {
-    if (shouldLog()) console.error("Error reading sounds JSON:", error)
   }
-  
-  return {
-    getAll: () => sounds,
-    add: async (sound: SoundData) => {
-      sounds.push(sound)
+
+  const saveSounds = async () => {
+    try {
       await fs.writeFile(jsonPath, JSON.stringify(sounds, null, 2), 'utf-8')
+    } catch (error) {
+      if (shouldLog()) console.error("Error saving sounds JSON:", error)
+      throw error
     }
   }
+
+  return {
+    getAll: async () => {
+      if (!initialized) {
+        await loadSounds()
+      }
+      return sounds
+    },
+    add: async (sound: SoundData) => {
+      if (!initialized) {
+        await loadSounds()
+      }
+      sounds.push(sound)
+      await saveSounds()
+    },
+    remove: async (soundId: string) => {
+      if (!initialized) {
+        await loadSounds()
+      }
+      sounds = sounds.filter(s => s.id !== soundId)
+      await saveSounds()
+    }
+  }
+}
+
+const soundManagers = {
+  sound: createSoundsManager("sound"),
+  music: createSoundsManager("music")
 }
 
 try {
@@ -146,7 +180,7 @@ const ROOT_PATH = path.join(__dirname, "..")
 function createWindow(): void {
   win = new BrowserWindow({
     width: 612,
-    height: 940,
+    height: 946,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
     frame: false,
@@ -230,8 +264,7 @@ async function convertToOpus(
 
 function setupIPC(): void {
   ipcMain.handle("load-sounds", async (_, type: "sound" | "music") => {
-    const manager = await manageSoundsJson(type)
-    return manager.getAll()
+    return await soundManagers[type].getAll()
   })
 
   ipcMain.on("window-control", (_: any, action: string) => {
@@ -442,11 +475,31 @@ function setupIPC(): void {
     "add-sound",
     async (_, params: { sound: SoundData; type: "sound" | "music" }) => {
       try {
-        const manager = await manageSoundsJson(params.type)
-        await manager.add(params.sound)
+        await soundManagers[params.type].add(params.sound)
       } catch (error) {
         if (shouldLog()) {
           console.error("Error adding sound:", error)
+        }
+        throw error
+      }
+    }
+  )
+
+  ipcMain.handle(
+    "delete-sound",
+    async (_, params: { sound: SoundData; type: "sound" | "music" }) => {
+      try {
+        const soundFilePath = path.join(app.getPath("userData"), params.sound.file)
+        await soundManagers[params.type].remove(params.sound.id)
+
+        try {
+          await fs.unlink(soundFilePath)
+        } catch (error) {
+          console.error("Error deleting sound file:", error)
+        }
+      } catch (error) {
+        if (shouldLog()) {
+          console.error("Error deleting sound:", error)
         }
         throw error
       }
