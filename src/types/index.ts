@@ -8,6 +8,11 @@ export interface Settings {
   buttonSettings: boolean
   hiddenSounds: string[]
   buttonColors: { [soundId: string]: string | undefined }
+  dragAndDropEnabled: boolean
+  favorites: {
+    items: string[]
+    maxItems: number
+  }
   theme: {
     enabled: boolean
     backgroundColor: string
@@ -23,6 +28,8 @@ export interface SoundData {
   file: string
   title: string
   frequent?: boolean
+  isUserAdded?: boolean
+  format?: "opus" | "mp3"
 }
 
 export interface HotkeyMap {
@@ -43,6 +50,15 @@ export interface IpcApi {
   saveHotkeys: (hotkeys: HotkeyMap) => void
   saveSettings: (settings: Settings) => void
   toggleAlwaysOnTop: (isEnabled: boolean) => void
+  convertAudio: (params: {
+    url: string
+    originalName: string
+    type: "sound" | "music"
+  }) => Promise<{ outputPath: string }>
+  addSound: (params: {
+    sound: SoundData
+    type: "sound" | "music"
+  }) => Promise<void>
 }
 
 declare global {

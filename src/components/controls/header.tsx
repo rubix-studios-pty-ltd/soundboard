@@ -12,25 +12,44 @@ import { ThemePicker } from "@/components/ui/theme-picker"
 import ToggleSwitch from "@/components/controls/toggles"
 import {
   Cog,
+  Drag,
   Exit,
   Maximize,
   Menu,
   Minimize,
   Multi,
   Mute,
+  Plus,
   Repeat,
   StopIcon,
   Volume,
   Windows,
 } from "@/components/icons"
+import AddSoundModal from "@/components/modals/add-sound"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
+import { useSounds } from "@/context/sounds"
+import { addNewSound } from "@/utils/audio-convert"
 import { presetThemes } from "@/data/themes"
 
 const Header: React.FC = () => {
   const { stopAll } = useAudio()
   const { settings, updateSettings } = useSettings()
+  const { addSound } = useSounds()
   const [previousVolume, setPreviousVolume] = useState(1)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+  const handleAddSound = async (type: "sound" | "music", file: File) => {
+    try {
+      const newSound = await addNewSound(file, type)
+      addSound(newSound, type)
+      setIsAddModalOpen(false)
+      alert("Sound added successfully!")
+    } catch (error) {
+      console.error("Failed to add sound:", error)
+      alert("Failed to add sound. Please try again.")
+    }
+  }
 
   const handleThemeChange = (themeKey: string | null) => {
     if (themeKey === null) {
@@ -172,16 +191,40 @@ const Header: React.FC = () => {
 
       <div className="flex items-center">
         <div className="flex items-center gap-2">
-          <button
-            className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-              settings.buttonSettings ? "text-red-500" : "text-white"
-            }`}
-            onClick={buttonSettings}
-          >
-            <div className="mr-0.5 h-4 w-4">
-              <Cog className="h-full w-full" />
-            </div>
-          </button>
+          <div className="flex items-center gap-2.5">
+            <button
+              className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+                settings.buttonSettings ? "text-red-500" : "text-white"
+              }`}
+              onClick={buttonSettings}
+            >
+              <div className="h-4 w-4">
+                <Cog className="h-full w-full" />
+              </div>
+            </button>
+            <button
+              className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+                settings.dragAndDropEnabled ? "text-red-500" : "text-white"
+              }`}
+              onClick={() =>
+                updateSettings({
+                  dragAndDropEnabled: !settings.dragAndDropEnabled,
+                })
+              }
+            >
+              <div className="h-4 w-4">
+                <Drag className="h-full w-full" />
+              </div>
+            </button>
+            <button
+              className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
+              onClick={() => setIsAddModalOpen(true)}
+            >
+              <div className="h-4 w-4">
+                <Plus className="h-full w-full" />
+              </div>
+            </button>
+          </div>
           <Separator orientation="vertical" />
           <button
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
@@ -210,7 +253,6 @@ const Header: React.FC = () => {
               )}
             </div>
           </button>
-
           <Separator orientation="vertical" />
         </div>
 
@@ -235,6 +277,12 @@ const Header: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <AddSoundModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAdd={handleAddSound}
+      />
     </div>
   )
 }

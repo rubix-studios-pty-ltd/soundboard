@@ -1,30 +1,26 @@
 import React, { useCallback } from "react"
 
-import { SoundData } from "@/types"
 import { useHotkeys } from "@/hooks/usehotkey"
 import HotkeyModal from "@/components/modals/hotkey"
 import SoundButton from "@/components/sounds/button"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
+import { useSounds } from "@/context/sounds"
 import { generateSoundId } from "@/utils/sound-id"
 
 interface SoundGridProps {
-  sounds: SoundData[]
+  type: "sound" | "music"
   containerId: string
 }
 
-const SoundGrid: React.FC<SoundGridProps> = ({
-  sounds: rawSounds,
-  containerId,
-}) => {
+const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
   const { settings, updateSettings } = useSettings()
-  const sounds = rawSounds.map((sound) => {
-    const soundWithId = {
-      ...sound,
-      id: sound.id ?? generateSoundId(sound.file),
-    }
-    return soundWithId
-  })
+  const { sounds: allSounds, music: allMusic } = useSounds()
+  const rawSounds = type === "sound" ? allSounds : allMusic
+  const sounds = rawSounds.map((sound) => ({
+    ...sound,
+    id: sound.id ?? generateSoundId(sound.file),
+  }))
 
   const { playSound } = useAudio()
 
@@ -57,18 +53,21 @@ const SoundGrid: React.FC<SoundGridProps> = ({
   }
 
   return (
-    <div id={containerId} className="flex flex-wrap gap-1 p-0">
-      {sounds.map((sound) => (
-        <SoundButton
-          key={sound.id}
-          id={sound.id}
-          file={sound.file}
-          title={sound.title}
-          onHotkeyAssign={showHotkeyModal}
-          isHidden={settings.hiddenSounds?.includes(sound.id) || false}
-          onToggleHide={handleToggleHide}
-        />
-      ))}
+    <div>
+      <div id={containerId} className="flex flex-wrap gap-1 p-0">
+        {sounds.map((sound) => (
+          <SoundButton
+            key={sound.id}
+            id={sound.id}
+            file={sound.file}
+            title={sound.title}
+            onHotkeyAssign={showHotkeyModal}
+            isHidden={settings.hiddenSounds?.includes(sound.id) || false}
+            onToggleHide={handleToggleHide}
+            isDraggable={settings.dragAndDropEnabled}
+          />
+        ))}
+      </div>
       <HotkeyModal
         isOpen={modalOpen}
         onClose={closeModal}

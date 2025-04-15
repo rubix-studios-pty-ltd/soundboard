@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { Chevron, Close } from "@/components/icons"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
+import { generateSoundId } from "@/utils/sound-id"
 
 const Preset = [
   "#ef4444",
@@ -30,6 +31,7 @@ interface SoundButtonProps {
   onHotkeyAssign: (soundId: string) => void
   isHidden?: boolean
   onToggleHide?: (id: string) => void
+  isDraggable?: boolean
 }
 
 const SoundButton: React.FC<SoundButtonProps> = ({
@@ -39,9 +41,13 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   onHotkeyAssign,
   isHidden = false,
   onToggleHide,
+  isDraggable = false,
 }) => {
   const { playSound, stopSound, isPlaying } = useAudio()
   const [isActive, setIsActive] = useState(false)
+
+  // Ensure we have a valid ID
+  const soundId = id || generateSoundId(file)
 
   useEffect(() => {
     const checkPlayingState = () => {
@@ -62,17 +68,17 @@ const SoundButton: React.FC<SoundButtonProps> = ({
 
   const handleClick = async () => {
     if (settings.repeatSoundEnabled) {
-      await playSound(id, file)
+      await playSound(soundId, file)
     } else if (isActive) {
       stopSound(file)
     } else {
-      await playSound(id, file)
+      await playSound(soundId, file)
     }
   }
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
-    onHotkeyAssign(id)
+    onHotkeyAssign(soundId)
   }
 
   return (
@@ -82,7 +88,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       {settings.buttonSettings && (
         <Popover>
           <PopoverTrigger asChild>
-            <Chevron className="absolute top-1.5 right-1 z-10 h-4 w-4 cursor-pointer border-0" />
+            <Chevron className="absolute top-1.5 right-1 z-10 h-4 w-4 cursor-pointer rounded-full border bg-white text-black transition-all duration-300 hover:text-gray-800" />
           </PopoverTrigger>
           <PopoverContent
             align="start"
@@ -94,7 +100,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                 <Checkbox
                   className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
                   checked={isHidden}
-                  onCheckedChange={() => onToggleHide?.(id)}
+                  onCheckedChange={() => onToggleHide?.(soundId)}
                 />
               </div>
               <Separator />
@@ -108,7 +114,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                       updateSettings({
                         buttonColors: {
                           ...(settings.buttonColors || {}),
-                          [id]: presetColor,
+                          [soundId]: presetColor,
                         },
                       })
                     }
@@ -120,7 +126,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                     updateSettings({
                       buttonColors: {
                         ...(settings.buttonColors || {}),
-                        [id]: undefined,
+                        [soundId]: undefined,
                       },
                     })
                   }
@@ -135,15 +141,24 @@ const SoundButton: React.FC<SoundButtonProps> = ({
       <Button
         variant="outline"
         size="sm"
+        draggable={isDraggable}
+        onDragStart={(e) => {
+          if (isDraggable) {
+            const soundIdToUse = soundId
+            e.dataTransfer.setData("text/sound-id", soundIdToUse)
+            e.dataTransfer.effectAllowed = "move"
+            console.log("Dragging sound:", { id: soundIdToUse, file })
+          }
+        }}
         className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all ${
           settings.buttonSettings && isHidden ? "opacity-50" : ""
-        }`}
+        } ${isDraggable ? "cursor-move" : ""}`}
         style={
           {
-            backgroundColor: settings?.buttonColors?.[id]
+            backgroundColor: settings?.buttonColors?.[soundId]
               ? isActive
                 ? "#000"
-                : settings.buttonColors[id]
+                : settings.buttonColors[soundId]
               : settings?.theme?.enabled
                 ? isActive
                   ? settings.theme.buttonActive
@@ -151,14 +166,14 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                 : isActive
                   ? "#000"
                   : undefined,
-            color: settings?.buttonColors?.[id]
+            color: settings?.buttonColors?.[soundId]
               ? "#fff"
               : settings?.theme?.enabled
                 ? settings.theme.buttonText
                 : isActive
                   ? "#fff"
                   : undefined,
-            "--button-hover": settings?.buttonColors?.[id]
+            "--button-hover": settings?.buttonColors?.[soundId]
               ? isActive
                 ? "#000"
                 : "#404040"
@@ -173,7 +188,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
         }
         onClick={handleClick}
         onContextMenu={handleContextMenu}
-        data-sound-id={id}
+        data-sound-id={soundId}
       >
         <span className="w-full truncate text-center">{title}</span>
       </Button>

@@ -24,6 +24,11 @@ const defaultSettings: Settings = {
   buttonSettings: false,
   hiddenSounds: [] as string[],
   buttonColors: {},
+  dragAndDropEnabled: false,
+  favorites: {
+    items: [],
+    maxItems: 12,
+  },
   theme: {
     enabled: false,
     backgroundColor: "#f3f4f6",
@@ -45,6 +50,19 @@ const validateSettings = (settings: any): Settings => {
       typeof settings.buttonColors === "object" && settings.buttonColors
         ? settings.buttonColors
         : {},
+    dragAndDropEnabled:
+      typeof settings.dragAndDropEnabled === "boolean"
+        ? settings.dragAndDropEnabled
+        : defaultSettings.dragAndDropEnabled,
+    favorites: {
+      ...defaultSettings.favorites,
+      ...(typeof settings.favorites === "object" && settings.favorites
+        ? settings.favorites
+        : {}),
+      items: Array.isArray(settings?.favorites?.items)
+        ? settings.favorites.items
+        : [],
+    },
     theme: {
       ...defaultSettings.theme,
       ...(typeof settings.theme === "object" && settings.theme

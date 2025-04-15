@@ -1,17 +1,20 @@
+import { promises as fs } from "fs"
 import path from "path"
 
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
+import ffmpeg from "fluent-ffmpeg"
 
 import type {
   HotkeyMap as HotkeyMapType,
   Settings as SettingsType,
+  SoundData,
 } from "@/types"
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
-const defaultSettings = {
+const defaultSettings: SettingsType = {
   multiSoundEnabled: true,
   repeatSoundEnabled: false,
   alwaysOnTop: false,
@@ -21,6 +24,11 @@ const defaultSettings = {
   buttonSettings: false,
   hiddenSounds: [] as string[],
   buttonColors: {},
+  dragAndDropEnabled: false,
+  favorites: {
+    items: [],
+    maxItems: 12,
+  },
   theme: {
     enabled: false,
     backgroundColor: "#f3f4f6",
@@ -114,7 +122,7 @@ const ROOT_PATH = path.join(__dirname, "..")
 
 function createWindow(): void {
   win = new BrowserWindow({
-    width: 610,
+    width: 612,
     height: 940,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
@@ -165,6 +173,19 @@ function createWindow(): void {
       win.webContents.openDevTools()
     }
   }
+}
+
+async function convertToOpus(
+  filePath: string,
+  outputPath: string
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    ffmpeg(filePath)
+      .toFormat("opus")
+      .save(outputPath)
+      .on("end", resolve)
+      .on("error", reject)
+  })
 }
 
 function setupIPC(): void {
@@ -249,6 +270,13 @@ function setupIPC(): void {
           typeof settings.buttonColors === "object"
             ? settings.buttonColors || {}
             : {},
+        dragAndDropEnabled: Boolean(settings.dragAndDropEnabled),
+        favorites: {
+          items: Array.isArray(settings.favorites?.items)
+            ? settings.favorites.items
+            : [],
+          maxItems: Number(settings.favorites?.maxItems) || 12,
+        },
         theme:
           typeof settings.theme === "object" &&
           typeof settings.theme?.buttonText === "string" &&
@@ -311,6 +339,13 @@ function setupIPC(): void {
             typeof currentSettings.theme?.buttonHoverColor === "string"
               ? currentSettings.theme
               : defaultSettings.theme,
+          dragAndDropEnabled: Boolean(currentSettings.dragAndDropEnabled),
+          favorites: {
+            items: Array.isArray(currentSettings.favorites?.items)
+              ? currentSettings.favorites.items
+              : [],
+            maxItems: Number(currentSettings.favorites?.maxItems) || 12,
+          },
         }
         store.set("settings", updatedSettings)
       }
@@ -320,6 +355,74 @@ function setupIPC(): void {
       }
     }
   })
+
+  ipcMain.handle(
+    "convert-audio",
+    async (
+      _,
+      params: { url: string; originalName: string; type: "sound" | "music" }
+    ) => {
+      try {
+        const tempDir = path.join(app.getPath("userData"), "temp")
+        await fs.mkdir(tempDir, { recursive: true })
+
+        const inputPath = path.join(tempDir, params.originalName)
+        const outputName =
+          path.basename(
+            params.originalName,
+            path.extname(params.originalName)
+          ) + ".opus"
+        const outputPath = path.join(ROOT_PATH, "sound", outputName)
+
+        const response = await fetch(params.url)
+        const buffer = await response.arrayBuffer()
+        await fs.writeFile(inputPath, Buffer.from(buffer))
+
+        await convertToOpus(inputPath, outputPath)
+
+        await fs.unlink(inputPath)
+
+        return { outputPath: outputName }
+      } catch (error) {
+        if (shouldLog()) {
+          console.error("Error converting audio:", error)
+        }
+        throw error
+      }
+    }
+  )
+
+  ipcMain.handle(
+    "add-sound",
+    async (_, params: { sound: SoundData; type: "sound" | "music" }) => {
+      try {
+        const dataFile = params.type === "sound" ? "audio.ts" : "music.ts"
+        const dataPath = path.join(ROOT_PATH, "src", "data", dataFile)
+
+        const content = await fs.readFile(dataPath, "utf-8")
+
+        const match = content.match(/export const \w+ = (\[[\s\S]*\])/)
+        if (!match) {
+          throw new Error("Invalid data file format")
+        }
+
+        const sounds = JSON.parse(match[1].replace(/'/g, '"'))
+        sounds.push(params.sound)
+
+        const newContent = content.replace(
+          /export const \w+ = \[[\s\S]*\]/,
+          `export const ${params.type === "sound" ? "audio" : "music"} = ${JSON.stringify(sounds, null, 2)}`
+        )
+
+        await fs.writeFile(dataPath, newContent)
+      } catch (error) {
+        if (shouldLog()) {
+          console.error("Error adding sound:", error)
+        }
+        throw error
+      }
+    }
+  )
 }
 
 const gotTheLock = app.requestSingleInstanceLock()

@@ -43,6 +43,24 @@ const electronAPI: IpcApi = {
         repeatSoundEnabled: false,
         alwaysOnTop: false,
         volume: 1,
+        maxPoolSize: 100,
+        maxInstancesPerSound: 20,
+        buttonSettings: false,
+        hiddenSounds: [],
+        buttonColors: {},
+        dragAndDropEnabled: false,
+        favorites: {
+          items: [],
+          maxItems: 12,
+        },
+        theme: {
+          enabled: false,
+          backgroundColor: "#f3f4f6",
+          buttonColor: "#4b5563",
+          buttonText: "#ffffff",
+          buttonActive: "#374151",
+          buttonHoverColor: "#404040",
+        },
       }
     }
   },
@@ -68,6 +86,24 @@ const electronAPI: IpcApi = {
       ipcRenderer.send("toggle-always-on-top", isEnabled)
     } catch (error) {
       console.error("Error toggling always-on-top:", error)
+    }
+  },
+
+  convertAudio: async (params) => {
+    try {
+      return await ipcRenderer.invoke("convert-audio", params)
+    } catch (error) {
+      console.error("Error converting audio:", error)
+      throw error
+    }
+  },
+
+  addSound: async (params) => {
+    try {
+      await ipcRenderer.invoke("add-sound", params)
+    } catch (error) {
+      console.error("Error adding sound:", error)
+      throw error
     }
   },
 }
