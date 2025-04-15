@@ -64,7 +64,11 @@ class SoundboardApp {
     }
   }
 
-  private async toggleSound(file: string, buttonId: string): Promise<void> {
+  private async toggleSound(
+    file: string,
+    buttonId: string,
+    isUserAdded: boolean = false
+  ): Promise<void> {
     const buttonElement = document.getElementById(buttonId) as HTMLButtonElement
     const currentVolume = parseFloat(this.volumeSlider.value)
 
@@ -72,7 +76,13 @@ class SoundboardApp {
       const isPlaying = this.audioPool.isPlaying(file)
 
       if (this.config.repeatSoundEnabled) {
-        await this.playSound(file, currentVolume, buttonElement, true)
+        await this.playSound(
+          file,
+          currentVolume,
+          buttonElement,
+          true,
+          isUserAdded
+        )
         return
       }
 
@@ -86,7 +96,13 @@ class SoundboardApp {
         await this.stopActiveSounds()
       }
 
-      await this.playSound(file, currentVolume, buttonElement, false)
+      await this.playSound(
+        file,
+        currentVolume,
+        buttonElement,
+        false,
+        isUserAdded
+      )
     } catch (error) {
       buttonElement.classList.remove("active")
       this.audioPool.stopSpecific(file)
@@ -97,10 +113,11 @@ class SoundboardApp {
     file: string,
     volume: number,
     buttonElement: HTMLButtonElement,
-    repeat: boolean
+    repeat: boolean,
+    isUserAdded: boolean = false
   ): Promise<void> {
     try {
-      await this.audioPool.play(file, volume, repeat, () => {
+      await this.audioPool.play(file, isUserAdded, volume, repeat, () => {
         buttonElement.classList.remove("active")
       })
       buttonElement.classList.add("active")
@@ -151,7 +168,8 @@ class SoundboardApp {
     const soundId = data.id ?? generateSoundId(data.file)
     btnElement.id = soundId
     btnElement.setAttribute("data-sound-id", soundId)
-    btnElement.onclick = () => this.toggleSound(data.file, soundId)
+    btnElement.onclick = () =>
+      this.toggleSound(data.file, soundId, data.isUserAdded)
     btnElement.oncontextmenu = (e) => {
       e.preventDefault()
       this.hotkeyManager.showModal(soundId)

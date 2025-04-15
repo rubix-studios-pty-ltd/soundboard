@@ -82,6 +82,7 @@ class AudioPool {
 
   async play(
     source: string,
+    isUserAdded: boolean,
     volume: number,
     repeat: boolean = false,
     onEnd?: () => void
@@ -119,6 +120,7 @@ class AudioPool {
       await this.playFromUrl(
         source,
         source,
+        isUserAdded,
         volume,
         this.repeatSoundEnabled && repeat,
         onEnd
@@ -214,11 +216,24 @@ class AudioPool {
   private async playFromUrl(
     url: string,
     source: string,
+    isUserAdded: boolean,
     volume: number,
     repeat: boolean = false,
     onEnd?: () => void
   ): Promise<void> {
     const instanceId = `${source}_${Date.now()}`
+
+    let finalUrl = url
+    if (isUserAdded) {
+      try {
+        const userDataPath = await window.electronAPI.getAppDataPath()
+        const filePath = `${userDataPath}/sounds/${url}`
+        finalUrl = `file://${filePath}`
+      } catch (error) {
+        console.error("Error getting app data path:", error)
+        finalUrl = url
+      }
+    }
 
     if (repeat) {
       const currentCount = this.instanceCounts.get(source) || 0
@@ -300,7 +315,7 @@ class AudioPool {
       this.pool.set(instanceId, poolItem)
 
       audioElement.currentTime = 0
-      audioElement.src = url
+      audioElement.src = finalUrl
       audioElement.volume = volume
       audioElement.loop = false
 

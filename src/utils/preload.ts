@@ -123,6 +123,24 @@ const electronAPI: IpcApi = {
       throw error
     }
   },
+
+  validateSound: async (sound) => {
+    try {
+      return await ipcRenderer.invoke("validate-sound", sound)
+    } catch (error) {
+      console.error("Error validating sound:", error)
+      return false
+    }
+  },
+
+  getAppDataPath: async () => {
+    try {
+      return await ipcRenderer.invoke("get-app-data-path")
+    } catch (error) {
+      console.error("Error getting app data path:", error)
+      throw error
+    }
+  },
 }
 
 contextBridge.exposeInMainWorld("electronAPI", electronAPI)

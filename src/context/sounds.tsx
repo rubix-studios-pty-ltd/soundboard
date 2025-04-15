@@ -1,10 +1,17 @@
-import React, { createContext, useCallback, useContext, useEffect, useState, useMemo } from "react"
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 
 import { SoundData } from "@/types"
+import { useUserSounds } from "@/hooks/useUserSounds"
 import { generateSoundId } from "@/utils/sound-id"
 import { soundData as initialSounds } from "@/data/audio"
 import { musicData as initialMusic } from "@/data/music"
-import { useUserSounds } from "@/hooks/useUserSounds"
 
 interface SoundsContextType {
   sounds: SoundData[]
@@ -19,71 +26,114 @@ const SoundsContext = createContext<SoundsContextType | null>(null)
 export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const processedInitialSounds = useMemo(() => 
-    initialSounds.map(sound => ({
-      ...sound,
-      id: generateSoundId(sound.file)
-    })), [])
+  const processedInitialSounds = useMemo(
+    () =>
+      initialSounds.map((sound) => ({
+        ...sound,
+        id: generateSoundId(sound.file),
+      })),
+    []
+  )
 
-  const processedInitialMusic = useMemo(() => 
-    initialMusic.map(sound => ({
-      ...sound,
-      id: generateSoundId(sound.file)
-    })), [])
+  const processedInitialMusic = useMemo(
+    () =>
+      initialMusic.map((sound) => ({
+        ...sound,
+        id: generateSoundId(sound.file),
+      })),
+    []
+  )
 
   const [sounds, setSounds] = useState<SoundData[]>([])
   const [music, setMusic] = useState<SoundData[]>([])
 
-  const { 
-    userSounds: userRegularSounds, 
+  const {
+    userSounds: userRegularSounds,
     loading: loadingRegularSounds,
     addUserSound: addRegularSound,
-    reloadSounds: reloadRegularSounds
+    removeUserSound: removeRegularSound,
   } = useUserSounds("sound")
 
-  const { 
-    userSounds: userMusicSounds, 
+  const {
+    userSounds: userMusicSounds,
     loading: loadingMusicSounds,
     addUserSound: addMusicSound,
-    reloadSounds: reloadMusicSounds
+    removeUserSound: removeMusicSound,
   } = useUserSounds("music")
 
   useEffect(() => {
-    setSounds([...processedInitialSounds, ...userRegularSounds])
+    const soundMap = new Map<string, SoundData>()
+
+    processedInitialSounds.forEach((sound) => {
+      soundMap.set(sound.file, sound)
+    })
+
+    userRegularSounds.forEach((sound) => {
+      if (!soundMap.has(sound.file)) {
+        soundMap.set(sound.file, sound)
+      }
+    })
+
+    setSounds(Array.from(soundMap.values()))
   }, [processedInitialSounds, userRegularSounds])
 
   useEffect(() => {
-    setMusic([...processedInitialMusic, ...userMusicSounds])
+    const musicMap = new Map<string, SoundData>()
+
+    processedInitialMusic.forEach((sound) => {
+      musicMap.set(sound.file, sound)
+    })
+
+    userMusicSounds.forEach((sound) => {
+      if (!musicMap.has(sound.file)) {
+        musicMap.set(sound.file, sound)
+      }
+    })
+
+    setMusic(Array.from(musicMap.values()))
   }, [processedInitialMusic, userMusicSounds])
 
-
-  const addSound = useCallback(async (sound: SoundData, type: "sound" | "music") => {
-    const processedSound = {
-      ...sound,
-      id: generateSoundId(sound.file),
-      isUserAdded: true
-    }
-    await window.electronAPI.addSound({ sound: processedSound, type })
-    if (type === "sound") {
-      addRegularSound(processedSound)
-    } else {
-      addMusicSound(processedSound)
-    }
-  }, [addRegularSound, addMusicSound])
-
-  const removeSound = useCallback(async (sound: SoundData, type: "sound" | "music") => {
-    try {
-      await window.electronAPI.deleteSound({ sound, type })
-      if (type === "sound") {
-        reloadRegularSounds()
-      } else {
-        reloadMusicSounds()
+  const addSound = useCallback(
+    async (sound: SoundData, type: "sound" | "music") => {
+      const processedSound = {
+        ...sound,
+        id: sound.id || generateSoundId(sound.file),
+        isUserAdded: true,
       }
-    } catch (error) {
-      console.error("Error removing sound:", error)
-      throw error
-    }
-  }, [reloadRegularSounds, reloadMusicSounds])
+      await window.electronAPI.addSound({ sound: processedSound, type })
+      if (type === "sound") {
+        addRegularSound(processedSound)
+      } else {
+        addMusicSound(processedSound)
+      }
+    },
+    [addRegularSound, addMusicSound]
+  )
+
+  const removeSound = useCallback(
+    async (sound: SoundData, type: "sound" | "music") => {
+      try {
+        if (type === "sound") {
+          removeRegularSound(sound.id)
+        } else {
+          removeMusicSound(sound.id)
+        }
+
+        await window.electronAPI.deleteSound({ sound, type }).catch((error) => {
+          if (type === "sound") {
+            addRegularSound(sound)
+          } else {
+            addMusicSound(sound)
+          }
+          throw error
+        })
+      } catch (error) {
+        console.error("Error in removeSound:", error)
+        throw error
+      }
+    },
+    [removeRegularSound, removeMusicSound, addRegularSound, addMusicSound]
+  )
 
   return (
     <SoundsContext.Provider
@@ -92,7 +142,7 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
         music,
         addSound,
         removeSound,
-        isLoading: loadingRegularSounds || loadingMusicSounds
+        isLoading: loadingRegularSounds || loadingMusicSounds,
       }}
     >
       {children}

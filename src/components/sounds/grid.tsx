@@ -26,7 +26,7 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
     (soundId: string) => {
       const sound = sounds.find((s) => s.id === soundId)
       if (sound) {
-        playSound(sound.id, sound.file)
+        playSound(sound.id, sound.file, sound.isUserAdded || false)
       }
     },
     [sounds, playSound]

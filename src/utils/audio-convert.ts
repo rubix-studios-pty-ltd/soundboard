@@ -1,8 +1,13 @@
 import { ipcRenderer } from "electron"
 
 import { SoundData } from "@/types"
+import { generateSoundId } from "@/utils/sound-id"
 
-export const convertToOpus = async (file: File, type: "sound" | "music") => {
+export const convertToOpus = async (
+  file: File,
+  type: "sound" | "music",
+  customTitle?: string
+) => {
   try {
     const arrayBuffer = await file.arrayBuffer()
     const result = await window.electronAPI.convertAudio({
@@ -12,8 +17,9 @@ export const convertToOpus = async (file: File, type: "sound" | "music") => {
     })
 
     const soundData: SoundData = {
+      id: generateSoundId(result.outputPath),
       file: result.outputPath,
-      title: file.name.replace(/\.[^/.]+$/, ""),
+      title: customTitle || file.name.replace(/\.[^/.]+$/, ""),
       isUserAdded: true,
       format: "opus",
     }
@@ -25,9 +31,13 @@ export const convertToOpus = async (file: File, type: "sound" | "music") => {
   }
 }
 
-export const addNewSound = async (file: File, type: "sound" | "music") => {
+export const addNewSound = async (
+  file: File,
+  type: "sound" | "music",
+  customTitle?: string
+) => {
   try {
-    const soundData = await convertToOpus(file, type)
+    const soundData = await convertToOpus(file, type, customTitle)
 
     await window.electronAPI.addSound({
       sound: soundData,

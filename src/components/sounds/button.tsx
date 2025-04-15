@@ -47,7 +47,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   isDraggable = false,
   isInFavorites = false,
   isUserAdded = false,
-  type
+  type,
 }) => {
   const { playSound, stopSound, isPlaying } = useAudio()
   const [isActive, setIsActive] = useState(false)
@@ -73,11 +73,11 @@ const SoundButton: React.FC<SoundButtonProps> = ({
 
   const handleClick = async () => {
     if (settings.repeatSoundEnabled) {
-      await playSound(soundId, file)
+      await playSound(soundId, file, isUserAdded)
     } else if (isActive) {
       stopSound(file)
     } else {
-      await playSound(soundId, file)
+      await playSound(soundId, file, isUserAdded)
     }
   }
 
@@ -146,8 +146,8 @@ const SoundButton: React.FC<SoundButtonProps> = ({
               {isUserAdded && (
                 <>
                   <Separator />
-                  <Button 
-                    variant="secondary" 
+                  <Button
+                    variant="secondary"
                     onClick={async () => {
                       try {
                         await removeSound({ id, file, title }, type)

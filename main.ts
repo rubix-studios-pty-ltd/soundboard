@@ -55,27 +55,70 @@ const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
 })
 
 function createSoundsManager(type: "sound" | "music") {
-  let sounds: SoundData[] = []
-  let initialized = false
   const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
+  const lockPath = path.join(app.getPath("userData"), `${type}s.lock`)
 
-  const loadSounds = async () => {
+  const withLock = async <T>(operation: () => Promise<T>): Promise<T> => {
     try {
-      const exists = await fs.access(jsonPath).then(() => true).catch(() => false)
-      if (exists) {
-        const content = await fs.readFile(jsonPath, 'utf-8')
-        sounds = JSON.parse(content)
+      await fs.writeFile(lockPath, Date.now().toString())
+      return await operation()
+    } finally {
+      try {
+        await fs.unlink(lockPath)
+      } catch (error) {
+        if (shouldLog()) console.error("Error releasing lock:", error)
       }
-      initialized = true
-    } catch (error) {
-      if (shouldLog()) console.error("Error reading sounds JSON:", error)
-      sounds = []
     }
   }
 
-  const saveSounds = async () => {
+  const validateSound = async (sound: SoundData): Promise<boolean> => {
     try {
-      await fs.writeFile(jsonPath, JSON.stringify(sounds, null, 2), 'utf-8')
+      const soundPath = path.join(app.getPath("userData"), "sounds", sound.file)
+      await fs.access(soundPath)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const loadSounds = async (): Promise<SoundData[]> => {
+    try {
+      const exists = await fs
+        .access(jsonPath)
+        .then(() => true)
+        .catch(() => false)
+      if (exists) {
+        const content = await fs.readFile(jsonPath, "utf-8")
+        const sounds = JSON.parse(content) as SoundData[]
+
+        const validatedSounds = []
+        for (const sound of sounds) {
+          if (await validateSound(sound)) {
+            validatedSounds.push(sound)
+          } else if (shouldLog()) {
+            console.log(`Removing stale sound entry: ${sound.id}`)
+          }
+        }
+
+        if (validatedSounds.length !== sounds.length) {
+          await saveSounds(validatedSounds)
+        }
+
+        return validatedSounds
+      }
+      return []
+    } catch (error) {
+      if (shouldLog()) console.error("Error reading sounds JSON:", error)
+      return []
+    }
+  }
+
+  const saveSounds = async (sounds: SoundData[]): Promise<void> => {
+    try {
+      const tempPath = `${jsonPath}.tmp`
+      await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), "utf-8")
+
+      await fs.rename(tempPath, jsonPath)
     } catch (error) {
       if (shouldLog()) console.error("Error saving sounds JSON:", error)
       throw error
@@ -84,31 +127,54 @@ function createSoundsManager(type: "sound" | "music") {
 
   return {
     getAll: async () => {
-      if (!initialized) {
-        await loadSounds()
-      }
-      return sounds
+      return await withLock(loadSounds)
     },
     add: async (sound: SoundData) => {
-      if (!initialized) {
-        await loadSounds()
-      }
-      sounds.push(sound)
-      await saveSounds()
+      await withLock(async () => {
+        if (await validateSound(sound)) {
+          const sounds = await loadSounds()
+          sounds.push(sound)
+          await saveSounds(sounds)
+        } else {
+          throw new Error("Sound file does not exist")
+        }
+      })
     },
     remove: async (soundId: string) => {
-      if (!initialized) {
-        await loadSounds()
-      }
-      sounds = sounds.filter(s => s.id !== soundId)
-      await saveSounds()
-    }
+      await withLock(async () => {
+        const sounds = await loadSounds()
+        const soundToRemove = sounds.find((s) => s.id === soundId)
+        if (!soundToRemove) {
+          return
+        }
+
+        const filteredSounds = sounds.filter((s) => s.id !== soundId)
+        await saveSounds(filteredSounds)
+
+        try {
+          const soundPath = path.join(
+            app.getPath("userData"),
+            "sounds",
+            soundToRemove.file
+          )
+          const exists = await fs
+            .access(soundPath)
+            .then(() => true)
+            .catch(() => false)
+          if (exists) {
+            await fs.unlink(soundPath)
+          }
+        } catch (error) {
+          if (shouldLog()) console.error("Error deleting sound file:", error)
+        }
+      })
+    },
   }
 }
 
 const soundManagers = {
   sound: createSoundsManager("sound"),
-  music: createSoundsManager("music")
+  music: createSoundsManager("music"),
 }
 
 try {
@@ -212,7 +278,7 @@ function createWindow(): void {
       }
 
       try {
-        const soundPath = path.join(app.getPath("userData"), filePath)
+        const soundPath = path.join(app.getPath("userData"), "sounds", filePath)
         try {
           await fs.access(soundPath)
           return await protocol.Response.fromFileStream(
@@ -220,10 +286,17 @@ function createWindow(): void {
             compressionOptions
           )
         } catch {
-          return await protocol.Response.fromFileStream(
-            path.join(ROOT_PATH, filePath),
-            compressionOptions
-          )
+          // For built-in sounds
+          const builtInPath = path.join(ROOT_PATH, filePath)
+          try {
+            await fs.access(builtInPath)
+            return await protocol.Response.fromFileStream(
+              builtInPath,
+              compressionOptions
+            )
+          } catch {
+            throw new Error(`Sound file not found: ${filePath}`)
+          }
         }
       } catch (error) {
         if (shouldLog()) {
@@ -251,7 +324,7 @@ async function convertToOpus(
       .audioFilters([
         "loudnorm=I=-16:TP=-1.5:LRA=11",
         "dynaudnorm=f=150:g=5",
-        "silenceremove=1:0:-50dB"
+        "silenceremove=1:0:-50dB",
       ])
       .audioFrequency(48000)
       .audioBitrate("64k")
@@ -438,7 +511,11 @@ function setupIPC(): void {
     "convert-audio",
     async (
       _,
-      params: { buffer: ArrayBuffer; originalName: string; type: "sound" | "music" }
+      params: {
+        buffer: ArrayBuffer
+        originalName: string
+        type: "sound" | "music"
+      }
     ) => {
       try {
         const tempDir = path.join(app.getPath("userData"), "temp")
@@ -461,7 +538,7 @@ function setupIPC(): void {
 
         await fs.unlink(inputPath)
 
-        return { outputPath: path.join("sounds", outputName) }
+        return { outputPath: outputName }
       } catch (error) {
         if (shouldLog()) {
           console.error("Error converting audio:", error)
@@ -489,14 +566,7 @@ function setupIPC(): void {
     "delete-sound",
     async (_, params: { sound: SoundData; type: "sound" | "music" }) => {
       try {
-        const soundFilePath = path.join(app.getPath("userData"), params.sound.file)
         await soundManagers[params.type].remove(params.sound.id)
-
-        try {
-          await fs.unlink(soundFilePath)
-        } catch (error) {
-          console.error("Error deleting sound file:", error)
-        }
       } catch (error) {
         if (shouldLog()) {
           console.error("Error deleting sound:", error)
@@ -505,6 +575,20 @@ function setupIPC(): void {
       }
     }
   )
+
+  ipcMain.handle("validate-sound", async (_, sound: SoundData) => {
+    try {
+      const soundPath = path.join(app.getPath("userData"), "sounds", sound.file)
+      await fs.access(soundPath)
+      return true
+    } catch {
+      return false
+    }
+  })
+
+  ipcMain.handle("get-app-data-path", async () => {
+    return app.getPath("userData")
+  })
 }
 
 const gotTheLock = app.requestSingleInstanceLock()

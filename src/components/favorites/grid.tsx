@@ -123,6 +123,8 @@ const FavoriteGrid: React.FC = () => {
                   onHotkeyAssign={() => {}}
                   isDraggable={dragAndDropEnabled}
                   isInFavorites={true}
+                  isUserAdded={sound.isUserAdded}
+                  type="sound"
                 />
                 {dragAndDropEnabled && (
                   <button

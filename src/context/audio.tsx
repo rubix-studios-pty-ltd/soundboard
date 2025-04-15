@@ -10,7 +10,13 @@ import { useSettings } from "@/context/setting"
 import AudioPool from "@/utils/audio-pool"
 
 interface AudioContextType {
-  playSound: (soundId: string, file: string) => Promise<void>
+  playSound: (
+    soundId: string,
+    file: string,
+    isUserAdded: boolean,
+    volume?: number,
+    repeatEnabled?: boolean
+  ) => Promise<void>
   stopAll: () => void
   stopSound: (file: string) => void
   isPlaying: (file: string) => boolean
@@ -73,7 +79,13 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [settings.volume, isReady])
 
-  const playSound = async (soundId: string, file: string) => {
+  const playSound = async (
+    soundId: string,
+    file: string,
+    isUserAdded: boolean,
+    volume?: number,
+    repeatEnabled?: boolean
+  ) => {
     if (!audioPoolRef.current || !isReady) {
       console.warn("Audio system not ready")
       return
@@ -82,8 +94,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       await audioPoolRef.current.play(
         file,
-        settings.volume,
-        settings.repeatSoundEnabled
+        isUserAdded,
+        volume ?? settings.volume,
+        repeatEnabled ?? settings.repeatSoundEnabled
       )
     } catch (error: unknown) {
       console.error("Error playing sound:", error)

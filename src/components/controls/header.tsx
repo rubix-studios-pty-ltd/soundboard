@@ -39,8 +39,12 @@ const Header: React.FC = () => {
   const [previousVolume, setPreviousVolume] = useState(1)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
-  const handleAddSound = async (type: "sound" | "music", file: File) => {
-    const newSound = await addNewSound(file, type)
+  const handleAddSound = async (
+    type: "sound" | "music",
+    file: File,
+    title?: string
+  ) => {
+    const newSound = await addNewSound(file, type, title)
     addSound(newSound, type)
     setIsAddModalOpen(false)
   }
@@ -178,7 +182,7 @@ const Header: React.FC = () => {
             </div>
           </PopoverContent>
         </Popover>
-        
+
         <div className="draggable px-2 text-xs font-medium text-white">
           Soundboard
         </div>
@@ -212,7 +216,7 @@ const Header: React.FC = () => {
               </div>
             </button>
             <button
-              className="cursor-pointer text-white transition-all duration-300 hover:text-red-500 hidden"
+              className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
               onClick={() => setIsAddModalOpen(true)}
             >
               <div className="h-4 w-4">
