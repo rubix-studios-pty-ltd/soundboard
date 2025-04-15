@@ -411,7 +411,6 @@ function setupIPC(): void {
         const tempDir = path.join(app.getPath("userData"), "temp")
         await fs.mkdir(tempDir, { recursive: true })
 
-        // Create sounds directory in AppData
         const soundsDir = path.join(app.getPath("userData"), "sounds")
         await fs.mkdir(soundsDir, { recursive: true })
 
@@ -423,15 +422,12 @@ function setupIPC(): void {
           ) + ".opus"
         const outputPath = path.join(soundsDir, outputName)
 
-        // Write the buffer directly to the input file
         await fs.writeFile(inputPath, Buffer.from(params.buffer))
 
         await convertToOpus(inputPath, outputPath)
 
-        // Clean up temp file
         await fs.unlink(inputPath)
 
-        // Return path relative to sounds dir
         return { outputPath: path.join("sounds", outputName) }
       } catch (error) {
         if (shouldLog()) {
