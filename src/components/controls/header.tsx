@@ -211,7 +211,7 @@ const Header: React.FC = () => {
               </div>
             </button>
             <button
-              className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
+              className="cursor-pointer text-white transition-all duration-300 hover:text-red-500 hidden"
               onClick={() => setIsAddModalOpen(true)}
             >
               <div className="h-4 w-4">
