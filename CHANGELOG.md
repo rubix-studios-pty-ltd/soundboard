@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.2](///compare/v3.4.1...v3.4.2) (2025-04-15)
+
+
+### Bug Fixes
+
+* correct version comparison links in changelog and remove redundant section 064584f
+* reorder Code Refactoring section in changelog for clarity e949804
+* update maxItems for favorites to 18 across settings and preload 5041979
+* update version comparison link in changelog and remove redundant section 0ace399
+
+
+### Code Refactoring
+
+* simplify sound management by removing locking mechanism and updating favorites component 74317c4
+* streamline code formatting and improve readability in build workflow and audio pool disposal cafb61c
+
 ### [3.4.1](///compare/v3.2.0...v3.4.1) (2025-04-15)
 
 
