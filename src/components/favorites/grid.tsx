@@ -1,12 +1,12 @@
 import React, { useCallback } from "react"
 
+import { useHotkeys } from "@/hooks/usehotkey"
 import { Exit } from "@/components/icons"
 import HotkeyModal from "@/components/modals/hotkey"
 import SoundButton from "@/components/sounds/button"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
-import { useHotkeys } from "@/hooks/usehotkey"
 import { generateSoundId } from "@/utils/sound-id"
 
 const FavoriteGrid: React.FC = () => {
@@ -18,7 +18,9 @@ const FavoriteGrid: React.FC = () => {
 
   const handleSoundPlay = useCallback(
     (soundId: string) => {
-      const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
+      const sound = allSounds.find(
+        (s) => s.id === soundId || generateSoundId(s.file) === soundId
+      )
       if (sound) {
         playSound(sound.id, sound.file, sound.isUserAdded || false)
       }
