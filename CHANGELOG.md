@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](///compare/v3.3.1...v3.4.0) (2025-04-15)
+
+
+### Features
+
+* add changelog reading and GitHub release creation steps to build workflow 2f0225d
+* integrate hotkey management in favorites grid with sound playback support e5fa71c
+
+
+### Documentation
+
+* update README to include favorites management and custom sound import features fa0ce4b
+
 ### [3.3.1](///compare/v3.3.0...v3.3.1) (2025-04-15)
 
 
