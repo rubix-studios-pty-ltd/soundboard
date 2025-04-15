@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.4.1](///compare/v3.3.0...v3.4.1) (2025-04-15)
+### [3.4.1](///compare/v3.2.0...v3.4.1) (2025-04-15)
 
 
 ### Code Refactoring
@@ -11,9 +11,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
+* enhance sound management by adding validation, user-added sound support, and improved file handling 418328f
+* enhance sound management with user-added sounds, implement loading and deletion features 42ce969
 * add changelog reading and GitHub release creation steps to build workflow 2f0225d
 * integrate hotkey management in favorites grid with sound playback support e5fa71c
-
 
 ### Documentation
 
@@ -24,13 +25,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 * ensure file input accepts only audio files f7893f7
 
-## [3.3.0](///compare/v3.2.0...v3.3.0) (2025-04-15)
-
-
-### Features
-
-* enhance sound management by adding validation, user-added sound support, and improved file handling 418328f
-* enhance sound management with user-added sounds, implement loading and deletion features 42ce969
 
 ## [3.2.0](///compare/v3.1.0...v3.2.0) (2025-04-15)
 
