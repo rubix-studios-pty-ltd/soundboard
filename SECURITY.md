@@ -13,7 +13,7 @@
 We take the security of Soundboard seriously. If you believe you have found a security vulnerability, please follow these steps:
 
 1. **Do Not** disclose the vulnerability publicly
-2. Send details of the vulnerability to [hello@rubixstudios.com](mailto:hello@rubixstudios.com)
+2. Submit a report via GitHub’s [private security advisories](https://github.com/rubixvi/soundboard/security/advisories/new)
 3. Include:
    - Description of the vulnerability
    - Steps to reproduce
