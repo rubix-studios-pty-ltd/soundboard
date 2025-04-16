@@ -1,6 +1,6 @@
 # Soundboard
 
-![Version](https://img.shields.io/badge/version-3.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-3.4.5-blue.svg)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Top Language](https://img.shields.io/github/languages/top/rubixvi/soundboard)](https://github.com/rubixvi/soundboard)
 
