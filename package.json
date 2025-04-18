@@ -1,11 +1,12 @@
 {
   "name": "soundboard",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
   "scripts": {
     "release": "standard-version && git push rubix master --follow-tags",
+    "release:patch": "standard-version --release-as patch && git push rubix master --follow-tags",
     "release:minor": "standard-version --release-as minor && git push rubix master --follow-tags",
     "release:major": "standard-version --release-as major && git push rubix master --follow-tags",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" --ignore-path .prettierignore --log-level warn",

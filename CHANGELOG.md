@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.1](///compare/v3.9.0...v3.7.1) (2025-04-18)
+
+
+### Bug Fixes
+
+* revert version to 3.7.0 in package-lock.json and update version badge in README.md 29470b9
+
 ## [3.7.0](///compare/v3.9.0...v3.7.0) (2025-04-18)
 
 ## [3.7.0](///compare/v3.6.0...v3.7.0) (2025-04-18)
