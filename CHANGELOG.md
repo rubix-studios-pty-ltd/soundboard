@@ -2,31 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.7.1](///compare/v3.9.0...v3.7.1) (2025-04-18)
+### [3.7.1](///compare/v3.7.0...v3.7.1) (2025-04-18)
 
 
 ### Bug Fixes
 
 * revert version to 3.7.0 in package-lock.json and update version badge in README.md 29470b9
 
-## [3.7.0](///compare/v3.9.0...v3.7.0) (2025-04-18)
-
-## [3.7.0](///compare/v3.6.0...v3.7.0) (2025-04-18)
-
-## [3.6.0](///compare/v3.5.0...v3.6.0) (2025-04-18)
+## [3.7.0](///compare/v3.4.5...v3.7.0) (2025-04-18)
 
 
 ### Features
 
 * enhance FFmpeg binary resolution and update packaging for ffmpeg-static a862aaa
 * integrate fluent-ffmpeg and manage FFmpeg binary extraction; remove ffmpeg-installer dependency 8e6ecec
-
-## [3.5.0](///compare/v3.4.5...v3.5.0) (2025-04-18)
-
-
-### Features
-
-* integrate ffmpeg installer and update audio filter settings 38ea90b
 
 
 ### Bug Fixes
