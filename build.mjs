@@ -1,7 +1,4 @@
-import path from "path"
-
 import * as esbuild from "esbuild"
-import * as fs from "fs-extra"
 
 const isWatch = process.argv.includes("--watch")
 const isDev = process.env.NODE_ENV !== "production"
@@ -63,26 +60,11 @@ const buildOptions = [
   },
 ]
 
-async function copyFFmpegBinaries() {
-  const srcBinPath = path.resolve("bin")
-  const destBinPath = path.resolve("dist", "bin")
-
-  try {
-    await fs.copy(srcBinPath, destBinPath)
-    console.log("Copied ffmpeg binaries")
-  } catch (error) {
-    console.error("Error copying ffmpeg binaries:", error)
-    throw error
-  }
-}
-
 if (isWatch) {
   console.log("Starting watch mode...")
   const contexts = await Promise.all(
     buildOptions.map((options) => esbuild.context(options))
   )
-
-  await copyFFmpegBinaries()
 
   await Promise.all(contexts.map((context) => context.watch()))
   console.log("Watching for changes...")
@@ -90,6 +72,4 @@ if (isWatch) {
   console.log("Building...")
   await Promise.all(buildOptions.map((options) => esbuild.build(options)))
   console.log("Build complete")
-
-  await copyFFmpegBinaries()
 }
