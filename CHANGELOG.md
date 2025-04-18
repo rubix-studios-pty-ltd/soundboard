@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](///compare/v3.4.5...v3.5.0) (2025-04-18)
+
+
+### Features
+
+* integrate ffmpeg installer and update audio filter settings 38ea90b
+
+
+### Bug Fixes
+
+* update file type validation to accept video files and adjust input accept attribute fc3c0fc
+
+
+### Code Refactoring
+
+* remove ffmpeg and ffmpeg-installer from build external dependencies; update type declarations 8ad8d03
 
 ### [3.4.5](///compare/v3.4.4...v3.4.5) (2025-04-16)
 
