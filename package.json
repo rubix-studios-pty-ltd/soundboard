@@ -85,10 +85,6 @@
       "artifactName": "Soundboard.dmg"
     },
     "asar": true,
-    "asarUnpack": [
-      "node_modules/ffmpeg-static/**/*",
-      "node_modules/fluent-ffmpeg/**/*"
-    ],
     "extraResources": [
       {
         "from": "node_modules/ffmpeg-static/ffmpeg.exe",
