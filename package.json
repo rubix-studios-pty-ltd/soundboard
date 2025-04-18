@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "description": "soundboard",
   "type": "module",
   "main": "dist/main.cjs",
@@ -89,11 +89,15 @@
       "node_modules/ffmpeg-static/**/*",
       "node_modules/fluent-ffmpeg/**/*"
     ],
-    "extraResources": [{
-      "from": "node_modules/ffmpeg-static/ffmpeg.exe",
-      "to": "./ffmpeg.exe",
-      "filter": ["**/*"]
-    }],
+    "extraResources": [
+      {
+        "from": "node_modules/ffmpeg-static/ffmpeg.exe",
+        "to": "./ffmpeg.exe",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "files": [
       "dist/**/*",
       "icon.ico",

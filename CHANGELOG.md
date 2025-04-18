@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.6.0](///compare/v3.5.0...v3.6.0) (2025-04-18)
+
+
+### Features
+
+* enhance FFmpeg binary resolution and update packaging for ffmpeg-static a862aaa
+* integrate fluent-ffmpeg and manage FFmpeg binary extraction; remove ffmpeg-installer dependency 8e6ecec
+
 ## [3.5.0](///compare/v3.4.5...v3.5.0) (2025-04-18)
 
 
