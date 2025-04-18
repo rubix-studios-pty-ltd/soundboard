@@ -5,6 +5,7 @@ const rawMusicData: [string, string][] = [
   ["sound/30-min.opus", "30 Phút"],
   ["sound/auxima.opus", "Ái Ố Sì Mà"],
   ["sound/helosoly.opus", "Hê Sờ Lô"],
+  ["sound/ongxa.opus", "Ông Xã"],
   ["sound/drama.opus", "Drama"],
   ["sound/meme-finales.opus", "Meme Finales"],
   ["sound/scheming.opus", "Scheming"],
@@ -72,7 +73,6 @@ const rawMusicData: [string, string][] = [
   ["sound/trong25.opus", "Trống 25s"],
   ["sound/nhac-hai-huoc.opus", "Hài Hước"],
   ["sound/sieu-cuon.opus", "Cuốn"],
-  ["sound/speed-up.opus", "Speed Up"],
   ["sound/trong-cay.opus", "Trồng Cây"],
 ]
 

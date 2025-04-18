@@ -17,7 +17,6 @@ const rawSoundData: [string, string][] = [
   ["sound/ohnono.opus", "Cười Oh No"],
   ["sound/laugh-male.opus", "Cười Đàn Ông"],
   ["sound/laugh-child.opus", "Cười Con Nít"],
-  ["sound/cuoinhe.opus", "Cười Nhẹ"],
   ["sound/laughhahe.opus", "Cười Hả Hê"],
   ["sound/burstlaugh.opus", "Cười Burst"],
   ["sound/ha-ha-ha.opus", "Cười Bé"],
@@ -86,6 +85,7 @@ const rawSoundData: [string, string][] = [
   ["sound/aidanhtaodi.opus", "Ai Đánh T Đê"],
   ["sound/troidatdth.opus", "Trời Đất Dth"],
   ["sound/wowamazing.opus", "Wow Amazing"],
+  ["sound/colen.opus", "Cố Lên"],
 ]
 
 export const soundData: SoundData[] = rawSoundData.map(([file, title]) => ({
