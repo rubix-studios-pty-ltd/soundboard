@@ -5,7 +5,6 @@ import { defaultSettings } from "@/constants/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
-import ffmpegStatic from "ffmpeg-static"
 import ffmpeg from "fluent-ffmpeg"
 
 import type {
@@ -17,46 +16,30 @@ import type {
 const shouldLog = () => process.argv.includes("--enable-logging")
 
 const getBinaryPath = (): string | null => {
-  try {
-    const platformBinary =
-      process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
+  const platformBinary = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
 
-    if (process.env.NODE_ENV === "development") {
-      if (shouldLog())
-        console.log("Dev mode using ffmpeg-static:", ffmpegStatic)
-      return ffmpegStatic!
-    }
+  const pathsToTry = [
+    path.join(path.dirname(process.execPath), platformBinary),
+    path.join(
+      process.resourcesPath,
+      "app.asar.unpacked",
+      "node_modules",
+      "ffmpeg-static",
+      platformBinary
+    ),
+  ]
 
-    const pathsToTry = [
-      path.join(path.dirname(process.execPath), "ffmpeg.exe"),
-      path.join(
-        process.resourcesPath,
-        "app.asar.unpacked",
-        "node_modules",
-        "ffmpeg-static",
-        platformBinary
-      ),
-    ]
-
-    for (const tryPath of pathsToTry) {
-      try {
-        const stats = statSync(tryPath)
-        if (stats.isFile()) {
-          if (shouldLog()) console.log("Resolved ffmpeg at:", tryPath)
-          return tryPath
-        }
-      } catch {
-        if (shouldLog()) console.log("Not found:", tryPath)
+  for (const tryPath of pathsToTry) {
+    try {
+      if (statSync(tryPath).isFile()) {
+        return tryPath
       }
+    } catch {
+      // ignore missing file
     }
-
-    throw new Error("Could not resolve ffmpeg binary")
-  } catch (error) {
-    if (shouldLog()) {
-      console.error("FFmpeg binary error:", error)
-    }
-    return null
   }
+
+  return null
 }
 
 const ffmpegPath = getBinaryPath()

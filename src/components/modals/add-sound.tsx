@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import LoadingSpinner from "@/components/ui/loading-spinner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,7 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 interface AddSoundModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (type: "sound" | "music", file: File, title?: string) => void
+  onAdd: (type: "sound" | "music", file: File, title?: string) => Promise<void>
   defaultType?: "sound" | "music"
 }
 
@@ -53,17 +54,32 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
     setSelectedFile(file)
   }
 
-  const handleAdd = () => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleAdd = async () => {
     if (selectedFile) {
-      onAdd(type, selectedFile, displayName.trim() || undefined)
-      setSelectedFile(null)
-      setDisplayName("")
+      setIsLoading(true)
+      try {
+        await onAdd(type, selectedFile, displayName.trim() || undefined)
+        setSelectedFile(null)
+        setDisplayName("")
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[300px] bg-[#1a1a1a] text-white">
+        {isLoading && (
+          <div className="absolute inset-0 bg-black flex items-center justify-center z-50 rounded-lg">
+            <div className="flex flex-col items-center gap-2">
+              <LoadingSpinner size="lg" />
+              <span>Đang chuyển đổi...</span>
+            </div>
+          </div>
+        )}
         <DialogHeader>
           <DialogTitle className="text-left">Thêm âm thanh</DialogTitle>
           <DialogDescription className="text-left text-sm text-gray-400">
@@ -104,7 +120,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
             <Button
               variant="secondary"
               onClick={handleAdd}
-              disabled={!selectedFile}
+              disabled={!selectedFile || isLoading}
             >
               Thêm
             </Button>
