@@ -2,14 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [3.9.0](///compare/v3.8.0...v3.9.0) (2025-04-18)
-
-## [3.8.0](///compare/v3.7.0...v3.8.0) (2025-04-18)
-
-
-### Features
-
-* add loading spinner component and enhance add sound modal with loading state abc205e
+## [3.7.0](///compare/v3.9.0...v3.7.0) (2025-04-18)
 
 ## [3.7.0](///compare/v3.6.0...v3.7.0) (2025-04-18)
 
