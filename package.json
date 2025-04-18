@@ -86,6 +86,9 @@
     "asar": {
       "smartUnpack": true
     },
+    "asarUnpack": [
+      "**/node_modules/@ffmpeg-installer/**"
+    ],
     "files": [
       "dist/**/*",
       "icon.ico",

@@ -6,16 +6,17 @@ import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
 
-import ffmpeg from "fluent-ffmpeg"
-import ffmpegInstaller from "@ffmpeg-installer/ffmpeg"
-
-ffmpeg.setFfmpegPath(ffmpegInstaller.path)
-
 import type {
   HotkeyMap as HotkeyMapType,
   Settings as SettingsType,
   SoundData,
 } from "@/types"
+
+const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
+
+const ffmpeg = require("fluent-ffmpeg")
+
+ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
@@ -283,10 +284,7 @@ async function convertToOpus(
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
       .toFormat("opus")
-      .audioFilters([
-        "loudnorm=I=-5:TP=-1.5:LRA=11",
-        "dynaudnorm=f=150:g=5",
-      ])
+      .audioFilters(["loudnorm=I=-5:TP=-1.5:LRA=11", "dynaudnorm=f=150:g=5"])
       .audioFrequency(48000)
       .audioBitrate("64k")
       .outputOptions(["-map_metadata", "-1"])

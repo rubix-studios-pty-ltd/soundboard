@@ -19,7 +19,7 @@ declare module "fluent-ffmpeg" {
   export = ffmpeg
 }
 
-declare module '@ffmpeg-installer/ffmpeg' {
+declare module "@ffmpeg-installer/ffmpeg" {
   interface FfmpegInstaller {
     path: string
     version: string
