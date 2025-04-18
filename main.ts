@@ -6,10 +6,10 @@ import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
 
-const ffmpeg = require("fluent-ffmpeg")
-const ffmpegPath = require("@ffmpeg-installer/ffmpeg")
+import ffmpeg from "fluent-ffmpeg"
+import ffmpegInstaller from "@ffmpeg-installer/ffmpeg"
 
-ffmpeg.setFfmpegPath(ffmpegPath.path);
+ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 import type {
   HotkeyMap as HotkeyMapType,

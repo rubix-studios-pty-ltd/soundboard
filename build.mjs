@@ -10,7 +10,7 @@ const baseOptions = {
   minifyWhitespace: !isDev,
   minifyIdentifiers: !isDev,
   minifySyntax: !isDev,
-  external: ["electron"],
+  external: ["electron", "fluent-ffmpeg", "@ffmpeg-installer/ffmpeg"],
   loader: { ".tsx": "tsx", ".ts": "ts", ".js": "js", ".jsx": "jsx" },
   jsx: "automatic",
   target: "es2020",

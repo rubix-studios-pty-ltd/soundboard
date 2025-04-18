@@ -45,8 +45,8 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (!file.type.includes("audio/")) {
-      alert("Please select an audio file")
+    if (!file.type.includes("audio/") && !file.type.includes("video/")) {
+      alert("Please select a valid audio or video file")
       return
     }
 
@@ -80,7 +80,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
           />
           <Input
             type="file"
-            accept="audio/*"
+            accept="audio/*, video/*"
             onChange={handleFileChange}
             className="cursor-pointer bg-white p-2 text-sm text-black"
           />
