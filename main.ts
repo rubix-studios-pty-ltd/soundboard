@@ -5,18 +5,13 @@ import { defaultSettings } from "@/constants/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
+import ffmpeg from "fluent-ffmpeg"
 
 import type {
   HotkeyMap as HotkeyMapType,
   Settings as SettingsType,
   SoundData,
 } from "@/types"
-
-const ffmpegInstaller = require("@ffmpeg-installer/ffmpeg")
-
-const ffmpeg = require("fluent-ffmpeg")
-
-ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
@@ -34,6 +29,47 @@ const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
     settings: defaultSettings,
   },
 })
+
+const extractFfmpeg = async () => {
+  const destDir = path.join(app.getPath("userData"), "bin")
+  const destPath = path.join(destDir, "ffmpeg.exe")
+
+  try {
+    try {
+      await fs.access(destPath)
+      return destPath
+    } catch {
+      await fs.mkdir(destDir, { recursive: true })
+
+      const sourcePath = app.isPackaged
+        ? path.join(path.dirname(process.resourcesPath), "bin", "ffmpeg.exe")
+        : path.join(process.cwd(), "bin", "ffmpeg.exe")
+
+      await fs.copyFile(sourcePath, destPath)
+      return destPath
+    }
+  } catch (error) {
+    if (shouldLog()) console.error("Error extracting FFmpeg:", error)
+    throw error
+  }
+}
+
+const getFfmpegPath = async () => {
+  try {
+    return await extractFfmpeg()
+  } catch (error) {
+    if (shouldLog()) console.error("Error getting FFmpeg path:", error)
+    throw error
+  }
+}
+
+getFfmpegPath()
+  .then((ffmpegPath) => {
+    ffmpeg.setFfmpegPath(ffmpegPath)
+  })
+  .catch((error) => {
+    if (shouldLog()) console.error("Failed to initialize FFmpeg:", error)
+  })
 
 function createSoundsManager(type: "sound" | "music") {
   const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
@@ -205,7 +241,14 @@ try {
 let win: BrowserWindowType | null = null
 const ROOT_PATH = path.join(__dirname, "..")
 
-function createWindow(): void {
+async function createWindow(): Promise<void> {
+  // Ensure FFmpeg is extracted before creating window
+  try {
+    await getFfmpegPath()
+  } catch (error) {
+    if (shouldLog()) console.error("Failed to setup FFmpeg:", error)
+  }
+
   win = new BrowserWindow({
     width: 612,
     height: 946,
