@@ -10,7 +10,20 @@ declare module "fluent-ffmpeg" {
     on(event: "error", callback: (err: Error) => void): this
   }
 
+  namespace ffmpeg {
+    export function setFfmpegPath(path: string): void
+  }
+
   function ffmpeg(input: string): FfmpegCommand
 
   export = ffmpeg
+}
+
+declare module '@ffmpeg-installer/ffmpeg' {
+  interface FfmpegInstaller {
+    path: string
+    version: string
+  }
+  const installer: FfmpegInstaller
+  export default installer
 }

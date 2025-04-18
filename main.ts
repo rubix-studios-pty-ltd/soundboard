@@ -5,7 +5,10 @@ import { defaultSettings } from "@/constants/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
 import Store from "electron-store"
-import ffmpeg from "fluent-ffmpeg"
+import ffmpeg from "fluent-ffmpeg" 
+import ffmpegInstaller from "@ffmpeg-installer/ffmpeg"
+
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 import type {
   HotkeyMap as HotkeyMapType,
@@ -280,9 +283,8 @@ async function convertToOpus(
     ffmpeg(filePath)
       .toFormat("opus")
       .audioFilters([
-        "loudnorm=I=-16:TP=-1.5:LRA=11",
+        "loudnorm=I=-5:TP=-1.5:LRA=11",
         "dynaudnorm=f=150:g=5",
-        "silenceremove=1:0:-50dB",
       ])
       .audioFrequency(48000)
       .audioBitrate("64k")
