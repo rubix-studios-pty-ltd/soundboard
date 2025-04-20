@@ -253,4 +253,4 @@ For support or inquiries, contact Vincent Vu
 - BigoTV: [@a.vinh](https://www.bigo.tv/a.vinh)
 - Facebook: [@rubixvi](https://www.facebook.com/rubixvi/)
 
-Rubix Studios - [https://www.rubixstudios.com.au](https://www.rubixstudios.com.au).
+Rubix Studios - [https://rubixstudios.com.au](https://rubixstudios.com.au).

@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
       <p className="p-1 text-[9px] text-white">
         <span className="mr-0.5">&copy;2025</span>
         <a
-          href="https://www.rubixstudios.com.au"
+          href="https://rubixstudios.com.au"
           target="_blank"
           rel="noopener noreferrer"
           className="font-bold text-white no-underline transition-colors hover:text-gray-300"
