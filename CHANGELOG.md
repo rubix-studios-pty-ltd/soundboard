@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.2](///compare/v3.7.1...v3.7.2) (2025-04-20)
+
+
+### Bug Fixes
+
+* correct version comparison links in CHANGELOG.md 6d5b8a0
+* revert version to 3.7.1 in package.json and package-lock.json 84e42ef
+* update Rubix Studios URL to remove 'www' prefix 649d3b4
+
 ### [3.7.1](///compare/v3.7.0...v3.7.1) (2025-04-18)
 
 
