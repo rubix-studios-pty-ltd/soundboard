@@ -249,8 +249,6 @@ Rubix Studios Pty. Ltd.
 
 For support or inquiries, contact Vincent Vu
 
-- Tiktok: [@rubixvi](https://www.tiktok.com/@rubixvi)
-- BigoTV: [@a.vinh](https://www.bigo.tv/a.vinh)
 - Facebook: [@rubixvi](https://www.facebook.com/rubixvi/)
 
 Rubix Studios - [https://rubixstudios.com.au](https://rubixstudios.com.au).
