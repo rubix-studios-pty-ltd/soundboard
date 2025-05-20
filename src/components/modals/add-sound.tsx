@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import LoadingSpinner from "@/components/ui/loading-spinner"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import LoadingSpinner from "@/components/ui/loading-spinner"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 interface AddSoundModalProps {
@@ -73,7 +73,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[300px] bg-[#1a1a1a] text-white">
         {isLoading && (
-          <div className="absolute inset-0 bg-black flex items-center justify-center z-50 rounded-lg">
+          <div className="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-black">
             <div className="flex flex-col items-center gap-2">
               <LoadingSpinner size="lg" />
               <span>Đang chuyển đổi...</span>
