@@ -20,14 +20,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
-          cache: 'npm'
+          node-version: '22.x'
+          cache: 'pnpm'
           
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm ci
         
       - name: Check Format
-        run: npm run format:check
+        run: pnpm run format:check
         
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -46,34 +46,34 @@ jobs:
           node-version: '18.x'
 
       - name: Install Dependencies
-        run: npm ci
+        run: pnpm ci
         
       - name: Cache node modules
         uses: actions/cache@v4
         with:
-          path: ~/.npm
+          path: ~/.pnpm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
         
       - name: Build App
         run: |
-          npm run clean
-          npm run build:prod
-          
+          pnpm run clean
+          pnpm run build:prod
+
       - name: Build and Release Windows
         if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run build:win
+          pnpm run build:win
           
       - name: Build and Release Mac
         if: matrix.os == 'macos-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm run build:mac
+          pnpm run build:mac
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
