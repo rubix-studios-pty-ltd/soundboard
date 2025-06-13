@@ -1,6 +1,6 @@
 {
   "name": "soundboard",
-  "version": "3.7.5",
+  "version": "3.7.6",
   "description": "A feature-rich desktop soundboard application built with Electron and React for managing and playing sound effects.",
   "type": "module",
   "main": "dist/main.cjs",
