@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.7](///compare/v3.7.6...v3.7.7) (2025-06-13)
+
+
+### Bug Fixes
+
+* update release commands to use pnpm instead of npm 40eb0e7
+
 ### [3.7.6](///compare/v3.7.5...v3.7.6) (2025-06-13)
 
 ### [3.7.5](///compare/v3.7.4...v3.7.5) (2025-06-13)
