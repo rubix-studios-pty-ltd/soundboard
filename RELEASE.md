@@ -20,9 +20,9 @@ When making changes, use conventional commit messages:
 
 1. Ensure all changes are committed and pushed to master
 2. Run one of these commands:
-   - `npm run release` - patch version (bug fixes)
-   - `npm run release:minor` - minor version (new features)
-   - `npm run release:major` - major version (breaking changes)
+   - `pnpm run release` - patch version (bug fixes)
+   - `pnpm run release:minor` - minor version (new features)
+   - `pnpm run release:major` - major version (breaking changes)
 3. Push the changes and tag:
 
    ```bash
