@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.13](///compare/v3.7.12...v3.7.13) (2025-06-13)
+
+
+### Bug Fixes
+
+* downgrade pnpm version to 9 and update caching strategy abdb7f9
+
 ### [3.7.12](///compare/v3.7.11...v3.7.12) (2025-06-13)
 
 
