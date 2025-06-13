@@ -182,17 +182,17 @@ npm install
 
 ## Available Scripts
 
-- `npm start` - Cleans, builds, and starts the application
-- `npm run dev` - Starts the app in development mode with hot reload
-- `npm run build` - Builds the application
-- `npm run build:win` - Creates a portable Windows executable
-- `npm run build:mac` - Creates a portable MacOS executable
+- `pnpm start` - Cleans, builds, and starts the application
+- `pnpm run dev` - Starts the app in development mode with hot reload
+- `pnpm run build` - Builds the application
+- `pnpm run build:win` - Creates a portable Windows executable
+- `pnpm run build:mac` - Creates a portable MacOS executable
 
 ### Development Scripts
 
-- `npm run watch:app` - Watch for source code changes
-- `npm run watch:css` - Watch for CSS changes
-- `npm run electron:dev` - Run Electron with live reload
+- `pnpm run watch:app` - Watch for source code changes
+- `pnpm run watch:css` - Watch for CSS changes
+- `pnpm run electron:dev` - Run Electron with live reload
 
 ## Project Structure
 
@@ -217,13 +217,13 @@ soundboard/
 To create a portable Windows executable:
 
 ```bash
-npm run build:win
+pnpm run build:win
 ```
 
 To create a portable MacOS executable:
 
 ```bash
-npm run build:mac
+pnpm run build:mac
 ```
 
 The built application will be available in the `release` directory.
