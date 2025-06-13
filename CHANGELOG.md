@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.12](///compare/v3.7.11...v3.7.12) (2025-06-13)
+
+
+### Bug Fixes
+
+* update fluent-ffmpeg package name and add async dependency 8fe1f05
+
 ### [3.7.11](///compare/v3.7.10...v3.7.11) (2025-06-13)
 
 ### [3.7.10](///compare/v3.7.9...v3.7.10) (2025-06-13)
