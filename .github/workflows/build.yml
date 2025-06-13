@@ -29,7 +29,7 @@ jobs:
           version: 9
 
       - name: Install Dependencies
-        run: pnpm ci
+        run: pnpm install --frozen-lockfile
         
       - name: Check Format
         run: pnpm run format:check
@@ -54,17 +54,21 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: 9
-          
-      - name: Install Dependencies
-        run: pnpm ci
         
-      - name: Cache node modules
+      - name: Get pnpm store path
+        id: pnpm-store
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm store
         uses: actions/cache@v4
         with:
-          path: ~/.pnpm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
         
       - name: Build App
         run: |
