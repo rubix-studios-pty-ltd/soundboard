@@ -18,7 +18,7 @@ const rawSoundData: [string, string][] = [
   ["sound/laugh-male.opus", "Cười Đàn Ông"],
   ["sound/laugh-child.opus", "Cười Con Nít"],
   ["sound/laughhahe.opus", "Cười Hả Hê"],
-  ["sound/burstlaugh.opus", "Cười Burst"],
+  //  ["sound/burstlaugh.opus", "Cười Burst"],
   ["sound/ha-ha-ha.opus", "Cười Bé"],
   ["sound/haha-3.opus", "Cười Bé 2"],
   ["sound/hahahaha.opus", "Cười Bé 3"],
@@ -35,6 +35,7 @@ const rawSoundData: [string, string][] = [
   ["sound/kisslady.opus", "Nụ Hôn Dài"],
   ["sound/kiss-male.opus", "Nụ Hôn Trai"],
   ["sound/10diem.opus", "10 Điểm"],
+  ["sound/10diemgoc.opus", "10 Điểm Gốc"],
   ["sound/khoai-khoai.opus", "Khoái"],
   ["sound/oizoioi.opus", "Ối Zời Ơi"],
   ["sound/aothatday.opus", "Ảo Thật"],
@@ -60,7 +61,7 @@ const rawSoundData: [string, string][] = [
   ["sound/da-lam-gi-dau.opus", "Đã Làm J Đâu"],
   ["sound/so-qua.opus", "Sợ Quá"],
   ["sound/fart.opus", "Fart"],
-  ["sound/fart-wet.opus", "Fart Wet"],
+  //  ["sound/fart-wet.opus", "Fart Wet"],
   ["sound/snore-mimi.opus", "Ngáy Mimi"],
   ["sound/luon-leo.opus", "Lươn Lẹo"],
   ["sound/chayeuem.opus", "Chả Yêu Em"],
@@ -73,7 +74,7 @@ const rawSoundData: [string, string][] = [
   ["sound/khochuhu.opus", "Khóc HuHu"],
   ["sound/khocnhe.opus", "Khóc Nhè"],
   ["sound/quakeu.opus", "Quạ Kêu"],
-  ["sound/gameover.opus", "Game Over"],
+  //  ["sound/gameover.opus", "Game Over"],
   ["sound/tron-lam-sao.opus", "Trốn Làm Sao"],
   ["sound/daygaydi.opus", "Dậy Gáy Đi"],
   ["sound/noi-the-thi-chiu.opus", "Nói Thế Chịu"],
@@ -86,6 +87,8 @@ const rawSoundData: [string, string][] = [
   ["sound/troidatdth.opus", "Trời Đất Dth"],
   ["sound/wowamazing.opus", "Wow Amazing"],
   ["sound/colen.opus", "Cố Lên"],
+  ["sound/bietgichua.opus", "Hết Tiền"],
+  ["sound/cuutui.opus", "Cứu Tui"],
 ]
 
 export const soundData: SoundData[] = rawSoundData.map(([file, title]) => ({

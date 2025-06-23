@@ -165,7 +165,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             e.dataTransfer.effectAllowed = "move"
           }
         }}
-        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 text-[9px] font-bold transition-all ${
+        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${
           settings.buttonSettings && isHidden ? "opacity-50" : ""
         } ${isDraggable ? "cursor-move" : ""}`}
         style={
@@ -205,7 +205,9 @@ const SoundButton: React.FC<SoundButtonProps> = ({
         onContextMenu={handleContextMenu}
         data-sound-id={soundId}
       >
-        <span className="w-full truncate text-center">{title}</span>
+        <span className="w-full truncate text-center text-[10px] font-semibold">
+          {title}
+        </span>
       </Button>
     </div>
   )

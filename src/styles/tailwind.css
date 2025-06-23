@@ -172,7 +172,7 @@ input,
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#333333] rounded-[4px] hover:bg-[#404040];
+  @apply bg-[#333333] rounded-[5px] hover:bg-[#404040];
 }
 
 ::-webkit-scrollbar-track {
@@ -180,7 +180,7 @@ input,
 }
 
 .sound-button {
-  transition: background-color 0.3s ease;
+  transition: background-color 0.5s ease;
 }
 
 .sound-button:hover {

@@ -14,7 +14,7 @@ interface SoundGridProps {
 
 const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
   const { settings, updateSettings } = useSettings()
-  const { sounds: allSounds, music: allMusic, isLoading } = useSounds()
+  const { sounds: allSounds, music: allMusic } = useSounds()
   const rawSounds = type === "sound" ? allSounds : allMusic
   const sounds = rawSounds.filter(
     (sound) => !settings.favorites.items.includes(sound.id)

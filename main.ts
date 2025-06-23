@@ -232,7 +232,7 @@ const ROOT_PATH = path.join(__dirname, "..")
 async function createWindow(): Promise<void> {
   win = new BrowserWindow({
     width: 612,
-    height: 946,
+    height: 890,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
     frame: false,

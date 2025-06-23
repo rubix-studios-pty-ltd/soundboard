@@ -106,16 +106,16 @@ const Header: React.FC = () => {
   const handleClose = () => window.electronAPI.closeWindow()
 
   return (
-    <div className="sticky top-0 z-50 flex h-8 items-center justify-between border-b-[1px] border-[#333333] bg-[#1a1a1a]">
+    <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b-[1px] border-[#333333] bg-[#1a1a1a]">
       <div className="draggable flex flex-1 flex-row items-center">
         <Popover>
           <PopoverTrigger asChild>
-            <button className="flex h-8 w-8 cursor-pointer items-center justify-center transition-colors duration-300 hover:bg-[#333333]">
-              <Menu className="h-5 w-5 text-white" />
+            <button className="flex h-7 w-7 cursor-pointer items-center justify-center transition-colors duration-500 hover:bg-[#333333]">
+              <Menu className="h-4 w-4 text-white" />
             </button>
           </PopoverTrigger>
-          <PopoverContent className="border-[#333333] bg-[#1a1a1a] p-4 text-white">
-            <div className="flex flex-col gap-4">
+          <PopoverContent className="border-[#333333] bg-[#1a1a1a] p-3 text-white">
+            <div className="flex flex-col gap-3">
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-col items-start gap-1">
                   <div className="flex flex-row items-center gap-2 text-sm font-semibold">
@@ -258,19 +258,19 @@ const Header: React.FC = () => {
         <div className="no-drag flex">
           <button
             onClick={handleMinimize}
-            className="flex h-8 w-8 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
+            className="flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
           >
             <Minimize className="h-4 w-4 text-white" />
           </button>
           <button
             onClick={handleMaximize}
-            className="flex h-8 w-8 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
+            className="flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
           >
             <Maximize className="h-3.5 w-3.5 text-white" />
           </button>
           <button
             onClick={handleClose}
-            className="flex h-8 w-8 items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
+            className="flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
           >
             <Exit className="h-4 w-4 text-white" />
           </button>

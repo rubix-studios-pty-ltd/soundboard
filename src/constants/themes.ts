@@ -59,6 +59,14 @@ export const presetThemes: Record<string, ThemePreset> = {
     buttonActive: "#912c78",
     buttonHoverColor: "#e684cd",
   },
+  rose: {
+    name: "Rose",
+    backgroundColor: "#E9CED0",
+    buttonColor: "#E06188",
+    buttonText: "#FFFFFF",
+    buttonActive: "#BC214C",
+    buttonHoverColor: "#F43F5E",
+  },
   red: {
     name: "Red",
     backgroundColor: "#F8F7F7",

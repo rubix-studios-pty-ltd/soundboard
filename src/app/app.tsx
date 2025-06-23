@@ -53,7 +53,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1">
         <div className="p-1">
           <FavoriteGrid />
-          <div className="flex flex-wrap items-start justify-around gap-2">
+          <div className="flex flex-wrap items-start justify-around gap-0.5">
             <SoundGrid type="sound" containerId="container1" />
             <Separator className="my-1" />
             <SoundGrid type="music" containerId="container2" />
