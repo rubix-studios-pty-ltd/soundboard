@@ -205,7 +205,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
         onContextMenu={handleContextMenu}
         data-sound-id={soundId}
       >
-        <span className="w-full truncate text-center text-[10px] font-semibold">
+        <span className="w-full truncate text-center text-[10px] font-bold">
           {title}
         </span>
       </Button>
