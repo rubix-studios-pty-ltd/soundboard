@@ -41,7 +41,7 @@ const rawMusicData: [string, string][] = [
   ["sound/winpk.opus", "Win PK"],
   ["sound/winpk-2.opus", "Win PK 2"],
   ["sound/winpk-3.opus", "Win PK 3"],
-  ["sound/bomay.opus", "B Mày"],
+  ["sound/bomay.opus", "Bố Mày"],
   ["sound/huwin.opus", "Hú Win"],
   ["sound/chungtakogiong.opus", "Ko Giống Nhau"],
   ["sound/yeahuda.opus", "Yeah Ú Đá"],
