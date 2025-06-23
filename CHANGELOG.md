@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.17](///compare/v3.7.16...v3.7.17) (2025-06-23)
+
+
+### Bug Fixes
+
+* change font weight from semibold to bold for sound button title d47e0e2
+
 ### [3.7.16](///compare/v3.7.15...v3.7.16) (2025-06-23)
 
 
