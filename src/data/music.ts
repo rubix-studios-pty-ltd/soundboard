@@ -74,12 +74,12 @@ const rawMusicData: [string, string][] = [
 //  ["sound/matngu.opus", "Mất Ngủ"],
 //  ["sound/bomcha.opus", "Bomcha"],
   ["sound/keo-violin.opus", "Violin Bựa"],
-//  ["sound/kentay.opus", "Kèn Tây"],
+  ["sound/kentay.opus", "Kèn Tây"],
 //  ["sound/trong30.opus", "Trống 30s"],
 //  ["sound/trong25.opus", "Trống 25s"],
 //  ["sound/nhac-hai-huoc.opus", "Hài Hước"],
 //  ["sound/sieu-cuon.opus", "Cuốn"],
-//  ["sound/trong-cay.opus", "Trồng Cây"],
+  ["sound/trong-cay.opus", "Trồng Cây"],
 ]
 
 export const musicData: SoundData[] = rawMusicData.map(([file, title]) => ({
