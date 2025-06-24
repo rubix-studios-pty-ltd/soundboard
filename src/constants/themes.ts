@@ -7,6 +7,9 @@ export const buttonPreset = [
   "#f97316",
   "#ec4899",
   "#06b6d4",
+  "#d946ef",
+  "#fb7185",
+  "#e879f9",
 ]
 
 export interface ThemePreset {

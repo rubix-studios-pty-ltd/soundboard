@@ -64,6 +64,7 @@ const FavoriteGrid: React.FC = () => {
       favorites: {
         ...favorites,
         items: newItems,
+        maxItems: 18,
       },
     })
   }
