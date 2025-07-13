@@ -156,7 +156,7 @@ const PopoutGrid: React.FC = () => {
                     file={sound.file}
                     title={sound.title}
                     onHotkeyAssign={showHotkeyModal}
-                    isDraggable={true}
+                    isDraggable={dragAndDropEnabled}
                     isInFavorites={false}
                     isInPopout={true}
                     isUserAdded={sound.isUserAdded}
