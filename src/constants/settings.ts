@@ -27,10 +27,6 @@ export const defaultSettings: Settings = {
     items: [],
     maxItems: 42,
     window: {
-      x: 100,
-      y: 100,
-      width: 312,
-      height: 498,
       isOpen: false,
       showOnStartup: false,
     },

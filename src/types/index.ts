@@ -25,10 +25,6 @@ export interface Settings {
     items: string[]
     maxItems: number
     window: {
-      x: number
-      y: number
-      width: number
-      height: number
       isOpen: boolean
       showOnStartup: boolean
     }

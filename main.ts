@@ -236,12 +236,9 @@ async function createPopoutWindow(): Promise<void> {
   popoutWin = new BrowserWindow({
     width: 312,
     height: 498,
-    x: 100,
-    y: 100,
     frame: false,
-    titleBarStyle: "hidden",
     resizable: true,
-    show: false,
+    show: true,
     webPreferences: {
       partition: "persist:soundboard",
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
@@ -264,56 +261,9 @@ async function createPopoutWindow(): Promise<void> {
 
     popoutWin.loadFile(path.join(ROOT_PATH, "popout.html"))
 
-    popoutWin.on("moved", () => {
-      const bounds = popoutWin?.getBounds()
-      if (bounds) {
-        const settings = store.get("settings")
-        store.set("settings", {
-          ...settings,
-          popoutGrid: {
-            ...settings.popoutGrid,
-            window: {
-              ...settings.popoutGrid.window,
-              x: bounds.x,
-              y: bounds.y,
-            },
-          },
-        })
-      }
-    })
-
-    popoutWin.on("resized", () => {
-      const bounds = popoutWin?.getBounds()
-      if (bounds) {
-        const settings = store.get("settings")
-        store.set("settings", {
-          ...settings,
-          popoutGrid: {
-            ...settings.popoutGrid,
-            window: {
-              ...settings.popoutGrid.window,
-              width: bounds.width,
-              height: bounds.height,
-            },
-          },
-        })
-      }
-    })
-
     popoutWin.on("close", (e) => {
       e.preventDefault()
       popoutWin?.hide()
-      const settings = store.get("settings")
-      store.set("settings", {
-        ...settings,
-        popoutGrid: {
-          ...settings.popoutGrid,
-          window: {
-            ...settings.popoutGrid.window,
-            isOpen: false,
-          },
-        },
-      })
     })
   }
 }
@@ -543,12 +493,8 @@ function setupIPC(): void {
           items: Array.isArray(settings.popoutGrid?.items)
             ? settings.popoutGrid.items
             : [],
-          maxItems: Number(settings.popoutGrid?.maxItems) || 18,
+          maxItems: Number(settings.popoutGrid?.maxItems) || 42,
           window: {
-            x: Number(settings.popoutGrid?.window?.x) || 100,
-            y: Number(settings.popoutGrid?.window?.y) || 100,
-            width: Number(settings.popoutGrid?.window?.width) || 400,
-            height: Number(settings.popoutGrid?.window?.height) || 300,
             isOpen: Boolean(settings.popoutGrid?.window?.isOpen),
             showOnStartup: Boolean(settings.popoutGrid?.window?.showOnStartup),
           },

@@ -1,24 +1,8 @@
-import React, { useState } from "react"
+import React from "react"
 
 import { Exit, Minimize } from "@/components/icons"
-import AddSoundModal from "@/components/modals/add-sound"
-import { useSounds } from "@/context/sounds"
-import { addNewSound } from "@/utils/audio-convert"
 
 const Header: React.FC = () => {
-  const { addSound } = useSounds()
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-
-  const handleAddSound = async (
-    type: "sound" | "music",
-    file: File,
-    title?: string
-  ) => {
-    const newSound = await addNewSound(file, type, title)
-    addSound(newSound, type)
-    setIsAddModalOpen(false)
-  }
-
   const handleMinimize = () =>
     window.electronAPI.windowControl("minimize", "popout")
   const handleClose = () => window.electronAPI.windowControl("close", "popout")
@@ -39,12 +23,6 @@ const Header: React.FC = () => {
           <Exit className="h-4 w-4 text-white" />
         </button>
       </div>
-
-      <AddSoundModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddSound}
-      />
     </div>
   )
 }
