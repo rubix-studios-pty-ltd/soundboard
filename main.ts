@@ -413,12 +413,9 @@ function setupIPC(): void {
               })
             } else {
               isQuitting = true
-              if (popoutWin) {
-                popoutWin.destroy()
-                popoutWin = null
-              }
+              cleanupWindows()
               cleanupIPC()
-              targetWindow.close()
+              app.quit()
             }
             break
           case "show":
@@ -741,13 +738,9 @@ function cleanupWindows(): void {
 
 app.on("before-quit", () => {
   isQuitting = true
-  cleanupWindows()
-  cleanupIPC()
 })
 
 app.on("window-all-closed", () => {
-  cleanupWindows()
-  cleanupIPC()
   if (process.platform !== "darwin") {
     app.quit()
   }
