@@ -73,6 +73,7 @@
     "react-dom": "^19.1.0"
   },
   "engines": {
+    "node": ">=22 <24",
     "pnpm": ">=10"
   },
   "build": {
