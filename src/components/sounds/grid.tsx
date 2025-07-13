@@ -66,6 +66,7 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
             onToggleHide={handleToggleHide}
             isDraggable={settings.dragAndDropEnabled}
             isInFavorites={false}
+            isInPopout={false}
             isUserAdded={sound.isUserAdded}
             type={type}
           />

@@ -23,6 +23,7 @@ interface SoundButtonProps {
   onToggleHide?: (id: string) => void
   isDraggable?: boolean
   isInFavorites?: boolean
+  isInPopout?: boolean
   isUserAdded?: boolean
   type: "sound" | "music"
 }
@@ -36,6 +37,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
   onToggleHide,
   isDraggable = false,
   isInFavorites = false,
+  isInPopout = false,
   isUserAdded = false,
   type,
 }) => {
@@ -90,19 +92,20 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             className="max-w-[200px] border-[#333333] bg-[#1a1a1a] p-4 text-white"
           >
             <div className="flex flex-col gap-4">
-              {!isInFavorites && (
-                <>
-                  <div className="flex flex-row items-center justify-between">
-                    <div className="text-sm font-semibold">Ẩn nút</div>
-                    <Checkbox
-                      className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
-                      checked={isHidden}
-                      onCheckedChange={() => onToggleHide?.(soundId)}
-                    />
-                  </div>
-                  <Separator />
-                </>
-              )}
+              {!isInFavorites ||
+                (!isInPopout && (
+                  <>
+                    <div className="flex flex-row items-center justify-between">
+                      <div className="text-sm font-semibold">Ẩn nút</div>
+                      <Checkbox
+                        className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
+                        checked={isHidden}
+                        onCheckedChange={() => onToggleHide?.(soundId)}
+                      />
+                    </div>
+                    <Separator />
+                  </>
+                ))}
               <div className="grid grid-cols-5 gap-2">
                 {buttonPreset.map((presetColor) => (
                   <button
@@ -205,7 +208,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
         onContextMenu={handleContextMenu}
         data-sound-id={soundId}
       >
-        <span className="w-full truncate text-center text-[10px] font-bold">
+        <span className="w-full truncate text-center text-[11px] font-semibold">
           {title}
         </span>
       </Button>

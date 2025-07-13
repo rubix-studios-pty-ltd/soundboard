@@ -63,7 +63,7 @@ const PopoutGrid: React.FC = () => {
       popoutGrid: {
         ...popoutGrid,
         items: newItems,
-        maxItems: 18,
+        maxItems: 42,
       },
       favorites: settings.favorites.items.includes(soundId)
         ? {
@@ -158,6 +158,7 @@ const PopoutGrid: React.FC = () => {
                     onHotkeyAssign={showHotkeyModal}
                     isDraggable={true}
                     isInFavorites={false}
+                    isInPopout={true}
                     isUserAdded={sound.isUserAdded}
                     type="sound"
                   />

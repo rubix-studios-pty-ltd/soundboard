@@ -25,12 +25,12 @@ export const defaultSettings: Settings = {
   },
   popoutGrid: {
     items: [],
-    maxItems: 18,
+    maxItems: 42,
     window: {
       x: 100,
       y: 100,
-      width: 228,
-      height: 360,
+      width: 312,
+      height: 498,
       isOpen: false,
       showOnStartup: false,
     },

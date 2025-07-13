@@ -235,8 +235,8 @@ async function createPopoutWindow(): Promise<void> {
   const { x, y, width, height } = settings?.popoutGrid?.window || {}
 
   popoutWin = new BrowserWindow({
-    width: width || 228,
-    height: height || 360,
+    width,
+    height,
     x,
     y,
     frame: false,
@@ -321,8 +321,8 @@ async function createPopoutWindow(): Promise<void> {
 
 async function createWindow(): Promise<void> {
   win = new BrowserWindow({
-    width: 612,
-    height: 982,
+    width: 614,
+    height: 984,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
     frame: false,

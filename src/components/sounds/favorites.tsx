@@ -155,6 +155,7 @@ const FavoriteGrid: React.FC = () => {
                   onHotkeyAssign={showHotkeyModal}
                   isDraggable={dragAndDropEnabled}
                   isInFavorites={true}
+                  isInPopout={false}
                   isUserAdded={sound.isUserAdded}
                   type="sound"
                 />

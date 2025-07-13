@@ -53,7 +53,7 @@ const AppContent: React.FC = () => {
       <main className="flex-1">
         <div className="p-1">
           <FavoriteGrid />
-          <div className="flex flex-wrap items-start justify-around gap-0.5">
+          <div className="flex flex-wrap items-start justify-around gap-1">
             {settings.showSoundGrid && (
               <SoundGrid type="sound" containerId="container1" />
             )}
