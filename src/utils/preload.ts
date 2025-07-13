@@ -4,6 +4,14 @@ import { contextBridge, ipcRenderer } from "electron"
 import type { HotkeyMap, IpcApi, Settings } from "@/types"
 
 const electronAPI: IpcApi = {
+  on: (channel: string, listener: (...args: any[]) => void) => {
+    ipcRenderer.on(channel, listener)
+  },
+
+  off: (channel: string, listener: (...args: any[]) => void) => {
+    ipcRenderer.removeListener(channel, listener)
+  },
+
   loadSounds: async (type: "sound" | "music") => {
     try {
       return await ipcRenderer.invoke("load-sounds", type)
@@ -12,6 +20,7 @@ const electronAPI: IpcApi = {
       return []
     }
   },
+
   minimizeWindow: () => {
     try {
       ipcRenderer.send("window-control", "minimize")
@@ -19,6 +28,15 @@ const electronAPI: IpcApi = {
       console.error("Error minimizing window:", error)
     }
   },
+
+  windowControl: (action: string, target?: string) => {
+    try {
+      ipcRenderer.send("window-control", action, target)
+    } catch (error) {
+      console.error("Error controlling window:", error)
+    }
+  },
+
   maximizeWindow: () => {
     try {
       ipcRenderer.send("window-control", "maximize")
@@ -26,6 +44,7 @@ const electronAPI: IpcApi = {
       console.error("Error maximizing window:", error)
     }
   },
+
   closeWindow: () => {
     try {
       ipcRenderer.send("window-control", "close")
@@ -33,6 +52,7 @@ const electronAPI: IpcApi = {
       console.error("Error closing window:", error)
     }
   },
+
   loadHotkeys: async () => {
     try {
       return await ipcRenderer.invoke("load-hotkeys")

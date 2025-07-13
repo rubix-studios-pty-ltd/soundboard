@@ -15,19 +15,20 @@ import {
   Cog,
   Drag,
   Exit,
+  Library,
   Maximize,
   Menu,
   Minimize,
   Multi,
+  Music,
   Mute,
+  Note,
   Plus,
+  Popout,
   Repeat,
   StopIcon,
   Volume,
   Windows,
-  Music,
-  Note,
-  Library,
 } from "@/components/icons"
 import AddSoundModal from "@/components/modals/add-sound"
 import { useAudio } from "@/context/audio"
@@ -41,6 +42,7 @@ const Header: React.FC = () => {
   const { addSound } = useSounds()
   const [previousVolume, setPreviousVolume] = useState(1)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [popoutVisible, setPopoutVisible] = useState(false)
 
   const handleAddSound = async (
     type: "sound" | "music",
@@ -107,6 +109,20 @@ const Header: React.FC = () => {
   const handleMinimize = () => window.electronAPI.minimizeWindow()
   const handleMaximize = () => window.electronAPI.maximizeWindow()
   const handleClose = () => window.electronAPI.closeWindow()
+
+  const handleTogglePopout = async () => {
+    try {
+      if (popoutVisible) {
+        window.electronAPI.windowControl("close", "popout")
+      } else {
+        window.electronAPI.windowControl("show", "popout")
+      }
+
+      setPopoutVisible((prevState) => !prevState)
+    } catch {
+      setPopoutVisible(false)
+    }
+  }
 
   return (
     <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b-[1px] border-[#333333] bg-[#1a1a1a]">
@@ -191,13 +207,16 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-        <div className="flex items-center">
-          <div className="flex items-center gap-2">
+      <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
-              onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: true })}
+              onClick={() =>
+                updateSettings({ showSoundGrid: true, showMusicGrid: true })
+              }
             >
-              <div className="h-4 w-4">
+              <div className="h-3.5 w-3.5">
                 <Library className="h-full w-full" />
               </div>
             </button>
@@ -205,9 +224,11 @@ const Header: React.FC = () => {
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
                 !settings.showMusicGrid ? "text-red-500" : "text-white"
               }`}
-              onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: false })}
+              onClick={() =>
+                updateSettings({ showSoundGrid: true, showMusicGrid: false })
+              }
             >
-              <div className="h-4 w-4">
+              <div className="h-3.5 w-3.5">
                 <Note className="h-full w-full" />
               </div>
             </button>
@@ -215,14 +236,26 @@ const Header: React.FC = () => {
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
                 !settings.showSoundGrid ? "text-red-500" : "text-white"
               }`}
-              onClick={() => updateSettings({ showSoundGrid: false, showMusicGrid: true })}
+              onClick={() =>
+                updateSettings({ showSoundGrid: false, showMusicGrid: true })
+              }
             >
-              <div className="h-4 w-4">
+              <div className="h-3.5 w-3.5">
                 <Music className="h-full w-full" />
               </div>
             </button>
-            <Separator orientation="vertical" />
-            <div className="flex items-center gap-2.5">
+          </div>
+          <Separator orientation="vertical" />
+          <button
+            className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
+            onClick={handleTogglePopout}
+          >
+            <div className="h-3.5 w-3.5">
+              <Popout className="h-full w-full" />
+            </div>
+          </button>
+          <Separator orientation="vertical" />
+          <div className="flex items-center gap-2.5">
             <button
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
                 settings.buttonSettings ? "text-red-500" : "text-white"
@@ -256,7 +289,6 @@ const Header: React.FC = () => {
               </div>
             </button>
           </div>
-          <Separator orientation="vertical" />
           <button
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={stopAll}
@@ -290,19 +322,19 @@ const Header: React.FC = () => {
         <div className="no-drag flex">
           <button
             onClick={handleMinimize}
-            className="cursor-pointer flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
+            className="flex h-7 w-7 cursor-pointer items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
           >
             <Minimize className="h-4 w-4 text-white" />
           </button>
           <button
             onClick={handleMaximize}
-            className="cursor-pointer flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
+            className="flex h-7 w-7 cursor-pointer items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
           >
             <Maximize className="h-3.5 w-3.5 text-white" />
           </button>
           <button
             onClick={handleClose}
-            className="cursor-pointer flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
+            className="flex h-7 w-7 cursor-pointer items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
           >
             <Exit className="h-4 w-4 text-white" />
           </button>

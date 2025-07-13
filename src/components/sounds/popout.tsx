@@ -9,9 +9,9 @@ import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
 import { generateSoundId } from "@/utils/sound-id"
 
-const FavoriteGrid: React.FC = () => {
+const PopoutGrid: React.FC = () => {
   const { settings, updateSettings } = useSettings()
-  const { dragAndDropEnabled, favorites } = settings
+  const { dragAndDropEnabled, popoutGrid } = settings
   const { sounds, music } = useSounds()
   const { playSound } = useAudio()
   const allSounds = [...sounds, ...music]
@@ -47,7 +47,7 @@ const FavoriteGrid: React.FC = () => {
     if (!soundId) {
       return
     }
-    const newItems = [...favorites.items]
+    const newItems = [...popoutGrid.items]
     const existingIndex = newItems.indexOf(soundId)
     if (existingIndex !== -1) {
       newItems.splice(existingIndex, 1)
@@ -55,22 +55,22 @@ const FavoriteGrid: React.FC = () => {
 
     newItems.splice(slotIndex, 0, soundId)
 
-    if (newItems.length > favorites.maxItems) {
-      newItems.length = favorites.maxItems
+    if (newItems.length > popoutGrid.maxItems) {
+      newItems.length = popoutGrid.maxItems
     }
 
     updateSettings({
-      favorites: {
-        ...favorites,
+      popoutGrid: {
+        ...popoutGrid,
         items: newItems,
         maxItems: 18,
       },
-      popoutGrid: settings.popoutGrid.items.includes(soundId)
+      favorites: settings.favorites.items.includes(soundId)
         ? {
-            ...settings.popoutGrid,
-            items: settings.popoutGrid.items.filter((id) => id !== soundId),
+            ...settings.favorites,
+            items: settings.favorites.items.filter((id) => id !== soundId),
           }
-        : settings.popoutGrid,
+        : settings.favorites,
     })
   }
 
@@ -96,16 +96,16 @@ const FavoriteGrid: React.FC = () => {
     }
   }
 
-  const removeFavorite = (soundId: string) => {
+  const removeSound = (soundId: string) => {
     updateSettings({
-      favorites: {
-        ...favorites,
-        items: favorites.items.filter((id) => id !== soundId),
+      popoutGrid: {
+        ...popoutGrid,
+        items: popoutGrid.items.filter((id) => id !== soundId),
       },
     })
   }
 
-  const usedSlots = favorites.items
+  const usedSlots = popoutGrid.items
     .map((soundId) => {
       const sound = allSounds.find(
         (s) => s.id === soundId || generateSoundId(s.file) === soundId
@@ -121,7 +121,7 @@ const FavoriteGrid: React.FC = () => {
     .filter(Boolean)
 
   const slots = dragAndDropEnabled
-    ? Array(favorites.maxItems)
+    ? Array(popoutGrid.maxItems)
         .fill(null)
         .map((_, i) => usedSlots[i] || null)
     : usedSlots
@@ -131,45 +131,49 @@ const FavoriteGrid: React.FC = () => {
   }
 
   return (
-    <div className="relative z-10 mb-4">
-      <div className="flex flex-wrap gap-1 p-0">
-        {slots.map((sound, index) => (
-          <div
-            key={index}
-            className={`relative h-7 w-24 rounded ${
-              dragAndDropEnabled ? "border-2 border-dashed border-gray-600" : ""
-            }`}
-            onDrop={(e) => handleDrop(e, index)}
-            onDragOver={handleDragOver}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-          >
-            {sound && (
-              <div
-                className={`relative ${dragAndDropEnabled ? "-translate-x-[2px] -translate-y-[3px] transform" : ""}`}
-              >
-                <SoundButton
-                  id={sound.id}
-                  file={sound.file}
-                  title={sound.title}
-                  onHotkeyAssign={showHotkeyModal}
-                  isDraggable={dragAndDropEnabled}
-                  isInFavorites={true}
-                  isUserAdded={sound.isUserAdded}
-                  type="sound"
-                />
-                {dragAndDropEnabled && (
-                  <button
-                    className="absolute -top-1 -right-1 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600"
-                    onClick={() => removeFavorite(sound.id)}
-                  >
-                    <Exit className="h-3 w-3" />
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
+    <>
+      <div className="relative z-10 mb-4">
+        <div className="flex flex-wrap gap-1 p-0">
+          {slots.map((sound, index) => (
+            <div
+              key={index}
+              className={`relative h-7 w-24 rounded ${
+                dragAndDropEnabled
+                  ? "border-2 border-dashed border-gray-600"
+                  : ""
+              }`}
+              onDrop={(e) => handleDrop(e, index)}
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+            >
+              {sound && (
+                <div
+                  className={`relative ${dragAndDropEnabled ? "-translate-x-[2px] -translate-y-[3px] transform" : ""}`}
+                >
+                  <SoundButton
+                    id={sound.id}
+                    file={sound.file}
+                    title={sound.title}
+                    onHotkeyAssign={showHotkeyModal}
+                    isDraggable={true}
+                    isInFavorites={false}
+                    isUserAdded={sound.isUserAdded}
+                    type="sound"
+                  />
+                  {dragAndDropEnabled && (
+                    <button
+                      className="absolute -top-1 -right-1 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600"
+                      onClick={() => removeSound(sound.id)}
+                    >
+                      <Exit className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
       <HotkeyModal
         isOpen={modalOpen}
@@ -178,8 +182,8 @@ const FavoriteGrid: React.FC = () => {
         currentHotkey={currentHotkey}
         onAssign={assignHotkey}
       />
-    </div>
+    </>
   )
 }
 
-export default FavoriteGrid
+export default PopoutGrid

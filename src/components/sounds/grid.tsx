@@ -17,7 +17,9 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
   const { sounds: allSounds, music: allMusic } = useSounds()
   const rawSounds = type === "sound" ? allSounds : allMusic
   const sounds = rawSounds.filter(
-    (sound) => !settings.favorites.items.includes(sound.id)
+    (sound) =>
+      !settings.favorites.items.includes(sound.id) &&
+      !settings.popoutGrid.items.includes(sound.id)
   )
 
   const { playSound } = useAudio()

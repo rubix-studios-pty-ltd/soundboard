@@ -227,7 +227,97 @@ try {
 }
 
 let win: BrowserWindowType | null = null
+let popoutWin: BrowserWindowType | null = null
 const ROOT_PATH = path.join(__dirname, "..")
+
+async function createPopoutWindow(): Promise<void> {
+  const settings = store.get("settings")
+  const { x, y, width, height } = settings?.popoutGrid?.window || {}
+
+  popoutWin = new BrowserWindow({
+    width: width || 228,
+    height: height || 360,
+    x,
+    y,
+    frame: false,
+    titleBarStyle: "hidden",
+    resizable: true,
+    show: false,
+    webPreferences: {
+      partition: "persist:soundboard",
+      preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
+      nodeIntegration: false,
+      contextIsolation: true,
+      backgroundThrottling: false,
+      spellcheck: false,
+    },
+  })
+
+  if (popoutWin) {
+    popoutWin.once("ready-to-show", () => {
+      if (
+        settings?.popoutGrid?.window?.isOpen ||
+        settings?.popoutGrid?.window?.showOnStartup
+      ) {
+        popoutWin?.show()
+      }
+    })
+
+    popoutWin.loadFile(path.join(ROOT_PATH, "popout.html"))
+
+    popoutWin.on("moved", () => {
+      const bounds = popoutWin?.getBounds()
+      if (bounds) {
+        const settings = store.get("settings")
+        store.set("settings", {
+          ...settings,
+          popoutGrid: {
+            ...settings.popoutGrid,
+            window: {
+              ...settings.popoutGrid.window,
+              x: bounds.x,
+              y: bounds.y,
+            },
+          },
+        })
+      }
+    })
+
+    popoutWin.on("resized", () => {
+      const bounds = popoutWin?.getBounds()
+      if (bounds) {
+        const settings = store.get("settings")
+        store.set("settings", {
+          ...settings,
+          popoutGrid: {
+            ...settings.popoutGrid,
+            window: {
+              ...settings.popoutGrid.window,
+              width: bounds.width,
+              height: bounds.height,
+            },
+          },
+        })
+      }
+    })
+
+    popoutWin.on("close", (e) => {
+      e.preventDefault()
+      popoutWin?.hide()
+      const settings = store.get("settings")
+      store.set("settings", {
+        ...settings,
+        popoutGrid: {
+          ...settings.popoutGrid,
+          window: {
+            ...settings.popoutGrid.window,
+            isOpen: false,
+          },
+        },
+      })
+    })
+  }
+}
 
 async function createWindow(): Promise<void> {
   win = new BrowserWindow({
@@ -327,33 +417,68 @@ function setupIPC(): void {
     return await soundManagers[type].getAll()
   })
 
-  ipcMain.on("window-control", (_: any, action: string) => {
-    try {
-      if (!win) {
-        return
-      }
+  ipcMain.on(
+    "window-control",
+    (_: any, action: string, target: string = "main") => {
+      try {
+        const targetWindow = target === "popout" ? popoutWin : win
+        if (!targetWindow) {
+          return
+        }
 
-      switch (action) {
-        case "minimize":
-          win.minimize()
-          break
-        case "maximize":
-          if (win.isMaximized()) {
-            win.unmaximize()
-          } else {
-            win.maximize()
-          }
-          break
-        case "close":
-          win.close()
-          break
-      }
-    } catch (error) {
-      if (shouldLog()) {
-        console.error("Error handling window control:", error)
+        switch (action) {
+          case "minimize":
+            targetWindow.minimize()
+            break
+          case "maximize":
+            if (targetWindow.isMaximized()) {
+              targetWindow.unmaximize()
+            } else {
+              targetWindow.maximize()
+            }
+            break
+          case "close":
+            if (target === "popout") {
+              targetWindow.hide()
+              const settings = store.get("settings")
+              store.set("settings", {
+                ...settings,
+                popoutGrid: {
+                  ...settings.popoutGrid,
+                  window: {
+                    ...settings.popoutGrid.window,
+                    isOpen: false,
+                  },
+                },
+              })
+            } else {
+              targetWindow.close()
+            }
+            break
+          case "show":
+            if (target === "popout") {
+              targetWindow.show()
+              const settings = store.get("settings")
+              store.set("settings", {
+                ...settings,
+                popoutGrid: {
+                  ...settings.popoutGrid,
+                  window: {
+                    ...settings.popoutGrid.window,
+                    isOpen: true,
+                  },
+                },
+              })
+            }
+            break
+        }
+      } catch (error) {
+        if (shouldLog()) {
+          console.error("Error handling window control:", error)
+        }
       }
     }
-  })
+  )
 
   ipcMain.handle("load-hotkeys", (): HotkeyMapType => {
     try {
@@ -415,6 +540,20 @@ function setupIPC(): void {
             : [],
           maxItems: Number(settings.favorites?.maxItems) || 18,
         },
+        popoutGrid: {
+          items: Array.isArray(settings.popoutGrid?.items)
+            ? settings.popoutGrid.items
+            : [],
+          maxItems: Number(settings.popoutGrid?.maxItems) || 18,
+          window: {
+            x: Number(settings.popoutGrid?.window?.x) || 100,
+            y: Number(settings.popoutGrid?.window?.y) || 100,
+            width: Number(settings.popoutGrid?.window?.width) || 400,
+            height: Number(settings.popoutGrid?.window?.height) || 300,
+            isOpen: Boolean(settings.popoutGrid?.window?.isOpen),
+            showOnStartup: Boolean(settings.popoutGrid?.window?.showOnStartup),
+          },
+        },
         theme:
           typeof settings.theme === "object" &&
           typeof settings.theme?.buttonText === "string" &&
@@ -437,6 +576,8 @@ function setupIPC(): void {
       }
 
       store.set("settings", validatedSettings)
+      win?.webContents.send("settings-updated", validatedSettings)
+      popoutWin?.webContents.send("settings-updated", validatedSettings)
     } catch (error) {
       if (shouldLog()) {
         console.error("Error saving settings:", error)
@@ -602,6 +743,7 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     try {
       createWindow()
+      createPopoutWindow()
       setupIPC()
     } catch (error) {
       if (shouldLog()) {

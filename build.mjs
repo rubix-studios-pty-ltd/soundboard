@@ -58,6 +58,11 @@ const buildOptions = [
     entryPoints: ["src/app/index.tsx"],
     inject: ["./react-shim.mjs"],
   },
+  {
+    ...browserOptions,
+    entryPoints: ["src/app/pindex.tsx"],
+    inject: ["./react-shim.mjs"],
+  },
 ]
 
 if (isWatch) {

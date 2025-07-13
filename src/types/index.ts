@@ -21,6 +21,18 @@ export interface Settings {
     buttonActive: string
     buttonHoverColor: string
   }
+  popoutGrid: {
+    items: string[]
+    maxItems: number
+    window: {
+      x: number
+      y: number
+      width: number
+      height: number
+      isOpen: boolean
+      showOnStartup: boolean
+    }
+  }
   showSoundGrid: boolean
   showMusicGrid: boolean
 }
@@ -44,9 +56,12 @@ export interface AudioPoolItem {
 }
 
 export interface IpcApi {
+  on: (channel: string, listener: (...args: any[]) => void) => void
+  off: (channel: string, listener: (...args: any[]) => void) => void
   minimizeWindow: () => void
   maximizeWindow: () => void
   closeWindow: () => void
+  windowControl: (action: string, target?: string) => void
   loadHotkeys: () => Promise<HotkeyMap>
   loadSettings: () => Promise<Settings>
   saveHotkeys: (hotkeys: HotkeyMap) => void

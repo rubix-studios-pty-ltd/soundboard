@@ -45,12 +45,23 @@ const validateSettings = (settings: any): Settings => {
         ? settings.theme
         : {}),
     },
-    showSoundGrid: typeof settings.showSoundGrid === "boolean" 
-      ? settings.showSoundGrid 
-      : defaultSettings.showSoundGrid,
-    showMusicGrid: typeof settings.showMusicGrid === "boolean" 
-      ? settings.showMusicGrid 
-      : defaultSettings.showMusicGrid,
+    popoutGrid: {
+      ...defaultSettings.popoutGrid,
+      ...(typeof settings.popoutGrid === "object" && settings.popoutGrid
+        ? settings.popoutGrid
+        : {}),
+      items: Array.isArray(settings?.popoutGrid?.items)
+        ? settings.popoutGrid.items
+        : [],
+    },
+    showSoundGrid:
+      typeof settings.showSoundGrid === "boolean"
+        ? settings.showSoundGrid
+        : defaultSettings.showSoundGrid,
+    showMusicGrid:
+      typeof settings.showMusicGrid === "boolean"
+        ? settings.showMusicGrid
+        : defaultSettings.showMusicGrid,
   }
 }
 
@@ -67,6 +78,12 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
+    const handleSettingsUpdate = (_: any, updatedSettings: Settings) => {
+      const validated = validateSettings(updatedSettings)
+      setSettings(validated)
+    }
+    window.electronAPI.on("settings-updated", handleSettingsUpdate)
+
     const initializeSettings = async () => {
       try {
         const savedSettings = await window.electronAPI.loadSettings()
@@ -79,6 +96,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     }
     initializeSettings()
+    return () => {
+      window.electronAPI.off("settings-updated", handleSettingsUpdate)
+    }
   }, [])
 
   const updateSettings = useCallback((newSettings: Partial<Settings>) => {
