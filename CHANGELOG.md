@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.9.0](///compare/v3.8.0...v3.9.0) (2025-07-13)
+
+
+### Features
+
+* update popout window dimensions and enhance sound button properties 9429333
+
 ## [3.8.0](///compare/v3.7.20...v3.8.0) (2025-07-13)
 
 
