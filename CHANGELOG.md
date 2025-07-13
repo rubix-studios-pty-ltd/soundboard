@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](///compare/v3.7.20...v3.8.0) (2025-07-13)
+
+
+### Features
+
+* add popout window functionality with drag-and-drop support for sound management 1560417
+* enhance audio settings and UI controls c215ede
+
 ### [3.7.20](///compare/v3.7.19...v3.7.20) (2025-06-24)
 
 ### [3.7.19](///compare/v3.7.18...v3.7.19) (2025-06-24)
