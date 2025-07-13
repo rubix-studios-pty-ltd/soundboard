@@ -412,6 +412,12 @@ function setupIPC(): void {
                 },
               })
             } else {
+              isQuitting = true
+              if (popoutWin) {
+                popoutWin.destroy()
+                popoutWin = null
+              }
+              cleanupIPC()
               targetWindow.close()
             }
             break
