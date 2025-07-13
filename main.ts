@@ -232,13 +232,12 @@ const ROOT_PATH = path.join(__dirname, "..")
 
 async function createPopoutWindow(): Promise<void> {
   const settings = store.get("settings")
-  const { x, y, width, height } = settings?.popoutGrid?.window || {}
 
   popoutWin = new BrowserWindow({
-    width,
-    height,
-    x,
-    y,
+    width: 312,
+    height: 498,
+    x: 100,
+    y: 100,
     frame: false,
     titleBarStyle: "hidden",
     resizable: true,
