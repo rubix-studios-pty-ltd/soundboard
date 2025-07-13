@@ -13,7 +13,7 @@ const baseOptions = {
   external: ["electron"],
   loader: { ".tsx": "tsx", ".ts": "ts", ".js": "js", ".jsx": "jsx" },
   jsx: "automatic",
-  target: "es2020",
+  target: "esnext",
   treeShaking: true,
   metafile: true,
   legalComments: isDev ? "inline" : "none",
@@ -24,7 +24,7 @@ const nodeOptions = {
   ...baseOptions,
   platform: "node",
   format: "cjs",
-  target: "node18",
+  target: "node22",
 }
 
 const browserOptions = {

@@ -104,7 +104,7 @@
       "dist/**/*",
       "icon.ico",
       "index.html",
-      "popup.html",
+      "popout.html",
       "sound/**/*",
       "!**/release/**/*",
       "!**/screenshot/**/*",

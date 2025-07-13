@@ -228,6 +228,7 @@ try {
 
 let win: BrowserWindowType | null = null
 let popoutWin: BrowserWindowType | null = null
+let isQuitting = false
 const ROOT_PATH = path.join(__dirname, "..")
 
 async function createPopoutWindow(): Promise<void> {
@@ -238,7 +239,7 @@ async function createPopoutWindow(): Promise<void> {
     height: 498,
     frame: false,
     resizable: true,
-    show: true,
+    show: false,
     webPreferences: {
       partition: "persist:soundboard",
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
@@ -262,8 +263,10 @@ async function createPopoutWindow(): Promise<void> {
     popoutWin.loadFile(path.join(ROOT_PATH, "popout.html"))
 
     popoutWin.on("close", (e) => {
-      e.preventDefault()
-      popoutWin?.hide()
+      if (!isQuitting) {
+        e.preventDefault()
+        popoutWin?.hide()
+      }
     })
   }
 }
@@ -337,6 +340,14 @@ async function createWindow(): Promise<void> {
     if (process.argv.includes("--enable-logging")) {
       win.webContents.openDevTools()
     }
+
+    win.on("close", () => {
+      isQuitting = true
+      if (popoutWin) {
+        popoutWin.destroy()
+        popoutWin = null
+      }
+    })
   }
 }
 
@@ -704,11 +715,41 @@ if (!gotTheLock) {
   })
 }
 
+function cleanupIPC(): void {
+  ipcMain.removeAllListeners()
+  if (win?.webContents) {
+    win.webContents.session.protocol.unhandle("app")
+  }
+}
+
+function cleanupWindows(): void {
+  if (popoutWin) {
+    popoutWin.destroy()
+    popoutWin = null
+  }
+  if (win) {
+    win.destroy()
+    win = null
+  }
+}
+
+app.on("before-quit", () => {
+  isQuitting = true
+  cleanupWindows()
+  cleanupIPC()
+})
+
 app.on("window-all-closed", () => {
-  win = null
+  cleanupWindows()
+  cleanupIPC()
   if (process.platform !== "darwin") {
     app.quit()
   }
+})
+
+app.on("will-quit", () => {
+  cleanupWindows()
+  cleanupIPC()
 })
 
 process.on("uncaughtException", (error: Error) => {
