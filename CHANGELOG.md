@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.11.0](///compare/v3.10.1...v3.11.0) (2025-07-13)
+
+
+### Features
+
+* update popout window dimensions and include popup.html in build 4802af9
+
+
+### Bug Fixes
+
+* adjust pnpm and electron app cleanup handling 21c2902
+* ensure popout window is destroyed on application quit 0e3930b
+* update target versions for build and correct popup.html reference to popout.html fe0b8d4
+
+
+### Code Refactoring
+
+* simplify popout window settings and remove unused modal logic 7e41224
+
 ### [3.10.1](///compare/v3.10.0...v3.10.1) (2025-07-13)
 
 ## [3.10.0](///compare/v3.9.0...v3.10.0) (2025-07-13)
