@@ -23,4 +23,6 @@ export const defaultSettings: Settings = {
     buttonActive: "#374151",
     buttonHoverColor: "#404040",
   },
+  showSoundGrid: true,
+  showMusicGrid: true,
 }

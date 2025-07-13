@@ -1,5 +1,3 @@
-import { ipcRenderer } from "electron"
-
 import { SoundData } from "@/types"
 import { generateSoundId } from "@/utils/sound-id"
 

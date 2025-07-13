@@ -45,6 +45,12 @@ const validateSettings = (settings: any): Settings => {
         ? settings.theme
         : {}),
     },
+    showSoundGrid: typeof settings.showSoundGrid === "boolean" 
+      ? settings.showSoundGrid 
+      : defaultSettings.showSoundGrid,
+    showMusicGrid: typeof settings.showMusicGrid === "boolean" 
+      ? settings.showMusicGrid 
+      : defaultSettings.showMusicGrid,
   }
 }
 

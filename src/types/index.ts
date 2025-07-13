@@ -21,6 +21,8 @@ export interface Settings {
     buttonActive: string
     buttonHoverColor: string
   }
+  showSoundGrid: boolean
+  showMusicGrid: boolean
 }
 
 export interface SoundData {

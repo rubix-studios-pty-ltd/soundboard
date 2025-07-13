@@ -232,7 +232,7 @@ const ROOT_PATH = path.join(__dirname, "..")
 async function createWindow(): Promise<void> {
   win = new BrowserWindow({
     width: 612,
-    height: 920,
+    height: 982,
     resizable: true,
     alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
     frame: false,
@@ -424,6 +424,8 @@ function setupIPC(): void {
           typeof settings.theme?.buttonHoverColor === "string"
             ? settings.theme
             : defaultSettings.theme,
+        showSoundGrid: Boolean(settings.showSoundGrid),
+        showMusicGrid: Boolean(settings.showMusicGrid),
       }
 
       if (

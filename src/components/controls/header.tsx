@@ -25,6 +25,9 @@ import {
   StopIcon,
   Volume,
   Windows,
+  Music,
+  Note,
+  Library,
 } from "@/components/icons"
 import AddSoundModal from "@/components/modals/add-sound"
 import { useAudio } from "@/context/audio"
@@ -188,9 +191,38 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2.5">
+        <div className="flex items-center">
+          <div className="flex items-center gap-2">
+            <button
+              className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
+              onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: true })}
+            >
+              <div className="h-4 w-4">
+                <Library className="h-full w-full" />
+              </div>
+            </button>
+            <button
+              className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+                !settings.showMusicGrid ? "text-red-500" : "text-white"
+              }`}
+              onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: false })}
+            >
+              <div className="h-4 w-4">
+                <Note className="h-full w-full" />
+              </div>
+            </button>
+            <button
+              className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
+                !settings.showSoundGrid ? "text-red-500" : "text-white"
+              }`}
+              onClick={() => updateSettings({ showSoundGrid: false, showMusicGrid: true })}
+            >
+              <div className="h-4 w-4">
+                <Music className="h-full w-full" />
+              </div>
+            </button>
+            <Separator orientation="vertical" />
+            <div className="flex items-center gap-2.5">
             <button
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
                 settings.buttonSettings ? "text-red-500" : "text-white"
@@ -258,19 +290,19 @@ const Header: React.FC = () => {
         <div className="no-drag flex">
           <button
             onClick={handleMinimize}
-            className="flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
+            className="cursor-pointer flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
           >
             <Minimize className="h-4 w-4 text-white" />
           </button>
           <button
             onClick={handleMaximize}
-            className="flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
+            className="cursor-pointer flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
           >
             <Maximize className="h-3.5 w-3.5 text-white" />
           </button>
           <button
             onClick={handleClose}
-            className="flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
+            className="cursor-pointer flex h-7 w-7 items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
           >
             <Exit className="h-4 w-4 text-white" />
           </button>

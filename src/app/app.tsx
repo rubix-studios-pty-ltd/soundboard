@@ -54,9 +54,15 @@ const AppContent: React.FC = () => {
         <div className="p-1">
           <FavoriteGrid />
           <div className="flex flex-wrap items-start justify-around gap-0.5">
-            <SoundGrid type="sound" containerId="container1" />
-            <Separator className="my-1" />
-            <SoundGrid type="music" containerId="container2" />
+            {settings.showSoundGrid && (
+              <SoundGrid type="sound" containerId="container1" />
+            )}
+            {settings.showSoundGrid && settings.showMusicGrid && (
+              <Separator className="my-1" />
+            )}
+            {settings.showMusicGrid && (
+              <SoundGrid type="music" containerId="container2" />
+            )}
           </div>
         </div>
       </main>
