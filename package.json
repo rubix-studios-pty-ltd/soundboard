@@ -25,8 +25,7 @@
     "build:win": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --win portable",
     "build:mac": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac dmg",
     "build:mac:x64": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --x64",
-    "build:mac:arm64": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --arm64",
-    "build:mac:both": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --x64 --arm64"
+    "build:mac:arm64": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --arm64"
   },
   "author": "Rubix Studios Pty. Ltd.",
   "license": "MIT",

@@ -76,15 +76,24 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          pnpm run clean
           pnpm run build:win
           
-      - name: Build and Release Mac
+      - name: Build and Release Mac (x64)
         if: matrix.os == 'macos-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm run clean
-          pnpm run build:mac:both
+          pnpm run build:mac:x64
+
+      - name: Build and Release Mac (arm64)
+        if: matrix.os == 'macos-latest'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pnpm run clean
+          pnpm run build:mac:arm64
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
