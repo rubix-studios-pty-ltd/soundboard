@@ -2,7 +2,6 @@ import path from "path"
 
 import { getIsQuitting } from "@/store/quitting"
 import Store from "@/store/settings"
-import { win } from "@/window/main"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { BrowserWindow } from "electron"
 

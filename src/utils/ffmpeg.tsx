@@ -5,23 +5,22 @@ import ffmpeg from "fluent-ffmpeg"
 
 const getFfmpeg = (): string | null => {
   const platform = process.platform
+  const platformFolder =
+    platform === "darwin"
+      ? process.arch === "arm64"
+        ? "darwin-arm64"
+        : "darwin-x64"
+      : "win32"
   const platformBinary = platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
 
   const pathsToTry = [
-    path.join(path.dirname(process.execPath), platformBinary),
+    path.join(__dirname, "..", "vendor", "ffmpeg", platformFolder, platformBinary),
     path.join(
       process.resourcesPath,
-      "app.asar.unpacked",
       "ffmpeg",
+      platformFolder,
       platformBinary
-    ),
-    path.join(
-      process.resourcesPath,
-      "app.asar.unpacked",
-      "node_modules",
-      "ffmpeg-static",
-      platformBinary
-    ),
+    )
   ]
 
   for (const tryPath of pathsToTry) {
@@ -30,7 +29,7 @@ const getFfmpeg = (): string | null => {
         return tryPath
       }
     } catch {
-      // ignore missing file
+      // File missing
     }
   }
 

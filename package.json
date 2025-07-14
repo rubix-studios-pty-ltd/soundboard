@@ -69,7 +69,6 @@
     "@radix-ui/react-slider": "^1.3.5",
     "@radix-ui/react-slot": "^1.2.3",
     "electron-store": "^10.1.0",
-    "ffmpeg-static": "^5.2.0",
     "fluent-ffmpeg": "^2.1.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
@@ -85,7 +84,14 @@
     "win": {
       "target": "portable",
       "icon": "icon.ico",
-      "artifactName": "Soundboard.exe"
+      "artifactName": "Soundboard.exe",
+      "extraResources": [
+        {
+          "from": "src/vendor/ffmpeg/win32",
+          "to": "ffmpeg/win32",
+          "filter": ["**/*"]
+        }
+      ]
     },
     "mac": {
       "target": [
@@ -98,21 +104,24 @@
       ],
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
-      "artifactName": "Soundboard-${arch}.${ext}"
+      "artifactName": "Soundboard-${arch}.${ext}",
+      "extraResources": [
+        {
+          "from": "src/vendor/ffmpeg/darwin-arm64",
+          "to": "ffmpeg/darwin-arm64",
+          "filter": ["**/*"]
+        },
+        {
+          "from": "src/vendor/ffmpeg/darwin-x64",
+          "to": "ffmpeg/darwin-x64",
+          "filter": ["**/*"]
+        }
+      ]
     },
     "dmg": {
       "format": "UDZO"
     },
     "asar": true,
-    "extraResources": [
-      {
-        "from": "./node_modules/ffmpeg-static/ffmpeg.exe",
-        "to": "./ffmpeg.exe",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
     "files": [
       "dist/**/*",
       "icon.ico",
