@@ -460,7 +460,13 @@ class AudioPool {
 
   dispose(): void {
     this.stopAll()
-    this.audioContext.close()
+
+    if (this.audioContext && this.audioContext.state !== "closed") {
+      this.audioContext.close().catch((err) => {
+        console.warn("Failed to close AudioContext:", err)
+      })
+    }
+
     this.pool.clear()
     this.instanceCounts.clear()
     this.unusedAudioElements.forEach((audio) => {

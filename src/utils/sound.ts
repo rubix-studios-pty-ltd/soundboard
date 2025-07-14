@@ -1,10 +1,10 @@
 import type { SoundData } from "@/types"
+import getEl from "@/lib/get-element"
 import AudioPool from "@/utils/audio-pool"
 import HotkeyManager from "@/utils/hotkeys"
 import { generateSoundId } from "@/utils/sound-id"
 import { soundData } from "@/data/audio"
 import { musicData } from "@/data/music"
-import getEl from "@/lib/get-element"
 
 interface SoundAppConfig {
   multiSoundEnabled: boolean

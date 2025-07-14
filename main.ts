@@ -2,7 +2,10 @@ import { promises as fs } from "fs"
 import path from "path"
 
 import { defaultSettings } from "@/constants/settings"
+import { setIsQuitting } from "@/store/quitting"
 import Store from "@/store/settings"
+import { createWindow, win } from "@/window/main"
+import { createPopoutWindow, popoutWin } from "@/window/popup"
 import { app, BrowserWindow, ipcMain } from "electron"
 
 import type {
@@ -12,9 +15,6 @@ import type {
 } from "@/types"
 import { convertToOpus } from "@/utils/optus-convert"
 import { createSoundsManager } from "@/utils/sound-manager"
-import { createWindow, win } from "@/window/main"
-import { createPopoutWindow, popoutWin } from "@/window/popup"
-import { setIsQuitting } from "@/store/quitting"
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
@@ -466,7 +466,6 @@ app.once("before-quit", async () => {
     console.error("Error during shutdown:", error)
   }
 })
-
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

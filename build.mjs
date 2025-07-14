@@ -1,5 +1,6 @@
-import * as esbuild from "esbuild"
 import { rmSync } from "fs"
+
+import * as esbuild from "esbuild"
 
 const isWatch = process.argv.includes("--watch")
 const isDev = process.env.NODE_ENV !== "production"
@@ -69,9 +70,7 @@ const buildOptions = [
 if (isWatch) {
   console.log("Starting watch mode...")
   Promise.all(buildOptions.map((options) => esbuild.context(options)))
-    .then((contexts) =>
-      Promise.all(contexts.map((context) => context.watch()))
-    )
+    .then((contexts) => Promise.all(contexts.map((context) => context.watch())))
     .then(() => {
       console.log("Watching for changes...")
     })

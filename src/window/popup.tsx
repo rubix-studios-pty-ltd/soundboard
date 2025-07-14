@@ -1,8 +1,8 @@
 import path from "path"
 
+import { getIsQuitting } from "@/store/quitting"
 import Store from "@/store/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
-import { getIsQuitting } from "@/store/quitting"
 import { BrowserWindow } from "electron"
 
 const ROOT_PATH = path.join(__dirname, "..")
@@ -18,7 +18,7 @@ export async function createPopoutWindow(): Promise<void> {
     frame: false,
     titleBarStyle: "hidden",
     show: false,
-    icon: path.join(__dirname, "icon.ico"),
+    icon: path.join(__dirname, "..", "icon.ico"),
     webPreferences: {
       partition: "persist:soundboard",
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
