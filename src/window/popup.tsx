@@ -4,6 +4,7 @@ import { getIsQuitting } from "@/store/quitting"
 import Store from "@/store/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { BrowserWindow } from "electron"
+import { win } from "@/window/main"
 
 const ROOT_PATH = path.join(__dirname, "..")
 export let popoutWin: BrowserWindowType | null = null
@@ -18,6 +19,8 @@ export async function createPopoutWindow(): Promise<void> {
     frame: false,
     titleBarStyle: "hidden",
     show: false,
+    parent: win ?? undefined,
+    type: 'toolbar',
     icon: path.join(__dirname, "..", "icon.ico"),
     webPreferences: {
       partition: "persist:soundboard",
