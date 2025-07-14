@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.11.1](///compare/v3.11.0...v3.11.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* reorganize imports and improve audio context disposal handling 04f4391
+* set parent window and type for popout window creation a77ba19
+* update Node engine requirement and adjust TypeScript target and library settings bce0133
+
 ## [3.11.0](///compare/v3.10.1...v3.11.0) (2025-07-13)
 
 
