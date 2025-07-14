@@ -13,6 +13,7 @@ const rawSoundData: [string, string][] = [
   ["sound/haha-2.opus", "Cười Trời Ơi"],
   ["sound/laughingkid.opus", "Cười Trẻ Con"],
   ["sound/chinese-laugh.opus", "Cười Trung"],
+  ["sound/chienthang.opus", "Cười Hẹ Hẹ"],
   ["sound/laugh-la.opus", "Cười Lạ"],
   ["sound/ohnono.opus", "Cười Oh No"],
   ["sound/laugh-male.opus", "Cười Đàn Ông"],

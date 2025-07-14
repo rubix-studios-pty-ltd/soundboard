@@ -18,7 +18,6 @@ const rawMusicData: [string, string][] = [
   ["sound/sexy-sax.opus", "Sexy Sax"],
   ["sound/rizz.opus", "Lãng Mạn Rizz"],
   ["sound/waitaminute.opus", "Lãng Mạn"],
-  ["sound/chienthang.opus", "Chiến Thắng"],
   ["sound/legendsnever.opus", "Legends"],
   ["sound/takeover.opus", "Take Over"],
   ["sound/ohno.opus", "Oh No"],
