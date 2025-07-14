@@ -21,6 +21,7 @@ export async function createWindow(): Promise<void> {
     alwaysOnTop: settings?.alwaysOnTop ?? false,
     frame: false,
     titleBarStyle: "hidden",
+    trafficLightPosition: { x: -999999, y: -999999 },
     show: false,
     icon: path.join(__dirname, "..", "icon.ico"),
     webPreferences: {
