@@ -8,15 +8,13 @@ const getFfmpeg = (): string | null => {
   const platformBinary = platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
 
   const pathsToTry = [
+    path.join(path.dirname(process.execPath), platformBinary),
     path.join(
       process.resourcesPath,
       "app.asar.unpacked",
       "ffmpeg",
-      platform,
       platformBinary
     ),
-    path.join(__dirname, "..", "vendor", "ffmpeg", platform, platformBinary),
-    path.join(path.dirname(process.execPath), platformBinary),
     path.join(
       process.resourcesPath,
       "app.asar.unpacked",
