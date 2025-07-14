@@ -106,6 +106,9 @@
       "category": "public.app-category.utilities",
       "artifactName": "Soundboard.dmg"
     },
+    "dmg": {
+      "format": "ULFO"
+    },
     "asar": true,
     "extraResources": [
       {
