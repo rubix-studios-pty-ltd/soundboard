@@ -4,10 +4,17 @@ import path from "path"
 import ffmpeg from "fluent-ffmpeg"
 
 const getFfmpeg = (): string | null => {
-  const platformBinary = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
+  const platform = process.platform
+  const platformBinary = platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
 
   const pathsToTry = [
     path.join(path.dirname(process.execPath), platformBinary),
+    path.join(
+      process.resourcesPath,
+      "app.asar.unpacked",
+      "ffmpeg",
+      platformBinary
+    ),
     path.join(
       process.resourcesPath,
       "app.asar.unpacked",
