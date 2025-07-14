@@ -23,7 +23,10 @@
     "watch:app": "node build.mjs --watch",
     "watch:css": "pnpm exec tailwindcss -i ./src/styles/tailwind.css -o ./dist/app/styles.css --watch",
     "build:win": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --win portable",
-    "build:mac": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac dmg"
+    "build:mac": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac dmg",
+    "build:mac:x64": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --x64",
+    "build:mac:arm64": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --arm64",
+    "build:mac:both": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac --x64 --arm64"
   },
   "author": "Rubix Studios Pty. Ltd.",
   "license": "MIT",
@@ -89,17 +92,7 @@
       "target": [
         {
           "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "zip",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
+          "arch": ["universal"]
         }
       ],
       "icon": "icon.icns",

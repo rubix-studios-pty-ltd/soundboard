@@ -2,9 +2,9 @@ import path from "path"
 
 import { getIsQuitting } from "@/store/quitting"
 import Store from "@/store/settings"
+import { win } from "@/window/main"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { BrowserWindow } from "electron"
-import { win } from "@/window/main"
 
 const ROOT_PATH = path.join(__dirname, "..")
 export let popoutWin: BrowserWindowType | null = null
@@ -19,7 +19,7 @@ export async function createPopoutWindow(): Promise<void> {
     frame: false,
     titleBarStyle: "hidden",
     show: false,
-    type: 'toolbar',
+    type: "toolbar",
     skipTaskbar: true,
     icon: path.join(__dirname, "..", "icon.ico"),
     webPreferences: {
