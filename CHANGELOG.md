@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.15.0](///compare/v3.14.0...v3.15.0) (2025-07-14)
+
+
+### Features
+
+* refine macOS build process by separating x64 and arm64 configurations 33ade95
+
 ## [3.14.0](///compare/v3.13.1...v3.14.0) (2025-07-14)
 
 
