@@ -99,10 +99,10 @@
       ],
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
-      "artifactName": "Soundboard.dmg"
+      "artifactName": "Soundboard-${arch}.${ext}"
     },
     "dmg": {
-      "format": "ULFO"
+      "format": "UDZO"
     },
     "asar": true,
     "extraResources": [

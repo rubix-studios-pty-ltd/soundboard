@@ -84,7 +84,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pnpm run clean
-          pnpm run build:prod
           pnpm run build:mac:both
           
       - name: Upload Artifacts
