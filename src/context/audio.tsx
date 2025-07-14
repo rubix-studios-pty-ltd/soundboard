@@ -84,7 +84,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [settings.volume, isReady])
 
   const playSound = async (
-    soundId: string,
+    _soundId: string,
     file: string,
     isUserAdded: boolean,
     volume?: number,

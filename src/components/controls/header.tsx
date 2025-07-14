@@ -1,34 +1,21 @@
 import React, { useEffect, useState } from "react"
-import { presetThemes } from "@/constants/themes"
 
 import type { Settings } from "@/types"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
-import { ThemePicker } from "@/components/ui/theme-picker"
-import ToggleSwitch from "@/components/controls/toggles"
+import SettingsControl from "@/components/controls/settings"
+import WindowsControls from "@/components/controls/window"
 import {
   Cog,
   Drag,
-  Exit,
   Library,
-  Maximize,
-  Menu,
-  Minimize,
-  Multi,
   Music,
   Mute,
   Note,
   Plus,
   Popout,
-  Repeat,
   StopIcon,
   Volume,
-  Windows,
 } from "@/components/icons"
 import AddSoundModal from "@/components/modals/add-sound"
 import { useAudio } from "@/context/audio"
@@ -52,26 +39,6 @@ const Header: React.FC = () => {
     const newSound = await addNewSound(file, type, title)
     addSound(newSound, type)
     setIsAddModalOpen(false)
-  }
-
-  const handleThemeChange = (themeKey: string | null) => {
-    if (themeKey === null) {
-      updateSettings({
-        theme: {
-          ...settings.theme,
-          enabled: false,
-        },
-      })
-      return
-    }
-
-    const theme = presetThemes[themeKey]
-    updateSettings({
-      theme: {
-        enabled: true,
-        ...theme,
-      },
-    })
   }
 
   const buttonSettings = () => {
@@ -100,16 +67,6 @@ const Header: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    if (settings.volume > 0) {
-      setPreviousVolume(settings.volume)
-    }
-  }, [])
-
-  const handleMinimize = () => window.electronAPI.minimizeWindow()
-  const handleMaximize = () => window.electronAPI.maximizeWindow()
-  const handleClose = () => window.electronAPI.closeWindow()
-
   const handleTogglePopout = async () => {
     try {
       if (popoutVisible) {
@@ -124,83 +81,16 @@ const Header: React.FC = () => {
     }
   }
 
+  useEffect(() => {
+    if (settings.volume > 0) {
+      setPreviousVolume(settings.volume)
+    }
+  }, [])
+
   return (
     <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b-[1px] border-[#333333] bg-[#1a1a1a]">
       <div className="draggable flex flex-1 flex-row items-center">
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="flex h-7 w-7 cursor-pointer items-center justify-center transition-colors duration-500 hover:bg-[#333333]">
-              <Menu className="h-4 w-4 text-white" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="border-[#333333] bg-[#1a1a1a] p-3 text-white">
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-row items-center justify-between">
-                <div className="flex flex-col items-start gap-1">
-                  <div className="flex flex-row items-center gap-2 text-sm font-semibold">
-                    <Windows className="h-4 w-4 text-white" />
-                    <span>Giữ trên cùng</span>
-                  </div>
-                  <p className="text-foreground-muted text-xs">
-                    Giữ cửa sổ luôn trên cùng.
-                  </p>
-                </div>
-                <ToggleSwitch
-                  checked={settings.alwaysOnTop}
-                  onChange={(checked) => {
-                    const update: Partial<Settings> = { alwaysOnTop: checked }
-                    updateSettings(update)
-                  }}
-                />
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <div className="flex flex-col items-start gap-1">
-                  <div className="flex flex-row items-center gap-2 text-sm font-semibold">
-                    <Multi className="h-4 w-4 text-white" />
-                    <span>Phát đồng thời</span>
-                  </div>
-                  <p className="text-foreground-muted text-xs">
-                    Phát nhiều âm thanh cùng lúc.
-                  </p>
-                </div>
-                <ToggleSwitch
-                  checked={settings.multiSoundEnabled}
-                  onChange={(checked) => {
-                    const update: Partial<Settings> = {
-                      multiSoundEnabled: checked,
-                    }
-                    updateSettings(update)
-                  }}
-                />
-              </div>
-              <div className="flex flex-row items-center justify-between">
-                <div className="flex flex-col items-start gap-1">
-                  <div className="flex flex-row items-center gap-2 text-sm font-semibold">
-                    <Repeat className="h-4 w-4 text-white" />
-                    <span>Lặp âm thanh</span>
-                  </div>
-                  <p className="text-foreground-muted text-xs">
-                    Phát chồng âm thanh.
-                  </p>
-                </div>
-                <ToggleSwitch
-                  checked={settings.repeatSoundEnabled}
-                  onChange={(checked) => {
-                    const update: Partial<Settings> = {
-                      repeatSoundEnabled: checked,
-                    }
-                    updateSettings(update)
-                  }}
-                />
-              </div>
-              <Separator />
-              <div className="flex gap-2">
-                <div className="text-sm font-semibold">Giao diện</div>
-                <ThemePicker onThemeChange={handleThemeChange} />
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+        <SettingsControl />
 
         <div className="draggable px-2 text-xs font-medium text-white">
           Soundboard
@@ -319,26 +209,7 @@ const Header: React.FC = () => {
           <Separator orientation="vertical" />
         </div>
 
-        <div className="no-drag flex">
-          <button
-            onClick={handleMinimize}
-            className="flex h-7 w-7 cursor-pointer items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
-          >
-            <Minimize className="h-4 w-4 text-white" />
-          </button>
-          <button
-            onClick={handleMaximize}
-            className="flex h-7 w-7 cursor-pointer items-center justify-center text-white transition-colors duration-300 hover:bg-[#333333]"
-          >
-            <Maximize className="h-3.5 w-3.5 text-white" />
-          </button>
-          <button
-            onClick={handleClose}
-            className="flex h-7 w-7 cursor-pointer items-center justify-center text-white transition-colors duration-300 hover:bg-red-600"
-          >
-            <Exit className="h-4 w-4 text-white" />
-          </button>
-        </div>
+        <WindowsControls />
       </div>
 
       <AddSoundModal

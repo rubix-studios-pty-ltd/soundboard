@@ -108,11 +108,13 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
         ...newSettings,
       })
 
-      Promise.resolve(window.electronAPI.saveSettings(updated)).catch(
-        (error: unknown) => {
+      ;(async () => {
+        try {
+          await window.electronAPI.saveSettings(updated)
+        } catch (error) {
           console.error("Failed to save settings:", error)
         }
-      )
+      })()
 
       if ("alwaysOnTop" in newSettings) {
         window.electronAPI.toggleAlwaysOnTop(newSettings.alwaysOnTop ?? false)

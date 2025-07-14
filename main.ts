@@ -1,162 +1,27 @@
-import { promises as fs, statSync } from "fs"
+import { promises as fs } from "fs"
 import path from "path"
 
 import { defaultSettings } from "@/constants/settings"
+import Store from "@/store/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
-import { app, BrowserWindow, ipcMain, ProtocolRequest } from "electron"
-import Store from "electron-store"
-import ffmpeg from "fluent-ffmpeg"
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  protocol,
+  ProtocolRequest,
+} from "electron"
 
 import type {
   HotkeyMap as HotkeyMapType,
   Settings as SettingsType,
   SoundData,
 } from "@/types"
+import { getMimeType } from "@/utils/get-mime"
+import { convertToOpus } from "@/utils/optus-convert"
+import { createSoundsManager } from "@/utils/sound-manager"
 
 const shouldLog = () => process.argv.includes("--enable-logging")
-
-const getBinaryPath = (): string | null => {
-  const platformBinary = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
-
-  const pathsToTry = [
-    path.join(path.dirname(process.execPath), platformBinary),
-    path.join(
-      process.resourcesPath,
-      "app.asar.unpacked",
-      "node_modules",
-      "ffmpeg-static",
-      platformBinary
-    ),
-  ]
-
-  for (const tryPath of pathsToTry) {
-    try {
-      if (statSync(tryPath).isFile()) {
-        return tryPath
-      }
-    } catch {
-      // ignore missing file
-    }
-  }
-
-  return null
-}
-
-const ffmpegPath = getBinaryPath()
-
-const store = new Store<{ hotkeys: HotkeyMapType; settings: SettingsType }>({
-  schema: {
-    hotkeys: {
-      type: "object",
-    },
-    settings: {
-      type: "object",
-    },
-  },
-  defaults: {
-    hotkeys: {},
-    settings: defaultSettings,
-  },
-})
-
-function createSoundsManager(type: "sound" | "music") {
-  const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
-
-  const validateSound = async (sound: SoundData): Promise<boolean> => {
-    try {
-      const soundPath = path.join(app.getPath("userData"), "sounds", sound.file)
-      await fs.access(soundPath)
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  const loadSounds = async (): Promise<SoundData[]> => {
-    try {
-      const exists = await fs
-        .access(jsonPath)
-        .then(() => true)
-        .catch(() => false)
-      if (exists) {
-        const content = await fs.readFile(jsonPath, "utf-8")
-        const sounds = JSON.parse(content) as SoundData[]
-
-        const validatedSounds = []
-        for (const sound of sounds) {
-          if (await validateSound(sound)) {
-            validatedSounds.push(sound)
-          } else if (shouldLog()) {
-            console.log(`Removing stale sound entry: ${sound.id}`)
-          }
-        }
-
-        if (validatedSounds.length !== sounds.length) {
-          await saveSounds(validatedSounds)
-        }
-
-        return validatedSounds
-      }
-      return []
-    } catch (error) {
-      if (shouldLog()) console.error("Error reading sounds JSON:", error)
-      return []
-    }
-  }
-
-  const saveSounds = async (sounds: SoundData[]): Promise<void> => {
-    try {
-      const tempPath = `${jsonPath}.tmp`
-      await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), "utf-8")
-      await fs.rename(tempPath, jsonPath)
-    } catch (error) {
-      if (shouldLog()) console.error("Error saving sounds JSON:", error)
-      throw error
-    }
-  }
-
-  return {
-    getAll: async () => {
-      return await loadSounds()
-    },
-    add: async (sound: SoundData) => {
-      if (await validateSound(sound)) {
-        const sounds = await loadSounds()
-        sounds.push(sound)
-        await saveSounds(sounds)
-      } else {
-        throw new Error("Sound file does not exist")
-      }
-    },
-    remove: async (soundId: string) => {
-      const sounds = await loadSounds()
-      const soundToRemove = sounds.find((s) => s.id === soundId)
-      if (!soundToRemove) {
-        return
-      }
-
-      const filteredSounds = sounds.filter((s) => s.id !== soundId)
-      await saveSounds(filteredSounds)
-
-      try {
-        const soundPath = path.join(
-          app.getPath("userData"),
-          "sounds",
-          soundToRemove.file
-        )
-        const exists = await fs
-          .access(soundPath)
-          .then(() => true)
-          .catch(() => false)
-        if (exists) {
-          await fs.unlink(soundPath)
-        }
-      } catch (error) {
-        if (shouldLog()) console.error("Error deleting sound file:", error)
-      }
-    },
-  }
-}
 
 const soundManagers = {
   sound: createSoundsManager("sound"),
@@ -164,7 +29,7 @@ const soundManagers = {
 }
 
 try {
-  const settings = store.get("settings")
+  const settings = Store.get("settings")
   if (
     !settings ||
     typeof settings.volume !== "number" ||
@@ -181,7 +46,7 @@ try {
     typeof settings.theme?.buttonText !== "string" ||
     typeof settings.theme?.buttonActive !== "string"
   ) {
-    store.set("settings", {
+    Store.set("settings", {
       ...defaultSettings,
       ...settings,
       volume:
@@ -223,7 +88,7 @@ try {
   if (shouldLog()) {
     console.error("Error validating settings:", error)
   }
-  store.set("settings", defaultSettings)
+  Store.set("settings", defaultSettings)
 }
 
 let win: BrowserWindowType | null = null
@@ -232,7 +97,7 @@ let isQuitting = false
 const ROOT_PATH = path.join(__dirname, "..")
 
 async function createPopoutWindow(): Promise<void> {
-  const settings = store.get("settings")
+  const settings = Store.get("settings")
 
   popoutWin = new BrowserWindow({
     width: 312,
@@ -240,6 +105,7 @@ async function createPopoutWindow(): Promise<void> {
     frame: false,
     resizable: true,
     show: false,
+    alwaysOnTop: settings?.alwaysOnTop ?? false,
     webPreferences: {
       partition: "persist:soundboard",
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
@@ -256,6 +122,7 @@ async function createPopoutWindow(): Promise<void> {
         settings?.popoutGrid?.window?.isOpen ||
         settings?.popoutGrid?.window?.showOnStartup
       ) {
+        popoutWin?.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
         popoutWin?.show()
       }
     })
@@ -276,7 +143,7 @@ async function createWindow(): Promise<void> {
     width: 614,
     height: 984,
     resizable: true,
-    alwaysOnTop: store.get("settings")?.alwaysOnTop ?? false,
+    alwaysOnTop: Store.get("settings")?.alwaysOnTop ?? false,
     frame: false,
     titleBarStyle: "hidden",
     show: false,
@@ -295,44 +162,39 @@ async function createWindow(): Promise<void> {
       win?.show()
     })
 
-    const { protocol } = require("electron")
-    protocol.handle("app", async (request: ProtocolRequest) => {
-      const filePath = new URL(request.url).pathname
+    protocol.handle("app", async (request: Request) => {
+      const url = new URL(request.url)
+      const filePath = decodeURIComponent(url.pathname)
       const extension = path.extname(filePath).toLowerCase()
-
       const skipCompression = [".opus", ".mp3", ".ogg"].includes(extension)
 
-      const compressionOptions = {
-        enableBrotli: !skipCompression,
-        enableGzip: !skipCompression,
+      const soundPath = [
+        path.join(app.getPath("userData"), "sounds", filePath),
+        path.join(ROOT_PATH, filePath),
+      ]
+
+      for (const candidate of soundPath) {
+        try {
+          await fs.access(candidate)
+          const data = await fs.readFile(candidate)
+          const contentType = getMimeType(extension)
+
+          return new Response(data, {
+            headers: {
+              "Content-Type": contentType,
+              "Content-Encoding": skipCompression ? "identity" : "br",
+            },
+          })
+        } catch {
+          continue
+        }
       }
 
-      try {
-        const soundPath = path.join(app.getPath("userData"), "sounds", filePath)
-        try {
-          await fs.access(soundPath)
-          return await protocol.Response.fromFileStream(
-            soundPath,
-            compressionOptions
-          )
-        } catch {
-          const builtInPath = path.join(ROOT_PATH, filePath)
-          try {
-            await fs.access(builtInPath)
-            return await protocol.Response.fromFileStream(
-              builtInPath,
-              compressionOptions
-            )
-          } catch {
-            throw new Error(`Sound file not found: ${filePath}`)
-          }
-        }
-      } catch (error) {
-        if (shouldLog()) {
-          console.error("Protocol handler error:", error)
-        }
-        return new protocol.Response()
+      if (shouldLog()) {
+        console.error("File not found:", filePath)
       }
+
+      return new Response("File not found", { status: 404 })
     })
 
     win.loadFile(path.join(ROOT_PATH, "index.html"))
@@ -349,27 +211,6 @@ async function createWindow(): Promise<void> {
       }
     })
   }
-}
-
-async function convertToOpus(
-  filePath: string,
-  outputPath: string
-): Promise<void> {
-  if (ffmpegPath) {
-    ffmpeg.setFfmpegPath(ffmpegPath)
-  }
-
-  return new Promise((resolve, reject) => {
-    ffmpeg(filePath)
-      .toFormat("opus")
-      .audioFilters(["loudnorm=I=-5:TP=-1.5:LRA=11", "dynaudnorm=f=150:g=5"])
-      .audioFrequency(48000)
-      .audioBitrate("64k")
-      .outputOptions(["-map_metadata", "-1"])
-      .save(outputPath)
-      .on("end", resolve)
-      .on("error", reject)
-  })
 }
 
 function setupIPC(): void {
@@ -400,8 +241,8 @@ function setupIPC(): void {
           case "close":
             if (target === "popout") {
               targetWindow.hide()
-              const settings = store.get("settings")
-              store.set("settings", {
+              const settings = Store.get("settings")
+              Store.set("settings", {
                 ...settings,
                 popoutGrid: {
                   ...settings.popoutGrid,
@@ -420,9 +261,10 @@ function setupIPC(): void {
             break
           case "show":
             if (target === "popout") {
+              const settings = Store.get("settings")
+              targetWindow.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
               targetWindow.show()
-              const settings = store.get("settings")
-              store.set("settings", {
+              Store.set("settings", {
                 ...settings,
                 popoutGrid: {
                   ...settings.popoutGrid,
@@ -445,7 +287,7 @@ function setupIPC(): void {
 
   ipcMain.handle("load-hotkeys", (): HotkeyMapType => {
     try {
-      return store.get("hotkeys") ?? {}
+      return Store.get("hotkeys") ?? {}
     } catch (error) {
       if (shouldLog()) {
         console.error("Error loading hotkeys:", error)
@@ -456,7 +298,7 @@ function setupIPC(): void {
 
   ipcMain.handle("load-settings", (): SettingsType => {
     try {
-      return store.get("settings") ?? defaultSettings
+      return Store.get("settings") ?? defaultSettings
     } catch (error) {
       if (shouldLog()) {
         console.error("Error loading settings:", error)
@@ -467,7 +309,7 @@ function setupIPC(): void {
 
   ipcMain.on("save-hotkeys", (_: any, newHotkeys: HotkeyMapType) => {
     try {
-      store.set("hotkeys", newHotkeys)
+      Store.set("hotkeys", newHotkeys)
     } catch (error) {
       if (shouldLog()) {
         console.error("Error saving hotkeys:", error)
@@ -534,7 +376,15 @@ function setupIPC(): void {
         validatedSettings.volume = 1
       }
 
-      store.set("settings", validatedSettings)
+      Store.set("settings", validatedSettings)
+
+      if (win) {
+        win.setAlwaysOnTop(validatedSettings.alwaysOnTop)
+      }
+      if (popoutWin) {
+        popoutWin.setAlwaysOnTop(validatedSettings.alwaysOnTop)
+      }
+
       win?.webContents.send("settings-updated", validatedSettings)
       popoutWin?.webContents.send("settings-updated", validatedSettings)
     } catch (error) {
@@ -542,7 +392,7 @@ function setupIPC(): void {
         console.error("Error saving settings:", error)
       }
       try {
-        store.set("settings", defaultSettings)
+        Store.set("settings", defaultSettings)
       } catch (e) {
         if (shouldLog()) {
           console.error("Failed to save default settings:", e)
@@ -555,7 +405,10 @@ function setupIPC(): void {
     try {
       if (win) {
         win.setAlwaysOnTop(isEnabled)
-        const currentSettings = store.get("settings") ?? defaultSettings
+        if (popoutWin) {
+          popoutWin.setAlwaysOnTop(isEnabled)
+        }
+        const currentSettings = Store.get("settings") ?? defaultSettings
         const updatedSettings = {
           ...currentSettings,
           alwaysOnTop: isEnabled,
@@ -587,7 +440,7 @@ function setupIPC(): void {
             maxItems: Number(currentSettings.favorites?.maxItems) || 18,
           },
         }
-        store.set("settings", updatedSettings)
+        Store.set("settings", updatedSettings)
       }
     } catch (error) {
       if (shouldLog()) {
