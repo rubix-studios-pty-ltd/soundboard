@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.12.0](///compare/v3.11.2...v3.12.0) (2025-07-14)
+
+
+### Features
+
+* add DMG format specification for macOS build 82221be
+
+
+### Bug Fixes
+
+* set parent window for popout window creation c196579
+
 ### [3.11.2](///compare/v3.11.1...v3.11.2) (2025-07-14)
 
 
