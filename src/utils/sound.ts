@@ -4,6 +4,7 @@ import HotkeyManager from "@/utils/hotkeys"
 import { generateSoundId } from "@/utils/sound-id"
 import { soundData } from "@/data/audio"
 import { musicData } from "@/data/music"
+import getEl from "@/lib/get-element"
 
 interface SoundAppConfig {
   multiSoundEnabled: boolean
@@ -22,17 +23,11 @@ class SoundboardApp {
   private config: SoundAppConfig
 
   constructor(initialConfig: SoundAppConfig) {
-    this.container1 = document.getElementById("container1") as HTMLElement
-    this.container2 = document.getElementById("container2") as HTMLElement
-    this.stopAllButton = document.getElementById(
-      "stopAllButton"
-    ) as HTMLButtonElement
-    this.template = document.getElementById(
-      "sound-button-template"
-    ) as HTMLTemplateElement
-    this.volumeSlider = document.getElementById(
-      "volumeSlider"
-    ) as HTMLInputElement
+    this.container1 = getEl("container1")
+    this.container2 = getEl("container2")
+    this.stopAllButton = getEl("stopAllButton")
+    this.template = getEl("sound-button-template")
+    this.volumeSlider = getEl("volumeSlider")
 
     this.config = initialConfig
     this.audioPool = new AudioPool(

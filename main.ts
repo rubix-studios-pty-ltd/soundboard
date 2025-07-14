@@ -3,23 +3,18 @@ import path from "path"
 
 import { defaultSettings } from "@/constants/settings"
 import Store from "@/store/settings"
-import type { BrowserWindow as BrowserWindowType } from "electron"
-import {
-  app,
-  BrowserWindow,
-  ipcMain,
-  protocol,
-  ProtocolRequest,
-} from "electron"
+import { app, BrowserWindow, ipcMain } from "electron"
 
 import type {
   HotkeyMap as HotkeyMapType,
   Settings as SettingsType,
   SoundData,
 } from "@/types"
-import { getMimeType } from "@/utils/get-mime"
 import { convertToOpus } from "@/utils/optus-convert"
 import { createSoundsManager } from "@/utils/sound-manager"
+import { createWindow, win } from "@/window/main"
+import { createPopoutWindow, popoutWin } from "@/window/popup"
+import { setIsQuitting } from "@/store/quitting"
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
@@ -91,128 +86,6 @@ try {
   Store.set("settings", defaultSettings)
 }
 
-let win: BrowserWindowType | null = null
-let popoutWin: BrowserWindowType | null = null
-let isQuitting = false
-const ROOT_PATH = path.join(__dirname, "..")
-
-async function createPopoutWindow(): Promise<void> {
-  const settings = Store.get("settings")
-
-  popoutWin = new BrowserWindow({
-    width: 312,
-    height: 498,
-    frame: false,
-    resizable: true,
-    show: false,
-    alwaysOnTop: settings?.alwaysOnTop ?? false,
-    webPreferences: {
-      partition: "persist:soundboard",
-      preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
-      nodeIntegration: false,
-      contextIsolation: true,
-      backgroundThrottling: false,
-      spellcheck: false,
-    },
-  })
-
-  if (popoutWin) {
-    popoutWin.once("ready-to-show", () => {
-      if (
-        settings?.popoutGrid?.window?.isOpen ||
-        settings?.popoutGrid?.window?.showOnStartup
-      ) {
-        popoutWin?.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
-        popoutWin?.show()
-      }
-    })
-
-    popoutWin.loadFile(path.join(ROOT_PATH, "popout.html"))
-
-    popoutWin.on("close", (e) => {
-      if (!isQuitting) {
-        e.preventDefault()
-        popoutWin?.hide()
-      }
-    })
-  }
-}
-
-async function createWindow(): Promise<void> {
-  win = new BrowserWindow({
-    width: 614,
-    height: 984,
-    resizable: true,
-    alwaysOnTop: Store.get("settings")?.alwaysOnTop ?? false,
-    frame: false,
-    titleBarStyle: "hidden",
-    show: false,
-    webPreferences: {
-      partition: "persist:soundboard",
-      preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
-      nodeIntegration: false,
-      contextIsolation: true,
-      backgroundThrottling: false,
-      spellcheck: false,
-    },
-  })
-
-  if (win) {
-    win.once("ready-to-show", () => {
-      win?.show()
-    })
-
-    protocol.handle("app", async (request: Request) => {
-      const url = new URL(request.url)
-      const filePath = decodeURIComponent(url.pathname)
-      const extension = path.extname(filePath).toLowerCase()
-      const skipCompression = [".opus", ".mp3", ".ogg"].includes(extension)
-
-      const soundPath = [
-        path.join(app.getPath("userData"), "sounds", filePath),
-        path.join(ROOT_PATH, filePath),
-      ]
-
-      for (const candidate of soundPath) {
-        try {
-          await fs.access(candidate)
-          const data = await fs.readFile(candidate)
-          const contentType = getMimeType(extension)
-
-          return new Response(data, {
-            headers: {
-              "Content-Type": contentType,
-              "Content-Encoding": skipCompression ? "identity" : "br",
-            },
-          })
-        } catch {
-          continue
-        }
-      }
-
-      if (shouldLog()) {
-        console.error("File not found:", filePath)
-      }
-
-      return new Response("File not found", { status: 404 })
-    })
-
-    win.loadFile(path.join(ROOT_PATH, "index.html"))
-
-    if (process.argv.includes("--enable-logging")) {
-      win.webContents.openDevTools()
-    }
-
-    win.on("close", () => {
-      isQuitting = true
-      if (popoutWin) {
-        popoutWin.destroy()
-        popoutWin = null
-      }
-    })
-  }
-}
-
 function setupIPC(): void {
   ipcMain.handle("load-sounds", async (_, type: "sound" | "music") => {
     return await soundManagers[type].getAll()
@@ -253,7 +126,7 @@ function setupIPC(): void {
                 },
               })
             } else {
-              isQuitting = true
+              setIsQuitting(true)
               cleanupWindows()
               cleanupIPC()
               app.quit()
@@ -571,27 +444,29 @@ if (!gotTheLock) {
   })
 }
 
+function cleanupWindows(): void {
+  popoutWin?.destroy()
+  win?.destroy()
+}
+
 function cleanupIPC(): void {
   ipcMain.removeAllListeners()
-  if (win?.webContents) {
-    win.webContents.session.protocol.unhandle("app")
-  }
+  win?.webContents?.session.protocol.unhandle("app")
 }
 
-function cleanupWindows(): void {
-  if (popoutWin) {
-    popoutWin.destroy()
-    popoutWin = null
-  }
-  if (win) {
-    win.destroy()
-    win = null
-  }
-}
+app.once("before-quit", async () => {
+  setIsQuitting(true)
 
-app.on("before-quit", () => {
-  isQuitting = true
+  try {
+    const settings = Store.get("settings")
+    if (settings) {
+      Store.set("settings", settings)
+    }
+  } catch (error) {
+    console.error("Error during shutdown:", error)
+  }
 })
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

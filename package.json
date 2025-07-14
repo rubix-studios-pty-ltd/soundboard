@@ -9,19 +9,26 @@
     "release:patch": "standard-version --release-as patch && git push rubix master --follow-tags",
     "release:minor": "standard-version --release-as minor && git push rubix master --follow-tags",
     "release:major": "standard-version --release-as major && git push rubix master --follow-tags",
+
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" --ignore-path .prettierignore --log-level warn",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs}\" --ignore-path .prettierignore --log-level warn",
-    "clean": "rimraf dist && rimraf release",
+
+    "dev": "cross-env NODE_ENV=development concurrently \"pnpm run watch:app\" \"pnpm run watch:css\" \"pnpm run electron:dev\"",
+    "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
+
     "start": "pnpm run clean && pnpm run build:prod && electron .",
+    "clean": "rimraf dist && rimraf release",
+
     "update": "pnpx npm-check-updates -u && pnpm install",
+
     "build": "cross-env NODE_ENV=development pnpm run build:app && pnpm run build:css",
     "build:prod": "cross-env NODE_ENV=production pnpm run build:app && pnpm run build:css",
     "build:app": "node build.mjs",
     "build:css": "pnpx @tailwindcss/cli -i ./src/styles/tailwind.css -o ./dist/app/styles.css",
-    "dev": "cross-env NODE_ENV=development concurrently \"pnpm run watch:app\" \"pnpm run watch:css\" \"pnpm run electron:dev\"",
+
     "watch:app": "node build.mjs --watch",
     "watch:css": "pnpm exec tailwindcss -i ./src/styles/tailwind.css -o ./dist/app/styles.css --watch",
-    "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
+    
     "build:win": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --win portable",
     "build:mac": "pnpm run clean && cross-env NODE_ENV=production pnpm run build:prod && electron-builder --mac dmg"
   },
@@ -86,7 +93,8 @@
       "artifactName": "Soundboard.exe"
     },
     "mac": {
-      "target": "dmg",
+      "target": ["dmg", "zip"],
+      "arch": ["x64", "arm64"],
       "icon": "icon.icns",
       "category": "public.app-category.utilities",
       "artifactName": "Soundboard.dmg"

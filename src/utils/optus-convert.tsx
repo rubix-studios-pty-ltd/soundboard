@@ -36,9 +36,11 @@ export async function convertToOpus(
   filePath: string,
   outputPath: string
 ): Promise<void> {
-  if (ffmpegPath) {
-    ffmpeg.setFfmpegPath(ffmpegPath)
+  if (!ffmpegPath) {
+    throw new Error("FFmpeg binary not found.")
   }
+
+  ffmpeg.setFfmpegPath(ffmpegPath)
 
   return new Promise((resolve, reject) => {
     ffmpeg(filePath)
@@ -49,6 +51,9 @@ export async function convertToOpus(
       .outputOptions(["-map_metadata", "-1"])
       .save(outputPath)
       .on("end", resolve)
-      .on("error", reject)
+      .on("error", (err) => {
+        console.error("FFmpeg conversion error:", err)
+        reject(err)
+      })
   })
 }

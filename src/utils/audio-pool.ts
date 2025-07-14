@@ -5,6 +5,7 @@ export interface AudioPoolItem {
   cleanupListeners: (() => void)[]
   onEnd?: () => void
   lastUsed: number
+  duration?: number
 }
 
 class AudioPool {
@@ -318,7 +319,9 @@ class AudioPool {
       audioElement.src = finalUrl
       audioElement.volume = volume
       audioElement.loop = false
-
+      audioElement.onloadedmetadata = () => {
+        poolItem.duration = audioElement.duration
+      }
       await audioElement.play()
       poolItem.isPlaying = true
       poolItem.lastUsed = Date.now()
@@ -327,7 +330,11 @@ class AudioPool {
       this.instanceCounts.set(source, currentCount + 1)
     } catch (error) {
       console.error("Error playing audio:", error)
-      this.stopSpecific(source)
+      const item = this.pool.get(instanceId)
+      if (item) {
+        this.cleanupAudioItem(item)
+        this.pool.delete(instanceId)
+      }
       throw error
     }
   }
@@ -427,8 +434,11 @@ class AudioPool {
   }
 
   getAudio(source: string): HTMLAudioElement | undefined {
-    const item = this.pool.get(source)
-    return item?.audio
+    const entries = Array.from(this.pool.entries())
+      .filter(([key]) => key.startsWith(source))
+      .sort((a, b) => b[1].lastUsed - a[1].lastUsed)
+
+    return entries[0]?.[1].audio
   }
 
   getPlayingAudios(): Map<string, AudioPoolItem> {
@@ -442,6 +452,10 @@ class AudioPool {
       }
     }
     return undefined
+  }
+
+  getInstanceCount(source: string): number {
+    return this.instanceCounts.get(source) || 0
   }
 
   dispose(): void {

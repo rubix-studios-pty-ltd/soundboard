@@ -1,4 +1,5 @@
 import type { HotkeyMap } from "@/types"
+import getEl from "@/lib/get-element"
 
 class HotkeyManager {
   private modal: HTMLElement
@@ -9,21 +10,25 @@ class HotkeyManager {
   private hotkeyMap: HotkeyMap
 
   constructor() {
-    this.modal = document.getElementById("hotkeyModal") as HTMLElement
-    this.assignedKeyLabel = document.getElementById(
-      "assignedKeyLabel"
-    ) as HTMLElement
-    this.clearHotkeyButton = document.getElementById(
-      "clearHotkeyButton"
-    ) as HTMLElement
-    this.closeModalButton = document.getElementById(
-      "closeModalButton"
-    ) as HTMLElement
+    this.modal = getEl("hotkeyModal")
+    this.assignedKeyLabel = getEl("assignedKeyLabel")
+    this.clearHotkeyButton = getEl("clearHotkeyButton")
+    this.closeModalButton = getEl("closeModalButton")
     this.currentSoundId = null
     this.hotkeyMap = {}
-
-    this.initializeHotkeys()
     this.setupEventListeners()
+  }
+
+  public async init(): Promise<void> {
+    await this.initializeHotkeys()
+  }
+
+  private getElement(id: string): HTMLElement {
+    const el = document.getElementById(id)
+    if (!(el instanceof HTMLElement)) {
+      throw new Error(`Missing or invalid element: #${id}`)
+    }
+    return el
   }
 
   private async initializeHotkeys(): Promise<void> {
@@ -36,9 +41,7 @@ class HotkeyManager {
   }
 
   private setupEventListeners(): void {
-    this.closeModalButton.addEventListener("click", () => {
-      this.hideModal()
-    })
+    this.closeModalButton.addEventListener("click", () => this.hideModal())
 
     this.clearHotkeyButton.addEventListener("click", () => {
       if (this.currentSoundId && this.currentSoundId in this.hotkeyMap) {
@@ -49,41 +52,36 @@ class HotkeyManager {
     })
 
     document.addEventListener("keydown", (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase()
+
       if (this.modal.style.display === "flex" && this.currentSoundId) {
         event.preventDefault()
-        const key = event.key.toLowerCase()
 
-        const existingSound = Object.entries(this.hotkeyMap).find(
-          ([, hotkey]) => hotkey === key
-        )
-        if (existingSound) {
-          delete this.hotkeyMap[existingSound[0]]
+        for (const id in this.hotkeyMap) {
+          if (this.hotkeyMap[id] === key) {
+            delete this.hotkeyMap[id]
+            break
+          }
         }
 
         this.hotkeyMap[this.currentSoundId] = key
         window.electronAPI.saveHotkeys(this.hotkeyMap)
         this.hideModal()
+        return
       }
-    })
 
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
       if (this.modal.style.display !== "flex") {
-        const key = event.key.toLowerCase()
         const soundId = Object.entries(this.hotkeyMap).find(
           ([, hotkey]) => hotkey === key
         )?.[0]
         if (soundId) {
-          const button = document.querySelector(
-            `[data-sound-id="${soundId}"]`
-          ) as HTMLButtonElement
-          if (button) {
-            button.click()
-          } else {
-            const buttonById = document.getElementById(
-              soundId
-            ) as HTMLButtonElement
-            buttonById?.click()
-          }
+          const btn =
+            (document.querySelector(
+              `[data-sound-id="${soundId}"]`
+            ) as HTMLButtonElement) ??
+            (document.getElementById(soundId) as HTMLButtonElement)
+
+          btn?.click()
         }
       }
     })

@@ -1,4 +1,5 @@
 import * as esbuild from "esbuild"
+import { rmSync } from "fs"
 
 const isWatch = process.argv.includes("--watch")
 const isDev = process.env.NODE_ENV !== "production"
@@ -67,14 +68,25 @@ const buildOptions = [
 
 if (isWatch) {
   console.log("Starting watch mode...")
-  const contexts = await Promise.all(
-    buildOptions.map((options) => esbuild.context(options))
-  )
-
-  await Promise.all(contexts.map((context) => context.watch()))
-  console.log("Watching for changes...")
+  Promise.all(buildOptions.map((options) => esbuild.context(options)))
+    .then((contexts) =>
+      Promise.all(contexts.map((context) => context.watch()))
+    )
+    .then(() => {
+      console.log("Watching for changes...")
+    })
+    .catch((err) => {
+      console.error("Watch mode failed:", err)
+      process.exit(1)
+    })
 } else {
-  console.log("Building...")
-  await Promise.all(buildOptions.map((options) => esbuild.build(options)))
-  console.log("Build complete")
+  try {
+    rmSync("dist", { recursive: true, force: true })
+    console.log("Building...")
+    await Promise.all(buildOptions.map((options) => esbuild.build(options)))
+    console.log("Build complete")
+  } catch (err) {
+    console.error("Build failed:", err)
+    process.exit(1)
+  }
 }

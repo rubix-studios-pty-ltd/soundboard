@@ -13,7 +13,7 @@ export const useUserSounds = (type: "sound" | "music") => {
     ...sound,
     isUserAdded: true,
     id: sound.id || generateSoundId(sound.file),
-    file: `${sound.file}`,
+    file: sound.file,
   })
 
   const validateSoundFile = async (sound: SoundData): Promise<boolean> => {
