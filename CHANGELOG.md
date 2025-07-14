@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.13.1](///compare/v3.13.0...v3.13.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* update DMG artifact naming and format for macOS build 6b08650
+
 ## [3.13.0](///compare/v3.12.0...v3.13.0) (2025-07-14)
 
 
