@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.15.1](///compare/v3.15.0...v3.15.1) (2025-07-14)
+
+
+### Bug Fixes
+
+* add traffic light position to main and popout window configurations 607e2d0
+* improve ffmpeg path resolution for better compatibility across platforms da4c4a4
+* update ffmpeg resource paths for better compatibility d7beb9e
+
 ## [3.15.0](///compare/v3.14.0...v3.15.0) (2025-07-14)
 
 
