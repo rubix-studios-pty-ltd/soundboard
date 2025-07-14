@@ -102,7 +102,14 @@
       "artifactName": "Soundboard-${arch}.${ext}"
     },
     "dmg": {
-      "format": "UDZO"
+      "format": "UDZO",
+      "background": null,
+      "iconSize": 80,
+      "type": "custom",
+      "contents": [],
+      "options": {
+        "fs": "HFS+"
+      }
     },
     "asar": true,
     "extraResources": [
