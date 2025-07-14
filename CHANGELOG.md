@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.14.0](///compare/v3.13.1...v3.14.0) (2025-07-14)
+
+
+### Features
+
+* add new sound "Cười Hẹ Hẹ" and remove "Chiến Thắng" from music data 4ffdd95
+* enhance DMG configuration with custom options for macOS build 1af2be7
+
+
+### Bug Fixes
+
+* simplify DMG configuration by removing unnecessary options c9af663
+
 ### [3.13.1](///compare/v3.13.0...v3.13.1) (2025-07-14)
 
 
