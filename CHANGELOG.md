@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.13.0](///compare/v3.12.0...v3.13.0) (2025-07-14)
+
+
+### Features
+
+* enhance macOS build process with architecture-specific options e84d6fe
+
 ## [3.12.0](///compare/v3.11.2...v3.12.0) (2025-07-14)
 
 
