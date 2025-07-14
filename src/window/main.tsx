@@ -6,7 +6,7 @@ import Store from "@/store/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, protocol } from "electron"
 
-import { getMimeType } from "@/lib/get-mime"
+import { getMimeType } from "@/lib/getmime"
 
 const ROOT_PATH = path.join(__dirname, "..")
 export let win: BrowserWindowType | null = null

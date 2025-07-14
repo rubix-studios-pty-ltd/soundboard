@@ -1,5 +1,5 @@
 import type { SoundData } from "@/types"
-import getEl from "@/lib/get-element"
+import getEl from "@/lib/getelement"
 import AudioPool from "@/utils/audio-pool"
 import HotkeyManager from "@/utils/hotkeys"
 import { generateSoundId } from "@/utils/sound-id"

@@ -13,7 +13,7 @@ import type {
   Settings as SettingsType,
   SoundData,
 } from "@/types"
-import { convertToOpus } from "@/utils/optus-convert"
+import { convertToOpus } from "@/utils/ffmpeg"
 import { createSoundsManager } from "@/utils/sound-manager"
 
 const shouldLog = () => process.argv.includes("--enable-logging")
