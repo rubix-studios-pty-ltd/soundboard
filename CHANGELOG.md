@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.15.3](///compare/v3.15.2...v3.15.3) (2025-07-14)
+
+
+### Bug Fixes
+
+* streamline ffmpeg path resolution by removing redundant entries a5f6ec8
+* update ffmpeg resource path to point directly to executable 4af182e
+
 ### [3.15.2](///compare/v3.15.1...v3.15.2) (2025-07-14)
 
 ### [3.15.1](///compare/v3.15.0...v3.15.1) (2025-07-14)
