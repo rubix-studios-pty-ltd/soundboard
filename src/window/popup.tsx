@@ -19,8 +19,8 @@ export async function createPopoutWindow(): Promise<void> {
     frame: false,
     titleBarStyle: "hidden",
     show: false,
-    parent: win ?? undefined,
     type: 'toolbar',
+    skipTaskbar: true,
     icon: path.join(__dirname, "..", "icon.ico"),
     webPreferences: {
       partition: "persist:soundboard",
