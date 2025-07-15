@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.16.0](///compare/v3.15.6...v3.16.0) (2025-07-15)
+
+
+### Features
+
+* Implement audio conversion and management features 1c68460
+
 ### [3.15.6](///compare/v3.15.5...v3.15.6) (2025-07-14)
 
 ### [3.15.5](///compare/v3.15.4...v3.15.5) (2025-07-14)
