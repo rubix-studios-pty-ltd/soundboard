@@ -17,11 +17,11 @@ import {
   StopIcon,
   Volume,
 } from "@/components/icons"
-import AddSoundModal from "@/components/modals/add-sound"
+import AddSoundModal from "@/components/modals/sound"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
-import { addNewSound } from "@/utils/audio-convert"
+import { addNewSound } from "@/utils/audio/convert"
 
 const Header: React.FC = () => {
   const { stopAll } = useAudio()

@@ -7,7 +7,7 @@ import SoundButton from "@/components/sounds/button"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
-import { generateSoundId } from "@/utils/sound-id"
+import { generateSoundId } from "@/utils/sound/id"
 
 const FavoriteGrid: React.FC = () => {
   const { settings, updateSettings } = useSettings()

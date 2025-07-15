@@ -1,6 +1,5 @@
 import { statSync } from "fs"
 import path from "path"
-
 import ffmpeg from "fluent-ffmpeg"
 
 const getFfmpeg = (): string | null => {
@@ -14,13 +13,15 @@ const getFfmpeg = (): string | null => {
   const platformBinary = platform === "win32" ? "ffmpeg.exe" : "ffmpeg"
 
   const pathsToTry = [
-    path.join(__dirname, "..", "vendor", "ffmpeg", platformFolder, platformBinary),
     path.join(
-      process.resourcesPath,
+      __dirname,
+      "..",
+      "vendor",
       "ffmpeg",
       platformFolder,
       platformBinary
-    )
+    ),
+    path.join(process.resourcesPath, "ffmpeg", platformFolder, platformBinary),
   ]
 
   for (const tryPath of pathsToTry) {

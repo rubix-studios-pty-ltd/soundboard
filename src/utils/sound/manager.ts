@@ -1,7 +1,6 @@
+import { app } from "electron"
 import { promises as fs } from "fs"
 import path from "path"
-
-import { app } from "electron"
 
 import type { SoundData } from "@/types"
 
@@ -12,10 +11,15 @@ export function createSoundsManager(type: "sound" | "music") {
 
   const validateSound = async (sound: SoundData): Promise<boolean> => {
     try {
-      const soundPath = path.join(app.getPath("userData"), "sounds", sound.file)
+      const soundPath = path.normalize(
+        path.join(app.getPath("userData"), "sounds", sound.file)
+      )
       await fs.access(soundPath)
       return true
-    } catch {
+    } catch (error) {
+      if (shouldLog()) {
+        console.error(`Error validating sound ${sound.id}:`, error)
+      }
       return false
     }
   }
@@ -55,7 +59,11 @@ export function createSoundsManager(type: "sound" | "music") {
   const saveSounds = async (sounds: SoundData[]): Promise<void> => {
     try {
       const tempPath = `${jsonPath}.tmp`
-      await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), "utf-8")
+      const mode = process.platform === "darwin" ? 0o644 : undefined
+      await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), {
+        encoding: "utf-8",
+        mode,
+      })
       await fs.rename(tempPath, jsonPath)
     } catch (error) {
       if (shouldLog()) console.error("Error saving sounds JSON:", error)
@@ -87,10 +95,8 @@ export function createSoundsManager(type: "sound" | "music") {
       await saveSounds(filteredSounds)
 
       try {
-        const soundPath = path.join(
-          app.getPath("userData"),
-          "sounds",
-          soundToRemove.file
+        const soundPath = path.normalize(
+          path.join(app.getPath("userData"), "sounds", soundToRemove.file)
         )
         const exists = await fs
           .access(soundPath)

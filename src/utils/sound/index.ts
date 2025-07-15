@@ -1,8 +1,8 @@
 import type { SoundData } from "@/types"
 import getEl from "@/lib/getelement"
-import AudioPool from "@/utils/audio-pool"
-import HotkeyManager from "@/utils/hotkeys"
-import { generateSoundId } from "@/utils/sound-id"
+import AudioPool from "@/utils/audio/pool"
+import { generateSoundId } from "@/utils/sound/id"
+import HotkeyManager from "@/utils/system/hotkeys"
 import { soundData } from "@/data/audio"
 import { musicData } from "@/data/music"
 
@@ -98,7 +98,7 @@ class SoundboardApp {
         false,
         isUserAdded
       )
-    } catch (error) {
+    } catch {
       buttonElement.classList.remove("active")
       this.audioPool.stopSpecific(file)
     }
@@ -111,14 +111,10 @@ class SoundboardApp {
     repeat: boolean,
     isUserAdded: boolean = false
   ): Promise<void> {
-    try {
-      await this.audioPool.play(file, isUserAdded, volume, repeat, () => {
-        buttonElement.classList.remove("active")
-      })
-      buttonElement.classList.add("active")
-    } catch (error) {
-      throw error
-    }
+    await this.audioPool.play(file, isUserAdded, volume, repeat, () => {
+      buttonElement.classList.remove("active")
+    })
+    buttonElement.classList.add("active")
   }
 
   private async stopActiveSounds(): Promise<void> {

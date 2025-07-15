@@ -1,10 +1,9 @@
-import { promises as fs } from "fs"
-import path from "path"
-
-import { getIsQuitting } from "@/store/quitting"
-import Store from "@/store/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { app, BrowserWindow, protocol } from "electron"
+import { promises as fs } from "fs"
+import path from "path"
+import { getIsQuitting } from "@/store/quitting"
+import Store from "@/store/settings"
 
 import { getMimeType } from "@/lib/getmime"
 

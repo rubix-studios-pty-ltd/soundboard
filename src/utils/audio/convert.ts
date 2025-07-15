@@ -1,5 +1,5 @@
 import { SoundData } from "@/types"
-import { generateSoundId } from "@/utils/sound-id"
+import { generateSoundId } from "@/utils/sound/id"
 
 export const convertToOpus = async (
   file: File,

@@ -12,9 +12,9 @@ const prettierConfig = {
     "prettier-plugin-tailwindcss",
   ],
   importOrder: [
-    "<BUILTIN_MODULES>",
-    "",
     "^(react/(.*)$)|^(react$)",
+    "^(electron|fs|path|os|url|crypto|stream|util|child_process)(/.*)?$",
+    "<BUILTIN_MODULES>",
     "<THIRD_PARTY_MODULES>",
     "",
     "^@/types$",

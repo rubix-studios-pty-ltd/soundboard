@@ -7,9 +7,9 @@ import SoundButton from "@/components/sounds/button"
 import { useAudio } from "@/context/audio"
 import { useSettings } from "@/context/setting"
 import { useSounds } from "@/context/sounds"
-import { generateSoundId } from "@/utils/sound-id"
+import { generateSoundId } from "@/utils/sound/id"
 
-const PopoutGrid: React.FC = () => {
+const SoundGrid: React.FC = () => {
   const { settings, updateSettings } = useSettings()
   const { dragAndDropEnabled, popoutGrid } = settings
   const { sounds, music } = useSounds()
@@ -187,4 +187,4 @@ const PopoutGrid: React.FC = () => {
   )
 }
 
-export default PopoutGrid
+export default SoundGrid

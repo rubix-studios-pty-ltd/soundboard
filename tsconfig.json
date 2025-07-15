@@ -32,7 +32,7 @@
     "*.ts",
     "*.mts",
     "*.tsx"
-  ],
+, "eslint.config.js"  ],
   "exclude": [
     "node_modules",
     "dist"

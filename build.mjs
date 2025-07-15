@@ -1,5 +1,4 @@
 import { rmSync } from "fs"
-
 import * as esbuild from "esbuild"
 
 const isWatch = process.argv.includes("--watch")

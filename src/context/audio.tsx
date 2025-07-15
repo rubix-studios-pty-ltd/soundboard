@@ -7,7 +7,7 @@ import React, {
 } from "react"
 
 import { useSettings } from "@/context/setting"
-import AudioPool from "@/utils/audio-pool"
+import AudioPool from "@/utils/audio/pool"
 
 interface AudioContextType {
   playSound: (

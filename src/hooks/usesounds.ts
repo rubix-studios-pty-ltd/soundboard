@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 
 import type { SoundData } from "@/types"
-import { generateSoundId } from "@/utils/sound-id"
+import { generateSoundId } from "@/utils/sound/id"
 
 export const useUserSounds = (type: "sound" | "music") => {
   const [userSounds, setUserSounds] = useState<SoundData[]>([])

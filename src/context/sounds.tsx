@@ -8,8 +8,8 @@ import React, {
 } from "react"
 
 import { SoundData } from "@/types"
-import { useUserSounds } from "@/hooks/useusersounds"
-import { generateSoundId } from "@/utils/sound-id"
+import { useUserSounds } from "@/hooks/usesounds"
+import { generateSoundId } from "@/utils/sound/id"
 import { soundData as initialSounds } from "@/data/audio"
 import { musicData as initialMusic } from "@/data/music"
 

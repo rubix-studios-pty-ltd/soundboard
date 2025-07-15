@@ -1,9 +1,8 @@
-import path from "path"
-
-import { getIsQuitting } from "@/store/quitting"
-import Store from "@/store/settings"
 import type { BrowserWindow as BrowserWindowType } from "electron"
 import { BrowserWindow } from "electron"
+import path from "path"
+import { getIsQuitting } from "@/store/quitting"
+import Store from "@/store/settings"
 
 const ROOT_PATH = path.join(__dirname, "..")
 export let popoutWin: BrowserWindowType | null = null

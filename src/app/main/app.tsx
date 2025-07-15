@@ -1,19 +1,21 @@
 import React, { useMemo } from "react"
 
+import { Separator } from "@/components/ui/separator"
+import Footer from "@/components/controls/footer"
+import Header from "@/components/controls/main/header"
+import FavoriteGrid from "@/components/sounds/favorites"
+import SoundGrid from "@/components/sounds/main/grid"
 import { AudioProvider, useAudio } from "@/context/audio"
 import { SettingsProvider, useSettings } from "@/context/setting"
 import { SoundsProvider } from "@/context/sounds"
 
 import "@/styles/tailwind.css"
 
-import HeaderPopout from "@/components/controls/pheader"
-import PopoutGrid from "@/components/sounds/popout"
-
-const Popout: React.FC = () => (
+const App: React.FC = () => (
   <SettingsProvider>
     <AudioProvider>
       <SoundsProvider>
-        <PopoutContent />
+        <AppContent />
       </SoundsProvider>
     </AudioProvider>
   </SettingsProvider>
@@ -25,7 +27,7 @@ const LoadingScreen: React.FC = () => (
   </div>
 )
 
-const PopoutContent: React.FC = () => {
+const AppContent: React.FC = () => {
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
@@ -47,14 +49,26 @@ const PopoutContent: React.FC = () => {
       className="flex min-h-screen flex-col overflow-x-hidden"
       style={themeStyles}
     >
-      <HeaderPopout />
+      <Header />
       <main className="flex-1">
         <div className="p-1">
-          <PopoutGrid />
+          <FavoriteGrid />
+          <div className="flex flex-wrap items-start justify-around gap-1">
+            {settings.showSoundGrid && (
+              <SoundGrid type="sound" containerId="container1" />
+            )}
+            {settings.showSoundGrid && settings.showMusicGrid && (
+              <Separator className="my-1" />
+            )}
+            {settings.showMusicGrid && (
+              <SoundGrid type="music" containerId="container2" />
+            )}
+          </div>
         </div>
       </main>
+      <Footer />
     </div>
   )
 }
 
-export default Popout
+export default App

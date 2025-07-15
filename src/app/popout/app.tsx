@@ -1,21 +1,19 @@
 import React, { useMemo } from "react"
 
-import { Separator } from "@/components/ui/separator"
-import Footer from "@/components/controls/footer"
-import Header from "@/components/controls/header"
-import FavoriteGrid from "@/components/sounds/favorites"
-import SoundGrid from "@/components/sounds/grid"
 import { AudioProvider, useAudio } from "@/context/audio"
 import { SettingsProvider, useSettings } from "@/context/setting"
 import { SoundsProvider } from "@/context/sounds"
 
 import "@/styles/tailwind.css"
 
+import Header from "@/components/controls/popout/header"
+import SoundGrid from "@/components/sounds/popout/grid"
+
 const App: React.FC = () => (
   <SettingsProvider>
     <AudioProvider>
       <SoundsProvider>
-        <AppContent />
+        <PopoutContent />
       </SoundsProvider>
     </AudioProvider>
   </SettingsProvider>
@@ -27,7 +25,7 @@ const LoadingScreen: React.FC = () => (
   </div>
 )
 
-const AppContent: React.FC = () => {
+const PopoutContent: React.FC = () => {
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
@@ -52,21 +50,9 @@ const AppContent: React.FC = () => {
       <Header />
       <main className="flex-1">
         <div className="p-1">
-          <FavoriteGrid />
-          <div className="flex flex-wrap items-start justify-around gap-1">
-            {settings.showSoundGrid && (
-              <SoundGrid type="sound" containerId="container1" />
-            )}
-            {settings.showSoundGrid && settings.showMusicGrid && (
-              <Separator className="my-1" />
-            )}
-            {settings.showMusicGrid && (
-              <SoundGrid type="music" containerId="container2" />
-            )}
-          </div>
+          <SoundGrid />
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

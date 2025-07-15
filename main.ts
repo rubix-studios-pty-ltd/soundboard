@@ -1,20 +1,19 @@
+import { app, BrowserWindow, ipcMain } from "electron"
 import { promises as fs } from "fs"
 import path from "path"
-
 import { defaultSettings } from "@/constants/settings"
 import { setIsQuitting } from "@/store/quitting"
 import Store from "@/store/settings"
 import { createWindow, win } from "@/window/main"
 import { createPopoutWindow, popoutWin } from "@/window/popup"
-import { app, BrowserWindow, ipcMain } from "electron"
 
 import type {
   HotkeyMap as HotkeyMapType,
   Settings as SettingsType,
   SoundData,
 } from "@/types"
-import { convertToOpus } from "@/utils/ffmpeg"
-import { createSoundsManager } from "@/utils/sound-manager"
+import { convertToOpus } from "@/utils/audio/ffmpeg"
+import { createSoundsManager } from "@/utils/sound/manager"
 
 const shouldLog = () => process.argv.includes("--enable-logging")
 
@@ -333,25 +332,36 @@ function setupIPC(): void {
       }
     ) => {
       try {
-        const tempDir = path.join(app.getPath("userData"), "temp")
-        await fs.mkdir(tempDir, { recursive: true })
+        const mode = process.platform === "darwin" ? 0o755 : undefined
+        const tempDir = path.normalize(
+          path.join(app.getPath("userData"), "temp")
+        )
+        const soundsDir = path.normalize(
+          path.join(app.getPath("userData"), "sounds")
+        )
 
-        const soundsDir = path.join(app.getPath("userData"), "sounds")
-        await fs.mkdir(soundsDir, { recursive: true })
+        await fs.mkdir(tempDir, { recursive: true, mode })
+        await fs.mkdir(soundsDir, { recursive: true, mode })
 
-        const inputPath = path.join(tempDir, params.originalName)
+        const safeOriginalName = path
+          .basename(params.originalName)
+          .replace(/[^\w\s.-]/g, "_")
+        const inputPath = path.normalize(path.join(tempDir, safeOriginalName))
         const outputName =
-          path.basename(
-            params.originalName,
-            path.extname(params.originalName)
-          ) + ".opus"
-        const outputPath = path.join(soundsDir, outputName)
+          path.basename(safeOriginalName, path.extname(safeOriginalName)) +
+          ".opus"
+        const outputPath = path.normalize(path.join(soundsDir, outputName))
 
-        await fs.writeFile(inputPath, Buffer.from(params.buffer))
-
+        await fs.writeFile(inputPath, Buffer.from(params.buffer), { mode })
         await convertToOpus(inputPath, outputPath)
 
-        await fs.unlink(inputPath)
+        try {
+          await fs.unlink(inputPath)
+        } catch (error) {
+          if (shouldLog()) {
+            console.error("Error cleaning up temp file:", error)
+          }
+        }
 
         return { outputPath: outputName }
       } catch (error) {
@@ -393,10 +403,15 @@ function setupIPC(): void {
 
   ipcMain.handle("validate-sound", async (_, sound: SoundData) => {
     try {
-      const soundPath = path.join(app.getPath("userData"), "sounds", sound.file)
+      const soundPath = path.normalize(
+        path.join(app.getPath("userData"), "sounds", sound.file)
+      )
       await fs.access(soundPath)
       return true
-    } catch {
+    } catch (error) {
+      if (shouldLog()) {
+        console.error("Error validating sound:", error)
+      }
       return false
     }
   })

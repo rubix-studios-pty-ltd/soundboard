@@ -1,7 +1,7 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
 
-import Popout from "@/app/popout"
+import App from "@/app/popout/app"
 
 const rootElement = document.getElementById("root")
 if (!rootElement) {
@@ -13,6 +13,6 @@ if (!rootElement) {
 const root = createRoot(rootElement ?? document.getElementById("root")!)
 root.render(
   <React.StrictMode>
-    <Popout />
+    <App />
   </React.StrictMode>
 )

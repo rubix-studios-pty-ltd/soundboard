@@ -1,5 +1,5 @@
 import type { SoundData } from "@/types"
-import { generateSoundId } from "@/utils/sound-id"
+import { generateSoundId } from "@/utils/sound/id"
 
 const rawSoundData: [string, string][] = [
   ["sound/laugh-1.opus", "Cười"],

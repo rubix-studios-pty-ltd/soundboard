@@ -1,5 +1,5 @@
-import { defaultSettings } from "@/constants/settings"
 import { contextBridge, ipcRenderer } from "electron"
+import { defaultSettings } from "@/constants/settings"
 
 import type { HotkeyMap, IpcApi, Settings } from "@/types"
 
