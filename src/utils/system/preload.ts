@@ -1,4 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron"
+import path from "path"
+import { pathToFileURL } from "url"
 import { defaultSettings } from "@/constants/settings"
 
 import type { HotkeyMap, IpcApi, Settings } from "@/types"
@@ -137,6 +139,17 @@ const electronAPI: IpcApi = {
     } catch (error) {
       console.error("Error getting app data path:", error)
       throw error
+    }
+  },
+
+  resolveUserSoundPath: async (url: string) => {
+    try {
+      const userDataPath = await ipcRenderer.invoke("get-app-data-path")
+      const filePath = path.normalize(path.join(userDataPath, "sounds", url))
+      return pathToFileURL(filePath).href
+    } catch (error) {
+      console.error("Error resolving user sound path:", error)
+      return url
     }
   },
 }

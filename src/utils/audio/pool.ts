@@ -1,6 +1,3 @@
-import path from "path"
-import { pathToFileURL } from "url"
-
 export interface AudioPoolItem {
   audio: HTMLAudioElement
   source: string
@@ -230,11 +227,9 @@ class AudioPool {
     let finalUrl = url
     if (isUserAdded) {
       try {
-        const userDataPath = await window.electronAPI.getAppDataPath()
-        const filePath = path.normalize(path.join(userDataPath, "sounds", url))
-        finalUrl = pathToFileURL(filePath).href
+        finalUrl = await window.electronAPI.resolveUserSoundPath(url)
       } catch (error) {
-        console.error("Error getting app data path:", error)
+        console.error("Error resolving user sound path:", error)
         finalUrl = url
       }
     }

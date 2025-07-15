@@ -26,6 +26,7 @@ export async function createWindow(): Promise<void> {
     webPreferences: {
       partition: "persist:soundboard",
       preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
+      sandbox: false,
       nodeIntegration: false,
       contextIsolation: true,
       backgroundThrottling: false,

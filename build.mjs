@@ -51,17 +51,21 @@ const buildOptions = [
   },
   {
     ...nodeOptions,
-    entryPoints: ["src/utils/preload.ts"],
+    entryPoints: ["src/utils/system/preload.ts"],
     outfile: "dist/preload.cjs",
   },
   {
     ...browserOptions,
-    entryPoints: ["src/app/index.tsx"],
+    entryPoints: ["src/app/main/index.tsx"],
+    outdir: "dist/app/main",
+    entryNames: "index",
     inject: ["./react-shim.mjs"],
   },
   {
     ...browserOptions,
-    entryPoints: ["src/app/pindex.tsx"],
+    entryPoints: ["src/app/popout/index.tsx"],
+    outdir: "dist/app/popout",
+    entryNames: "index",
     inject: ["./react-shim.mjs"],
   },
 ]

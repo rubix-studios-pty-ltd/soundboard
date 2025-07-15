@@ -79,6 +79,7 @@ export interface IpcApi {
   }) => Promise<void>
   validateSound: (sound: SoundData) => Promise<boolean>
   getAppDataPath: () => Promise<string>
+  resolveUserSoundPath: (url: string) => Promise<string>
 }
 
 declare global {
