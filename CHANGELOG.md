@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.17.1](///compare/v3.17.0...v3.17.1) (2025-07-19)
+
+
+### Bug Fixes
+
+* Update dependencies for @types/node, electron, and esbuild to latest versions 643d4f6
+
 ## [3.17.0](///compare/v3.16.1...v3.17.0) (2025-07-15)
 
 
