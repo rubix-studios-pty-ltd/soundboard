@@ -92,8 +92,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             className="max-w-[200px] border-[#333333] bg-[#1a1a1a] p-4 text-white"
           >
             <div className="flex flex-col gap-4">
-              {!isInFavorites ||
-                (!isInPopout && (
+              {isInFavorites || !isInPopout && (
                   <>
                     <div className="flex flex-row items-center justify-between">
                       <div className="text-sm font-semibold">Ẩn nút</div>
@@ -105,7 +104,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                     </div>
                     <Separator />
                   </>
-                ))}
+                )}
               <div className="grid grid-cols-5 gap-2">
                 {buttonPreset.map((presetColor) => (
                   <button
