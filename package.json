@@ -15,7 +15,7 @@
     "electron:dev": "nodemon --watch dist --exec \"electron . --enable-logging\"",
     "start": "pnpm run clean && pnpm run build:prod && electron .",
     "clean": "rimraf dist && rimraf release",
-    "update": "pnpx npm-check-updates -u && pnpm install",
+    "update": "pnpm update && pnpm install && pnpm prune && pnpm dedupe",
     "build": "cross-env NODE_ENV=development pnpm run build:app && pnpm run build:css",
     "build:prod": "cross-env NODE_ENV=production pnpm run build:app && pnpm run build:css",
     "build:app": "node build.mjs",
