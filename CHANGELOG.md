@@ -1,3 +1,11 @@
+## [3.18.3](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.2...v3.18.3) (2025-10-02)
+
+
+### Bug Fixes
+
+* add missing dependency installation step in release job ([3bfd539](https://github.com/rubix-studios-pty-ltd/soundboard/commit/3bfd5397d89655d83ed40e34b6009e2cdc986fa0))
+* update SoundButton component logic and styling ([7ad88ef](https://github.com/rubix-studios-pty-ltd/soundboard/commit/7ad88ef7e917177d8dd757dae556e9665edd22cc))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
