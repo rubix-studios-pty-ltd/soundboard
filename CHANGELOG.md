@@ -1,3 +1,14 @@
+## [3.18.4](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.3...v3.18.4) (2025-10-02)
+
+
+### Bug Fixes
+
+* add artifact upload steps for Windows and macOS builds ([ab324c2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/ab324c292d28bc6fc945e0ba08f4962a76331e84))
+* update @types/node dependency to version 24.6.2 and remove unused @semantic-release/npm ([215fbe1](https://github.com/rubix-studios-pty-ltd/soundboard/commit/215fbe1afe146ccee63338a0bd6cd4df4681a25a))
+* update artifact paths for Windows and macOS builds to use wildcards ([61f7ae1](https://github.com/rubix-studios-pty-ltd/soundboard/commit/61f7ae1dda6641be47c1d590ae2f8219cffcbcb3))
+* update build scripts to prevent publishing artifacts for Windows and macOS ([c870fe0](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c870fe07a275776f6fb4612f51ecf41edd9910e5))
+* update macOS artifact download steps and labels for clarity ([c4ea1d2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c4ea1d22b1a0ded0774dfbac1a14d0be578a22ef))
+
 ## [3.18.3](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.2...v3.18.3) (2025-10-02)
 
 
