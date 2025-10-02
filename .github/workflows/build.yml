@@ -112,6 +112,9 @@ jobs:
         with:
           version: 10
 
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Download Windows artifacts
         uses: actions/download-artifact@v4
         with:
