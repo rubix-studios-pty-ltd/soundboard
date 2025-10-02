@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: release/Soundboard.exe
+          path: release/*.exe
           retention-days: 5
 
       - name: Build and Release Mac (x64)
@@ -89,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-x64-build
-          path: release/Soundboard-x64.dmg
+          path: release/*x64.dmg
           retention-days: 5
 
       - name: Build and Release Mac (arm64)
@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-arm64-build
-          path: release/Soundboard-arm64.dmg
+          path: release/*arm64.dmg
           retention-days: 5
 
   release:
@@ -129,7 +129,7 @@ jobs:
       - name: Download Windows artifacts
         uses: actions/download-artifact@v4
         with:
-          name: windows-latest-build
+          name: windows-build
           path: release
 
       - name: Download macOS x64 artifacts
