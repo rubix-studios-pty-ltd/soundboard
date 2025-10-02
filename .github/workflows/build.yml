@@ -70,27 +70,38 @@ jobs:
 
       - name: Build and Release Windows
         if: matrix.os == 'windows-latest'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run build:win
-          
+
+      - name: Upload Windows Artifact
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: release/Soundboard.exe
+          retention-days: 5
+
       - name: Build and Release Mac (x64)
         if: matrix.os == 'macos-latest'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run build:mac:x64
+
+      - name: Upload macOS x64 Artifact
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-x64-build
+          path: release/Soundboard-x64.dmg
+          retention-days: 5
 
       - name: Build and Release Mac (arm64)
         if: matrix.os == 'macos-latest'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run build:mac:arm64
-          
-      - name: Upload Artifacts
+
+      - name: Upload macOS arm64 Artifact
+        if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-build
-          path: release/*
+          name: macos-arm64-build
+          path: release/Soundboard-arm64.dmg
           retention-days: 5
 
   release:
