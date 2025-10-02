@@ -30,8 +30,12 @@
             "label": "Windows Portable"
           },
           {
-            "path": "release/Soundboard-*.dmg",
-            "label": "macOS Disk Image"
+            "path": "release/Soundboard-arm64.dmg",
+            "label": "macOS (Apple Silicon, arm64)"
+          },
+          {
+            "path": "release/Soundboard-x64.dmg",
+            "label": "macOS (Intel, x64)"
           }
         ]
       }

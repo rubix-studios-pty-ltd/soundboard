@@ -121,10 +121,16 @@ jobs:
           name: windows-latest-build
           path: release
 
-      - name: Download macOS artifacts
+      - name: Download macOS x64 artifacts
         uses: actions/download-artifact@v4
         with:
-          name: macos-latest-build
+          name: macos-x64-build
+          path: release
+
+      - name: Download macOS arm64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-arm64-build
           path: release
 
       - name: Run semantic-release
