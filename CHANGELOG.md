@@ -1,3 +1,18 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [3.18.5](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.4...v3.18.5) (2025-10-02)
+
+
+### Bug Fixes
+
+* add development branch configuration and update changelog settings in release config ([96c8cc3](https://github.com/rubix-studios-pty-ltd/soundboard/commit/96c8cc346bc9da31e78a7d947a7d5046c5c80717))
+* update build workflow to include development branch and streamline pnpm setup ([421b24a](https://github.com/rubix-studios-pty-ltd/soundboard/commit/421b24a6abc735876bceb25129a6b2af86b378e0))
+
 ## [3.18.4](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.3...v3.18.4) (2025-10-02)
 
 
