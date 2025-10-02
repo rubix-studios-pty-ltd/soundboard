@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "ESNext",
+    "module": "esnext",
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -18,21 +18,30 @@
     "declaration": true,
     "declarationMap": true,
     "paths": {
-      "*": ["node_modules/*"],
-      "@/*": ["src/*"],
+      "*": [
+        "node_modules/*"
+      ],
+      "@/*": [
+        "src/*"
+      ],
     },
     "typeRoots": [
       "./node_modules/@types",
       "./src/types"
     ],
-    "lib": ["esnext", "dom", "dom.iterable"]
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ]
   },
-    "include": [
+  "include": [
     "src/**/*",
     "*.ts",
     "*.mts",
-    "*.tsx"
-, "eslint.config.js"  ],
+    "*.tsx",
+    "eslint.config.js"
+  ],
   "exclude": [
     "node_modules",
     "dist"

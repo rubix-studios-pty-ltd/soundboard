@@ -92,7 +92,8 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             className="max-w-[200px] border-[#333333] bg-[#1a1a1a] p-4 text-white"
           >
             <div className="flex flex-col gap-4">
-              {isInFavorites || !isInPopout && (
+              {isInFavorites ||
+                (!isInPopout && (
                   <>
                     <div className="flex flex-row items-center justify-between">
                       <div className="text-sm font-semibold">Ẩn nút</div>
@@ -104,7 +105,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                     </div>
                     <Separator />
                   </>
-                )}
+                ))}
               <div className="grid grid-cols-5 gap-2">
                 {buttonPreset.map((presetColor) => (
                   <button
@@ -167,9 +168,8 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             e.dataTransfer.effectAllowed = "move"
           }
         }}
-        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${
-          settings.buttonSettings && isHidden ? "opacity-50" : ""
-        } ${isDraggable ? "cursor-move" : ""}`}
+        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${settings.buttonSettings && isHidden ? "opacity-50" : ""
+          } ${isDraggable ? "cursor-move" : ""}`}
         style={
           {
             backgroundColor: settings?.buttonColors?.[soundId]

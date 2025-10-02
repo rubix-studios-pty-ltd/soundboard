@@ -2,8 +2,6 @@ name: Build and Release
 on:
   push:
     branches: [master]
-    tags:
-      - 'v*'
   pull_request:
     branches: [master]
 
@@ -34,8 +32,7 @@ jobs:
       - name: Check Format
         run: pnpm run format:check
         
-  release:
-    if: startsWith(github.ref, 'refs/tags/v')
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -75,25 +72,19 @@ jobs:
         if: matrix.os == 'windows-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pnpm run clean
-          pnpm run build:win
+        run: pnpm run build:win
           
       - name: Build and Release Mac (x64)
         if: matrix.os == 'macos-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pnpm run clean
-          pnpm run build:mac:x64
+        run: pnpm run build:mac:x64
 
       - name: Build and Release Mac (arm64)
         if: matrix.os == 'macos-latest'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pnpm run clean
-          pnpm run build:mac:arm64
+        run: pnpm run build:mac:arm64
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -101,4 +92,39 @@ jobs:
           name: ${{ matrix.os }}-build
           path: release/*
           retention-days: 5
-          
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-latest-build
+          path: release
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-latest-build
+          path: release
+
+      - name: Run semantic-release
+        run: pnpm release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
