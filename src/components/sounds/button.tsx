@@ -168,8 +168,9 @@ const SoundButton: React.FC<SoundButtonProps> = ({
             e.dataTransfer.effectAllowed = "move"
           }
         }}
-        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${settings.buttonSettings && isHidden ? "opacity-50" : ""
-          } ${isDraggable ? "cursor-move" : ""}`}
+        className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${
+          settings.buttonSettings && isHidden ? "opacity-50" : ""
+        } ${isDraggable ? "cursor-move" : ""}`}
         style={
           {
             backgroundColor: settings?.buttonColors?.[soundId]
