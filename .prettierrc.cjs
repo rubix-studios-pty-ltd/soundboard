@@ -33,6 +33,7 @@ const prettierConfig = {
     ".css$",
   ],
   importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
+  tailwindStylesheet: './src/styles/globals.css',
 }
 
 module.exports = prettierConfig

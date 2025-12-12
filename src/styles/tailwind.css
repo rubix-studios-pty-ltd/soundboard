@@ -87,12 +87,12 @@ input,
 
 @layer components {
   .toggle-switch {
-    @apply appearance-none w-[14px] h-[24px] bg-red-600 rounded-[30px] relative outline-none cursor-pointer transition-colors duration-300 mb-[5px];
+    @apply appearance-none w-3.5 h-6 bg-red-600 rounded-[30px] relative outline-none cursor-pointer transition-colors duration-300 mb-[5px];
   }
 
   .toggle-switch::before {
     content: '';
-    @apply w-[12px] h-[12px] bg-white rounded-full absolute top-[1px] left-[1px] transition-transform duration-300;
+    @apply w-3 h-3 bg-white rounded-full absolute top-px left-px transition-transform duration-300;
   }
 
   .toggle-switch:checked {
@@ -100,12 +100,12 @@ input,
   }
 
   .toggle-switch:checked::before {
-    @apply translate-y-[10px];
+    @apply translate-y-2.5;
   }
 }
 
 ::-webkit-scrollbar {
-  @apply w-[8px];
+  @apply w-2;
 }
 
 ::-webkit-scrollbar-thumb {
