@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.8](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.7...v3.18.8) (2025-12-12)
+
+
+### Bug Fixes
+
+* remove unused tailwindcss-animated dependency from package.json and pnpm-lock.yaml ([f3eba19](https://github.com/rubix-studios-pty-ltd/soundboard/commit/f3eba194e115fd3b761f0bac5a58c8146336be87))
+* update tailwind stylesheet path in prettier configuration ([8df411e](https://github.com/rubix-studios-pty-ltd/soundboard/commit/8df411e1f8bda1f017ed86527979796a661ee593))
+
 ## [3.18.7](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.6...v3.18.7) (2025-12-03)
 
 
