@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.9](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.8...v3.18.9) (2025-12-19)
+
+
+### Bug Fixes
+
+* update class name for disabled state in Slider component ([493b7fc](https://github.com/rubix-studios-pty-ltd/soundboard/commit/493b7fcf45f00865abfd658c70da999623a28c0a))
+
 ## [3.18.8](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.7...v3.18.8) (2025-12-12)
 
 
