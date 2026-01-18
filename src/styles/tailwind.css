@@ -1,6 +1,6 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@plugin 'tailwindcss-animate';
+@plugin "tailwindcss-animate";
 
 :root {
   --background: oklch(1 0 0);
@@ -62,7 +62,9 @@
   }
   body {
     @apply bg-[#1a1a1a] text-foreground font-sans;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family:
+      system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+      sans-serif;
     overflow-y: scroll;
   }
 }
@@ -91,7 +93,7 @@ input,
   }
 
   .toggle-switch::before {
-    content: '';
+    content: "";
     @apply w-3 h-3 bg-white rounded-full absolute top-px left-px transition-transform duration-300;
   }
 

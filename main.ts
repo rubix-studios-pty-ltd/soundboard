@@ -182,7 +182,7 @@ function setupIPC(): void {
         alwaysOnTop: Boolean(settings.alwaysOnTop),
         volume: Number(settings.volume),
         maxPoolSize:
-          settings.maxPoolSize === undefined || isNaN(Number(settings.maxPoolSize))
+          settings.maxPoolSize === undefined || Number.isNaN(Number(settings.maxPoolSize))
             ? 100
             : Number(settings.maxPoolSize),
         maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
@@ -216,7 +216,7 @@ function setupIPC(): void {
       }
 
       if (
-        isNaN(validatedSettings.volume) ||
+        Number.isNaN(validatedSettings.volume) ||
         validatedSettings.volume < 0 ||
         validatedSettings.volume > 1
       ) {
@@ -315,7 +315,7 @@ function setupIPC(): void {
 
         const safeOriginalName = path.basename(params.originalName).replace(/[^\w\s.-]/g, '_')
         const inputPath = path.normalize(path.join(tempDir, safeOriginalName))
-        const outputName = path.basename(safeOriginalName, path.extname(safeOriginalName)) + '.opus'
+        const outputName = `${path.basename(safeOriginalName, path.extname(safeOriginalName))}.opus`
         const outputPath = path.normalize(path.join(soundsDir, outputName))
 
         await fs.writeFile(inputPath, Buffer.from(params.buffer), { mode })

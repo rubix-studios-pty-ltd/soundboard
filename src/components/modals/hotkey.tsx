@@ -57,7 +57,7 @@ const HotkeyModal: FC<HotkeyModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[280px]">
+      <DialogContent className="max-w-70">
         <DialogHeader>
           <DialogTitle>Gán phím tắt</DialogTitle>
           <DialogDescription>{displayText}</DialogDescription>
