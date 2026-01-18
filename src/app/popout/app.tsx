@@ -1,15 +1,15 @@
-import React, { useMemo } from "react"
+import { type FC, useMemo } from 'react'
 
-import { AudioProvider, useAudio } from "@/context/audio"
-import { SettingsProvider, useSettings } from "@/context/setting"
-import { SoundsProvider } from "@/context/sounds"
+import { AudioProvider, useAudio } from '@/context/audio'
+import { SettingsProvider, useSettings } from '@/context/setting'
+import { SoundsProvider } from '@/context/sounds'
 
-import "@/styles/tailwind.css"
+import '@/styles/tailwind.css'
 
-import Header from "@/components/controls/popout/header"
-import SoundGrid from "@/components/sounds/popout/grid"
+import Header from '@/components/controls/popout/header'
+import SoundGrid from '@/components/sounds/popout/grid'
 
-const App: React.FC = () => (
+const App: FC = () => (
   <SettingsProvider>
     <AudioProvider>
       <SoundsProvider>
@@ -19,13 +19,13 @@ const App: React.FC = () => (
   </SettingsProvider>
 )
 
-const LoadingScreen: React.FC = () => (
+const LoadingScreen: FC = () => (
   <div className="flex min-h-screen items-center justify-center">
     <div className="text-gray-400">Loading</div>
   </div>
 )
 
-const PopoutContent: React.FC = () => {
+const PopoutContent: FC = () => {
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
@@ -43,10 +43,7 @@ const PopoutContent: React.FC = () => {
   }
 
   return (
-    <div
-      className="flex min-h-screen flex-col overflow-x-hidden"
-      style={themeStyles}
-    >
+    <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
       <Header />
       <main className="flex-1">
         <div className="p-1">

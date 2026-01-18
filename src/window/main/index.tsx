@@ -1,31 +1,30 @@
-import type { BrowserWindow as BrowserWindowType } from "electron"
-import { app, BrowserWindow, protocol } from "electron"
-import { promises as fs } from "fs"
-import path from "path"
-import { getIsQuitting } from "@/store/quitting"
-import Store from "@/store/settings"
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
+import type { BrowserWindow as BrowserWindowType } from 'electron'
+import { app, BrowserWindow, protocol } from 'electron'
+import { getMimeType } from '@/lib/getmime'
+import { getIsQuitting } from '@/store/quitting'
+import Store from '@/store/settings'
 
-import { getMimeType } from "@/lib/getmime"
-
-const ROOT_PATH = path.join(__dirname, "..")
+const ROOT_PATH = path.join(__dirname, '..')
 export let win: BrowserWindowType | null = null
 let popoutWin: BrowserWindowType | null = null
 
 export async function createWindow(): Promise<void> {
-  const settings = Store.get("settings")
+  const settings = Store.get('settings')
   win = new BrowserWindow({
     width: 614,
     height: 984,
     resizable: true,
     alwaysOnTop: settings?.alwaysOnTop ?? false,
     frame: false,
-    titleBarStyle: "hidden",
+    titleBarStyle: 'hidden',
     trafficLightPosition: { x: -999999, y: -999999 },
     show: false,
-    icon: path.join(__dirname, "..", "icon.ico"),
+    icon: path.join(__dirname, '..', 'icon.ico'),
     webPreferences: {
-      partition: "persist:soundboard",
-      preload: path.join(ROOT_PATH, "dist", "preload.cjs"),
+      partition: 'persist:soundboard',
+      preload: path.join(ROOT_PATH, 'dist', 'preload.cjs'),
       sandbox: false,
       nodeIntegration: false,
       contextIsolation: true,
@@ -35,18 +34,18 @@ export async function createWindow(): Promise<void> {
   })
 
   if (win) {
-    win.once("ready-to-show", () => {
+    win.once('ready-to-show', () => {
       win?.show()
     })
 
-    protocol.handle("app", async (request: Request) => {
+    protocol.handle('app', async (request: Request) => {
       const url = new URL(request.url)
       const filePath = decodeURIComponent(url.pathname)
       const extension = path.extname(filePath).toLowerCase()
-      const skipCompression = [".opus", ".mp3", ".ogg"].includes(extension)
+      const skipCompression = ['.opus', '.mp3', '.ogg'].includes(extension)
 
       const soundPath = [
-        path.join(app.getPath("userData"), "sounds", filePath),
+        path.join(app.getPath('userData'), 'sounds', filePath),
         path.join(ROOT_PATH, filePath),
       ]
 
@@ -58,21 +57,19 @@ export async function createWindow(): Promise<void> {
 
           return new Response(data, {
             headers: {
-              "Content-Type": contentType,
-              "Content-Encoding": skipCompression ? "identity" : "br",
+              'Content-Type': contentType,
+              'Content-Encoding': skipCompression ? 'identity' : 'br',
             },
           })
-        } catch {
-          continue
-        }
+        } catch {}
       }
 
-      return new Response("File not found", { status: 404 })
+      return new Response('File not found', { status: 404 })
     })
 
-    win.loadFile(path.join(ROOT_PATH, "index.html"))
+    win.loadFile(path.join(ROOT_PATH, 'index.html'))
 
-    win.on("close", () => {
+    win.on('close', () => {
       if (getIsQuitting() && popoutWin) {
         popoutWin.destroy()
         popoutWin = null

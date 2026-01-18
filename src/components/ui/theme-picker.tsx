@@ -1,6 +1,5 @@
-import { presetThemes } from "@/constants/themes"
-
-import { Close } from "@/components/icons"
+import { Close } from '@/components/icons'
+import { presetThemes } from '@/constants/themes'
 
 interface ThemePickerProps {
   onThemeChange: (themeKey: string | null) => void
@@ -11,6 +10,7 @@ export function ThemePicker({ onThemeChange }: ThemePickerProps) {
     <div className="grid grid-cols-7 gap-2">
       {Object.entries(presetThemes).map(([key, theme]) => (
         <button
+          type="button"
           key={key}
           className="size-5 cursor-pointer rounded-full border transition-transform hover:scale-110"
           style={{ backgroundColor: theme.buttonColor }}
@@ -18,6 +18,7 @@ export function ThemePicker({ onThemeChange }: ThemePickerProps) {
         />
       ))}
       <button
+        type="button"
         className="flex size-5 cursor-pointer items-center justify-center rounded-full border bg-white text-black hover:scale-110 hover:bg-gray-100"
         onClick={() => onThemeChange(null)}
       >

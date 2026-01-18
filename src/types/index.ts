@@ -39,7 +39,7 @@ export interface SoundData {
   title: string
   frequent?: boolean
   isUserAdded?: boolean
-  format?: "opus" | "mp3"
+  format?: 'opus' | 'mp3'
 }
 
 export interface HotkeyMap {
@@ -63,20 +63,14 @@ export interface IpcApi {
   saveHotkeys: (hotkeys: HotkeyMap) => void
   saveSettings: (settings: Settings) => void
   toggleAlwaysOnTop: (isEnabled: boolean) => void
-  loadSounds: (type: "sound" | "music") => Promise<SoundData[]>
+  loadSounds: (type: 'sound' | 'music') => Promise<SoundData[]>
   convertAudio: (params: {
     buffer: ArrayBuffer
     originalName: string
-    type: "sound" | "music"
+    type: 'sound' | 'music'
   }) => Promise<{ outputPath: string }>
-  addSound: (params: {
-    sound: SoundData
-    type: "sound" | "music"
-  }) => Promise<void>
-  deleteSound: (params: {
-    sound: SoundData
-    type: "sound" | "music"
-  }) => Promise<void>
+  addSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
+  deleteSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
   validateSound: (sound: SoundData) => Promise<boolean>
   getAppDataPath: () => Promise<string>
   resolveUserSoundPath: (url: string) => Promise<string>

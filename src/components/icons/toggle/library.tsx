@@ -1,4 +1,4 @@
-import React from "react"
+import type React from 'react'
 
 export const Library = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -7,6 +7,7 @@ export const Library = (props: React.SVGProps<SVGSVGElement>) => (
     strokeWidth="0"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
     {...props}
   >
     <circle cx="11.99" cy="11.99" r="2.01"></circle>

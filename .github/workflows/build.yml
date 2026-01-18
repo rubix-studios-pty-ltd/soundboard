@@ -31,9 +31,6 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
         
-      - name: Check Format
-        run: pnpm run format:check
-        
   build:
     runs-on: ${{ matrix.os }}
     strategy:

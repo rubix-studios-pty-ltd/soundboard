@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from 'react'
 
-import type { SoundData } from "@/types"
-import { generateSoundId } from "@/utils/sound/id"
+import type { SoundData } from '@/types'
+import { generateSoundId } from '@/utils/sound/id'
 
-export const useUserSounds = (type: "sound" | "music") => {
+export const useUserSounds = (type: 'sound' | 'music') => {
   const [userSounds, setUserSounds] = useState<SoundData[]>([])
   const [loading, setLoading] = useState(true)
   const loadedRef = useRef(false)
@@ -83,9 +83,7 @@ export const useUserSounds = (type: "sound" | "music") => {
       const sounds = await window.electronAPI.loadSounds(type)
       const processedSounds = sounds.map(processSound)
 
-      soundsMapRef.current = new Map(
-        processedSounds.map((sound) => [sound.id, sound])
-      )
+      soundsMapRef.current = new Map(processedSounds.map((sound) => [sound.id, sound]))
       setUserSounds(processedSounds)
       loadedRef.current = true
     } catch {

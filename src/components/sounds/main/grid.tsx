@@ -1,25 +1,23 @@
-import React, { useCallback } from "react"
-
-import { useHotkeys } from "@/hooks/usehotkey"
-import HotkeyModal from "@/components/modals/hotkey"
-import SoundButton from "@/components/sounds/button"
-import { useAudio } from "@/context/audio"
-import { useSettings } from "@/context/setting"
-import { useSounds } from "@/context/sounds"
+import { type FC, useCallback } from 'react'
+import HotkeyModal from '@/components/modals/hotkey'
+import SoundButton from '@/components/sounds/button'
+import { useAudio } from '@/context/audio'
+import { useSettings } from '@/context/setting'
+import { useSounds } from '@/context/sounds'
+import { useHotkeys } from '@/hooks/usehotkey'
 
 interface SoundGridProps {
-  type: "sound" | "music"
+  type: 'sound' | 'music'
   containerId: string
 }
 
-const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
+const SoundGrid: FC<SoundGridProps> = ({ type, containerId }) => {
   const { settings, updateSettings } = useSettings()
   const { sounds: allSounds, music: allMusic } = useSounds()
-  const rawSounds = type === "sound" ? allSounds : allMusic
+  const rawSounds = type === 'sound' ? allSounds : allMusic
   const sounds = rawSounds.filter(
     (sound) =>
-      !settings.favorites.items.includes(sound.id) &&
-      !settings.popoutGrid.items.includes(sound.id)
+      !settings.favorites.items.includes(sound.id) && !settings.popoutGrid.items.includes(sound.id)
   )
 
   const { playSound } = useAudio()
@@ -34,14 +32,8 @@ const SoundGrid: React.FC<SoundGridProps> = ({ type, containerId }) => {
     [sounds, playSound]
   )
 
-  const {
-    modalOpen,
-    currentHotkey,
-    showHotkeyModal,
-    assignHotkey,
-    clearHotkey,
-    closeModal,
-  } = useHotkeys(sounds, handleSoundPlay)
+  const { modalOpen, currentHotkey, showHotkeyModal, assignHotkey, clearHotkey, closeModal } =
+    useHotkeys(sounds, handleSoundPlay)
 
   const handleToggleHide = (soundId: string) => {
     const currentHiddenSounds = settings.hiddenSounds || []

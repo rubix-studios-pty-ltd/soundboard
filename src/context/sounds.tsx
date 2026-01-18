@@ -1,31 +1,22 @@
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react"
-
-import { SoundData } from "@/types"
-import { useUserSounds } from "@/hooks/usesounds"
-import { generateSoundId } from "@/utils/sound/id"
-import { soundData as initialSounds } from "@/data/audio"
-import { musicData as initialMusic } from "@/data/music"
+import type React from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { soundData as initialSounds } from '@/data/audio'
+import { musicData as initialMusic } from '@/data/music'
+import { useUserSounds } from '@/hooks/usesounds'
+import type { SoundData } from '@/types'
+import { generateSoundId } from '@/utils/sound/id'
 
 interface SoundsContextType {
   sounds: SoundData[]
   music: SoundData[]
-  addSound: (sound: SoundData, type: "sound" | "music") => Promise<void>
-  removeSound: (sound: SoundData, type: "sound" | "music") => Promise<void>
+  addSound: (sound: SoundData, type: 'sound' | 'music') => Promise<void>
+  removeSound: (sound: SoundData, type: 'sound' | 'music') => Promise<void>
   isLoading: boolean
 }
 
 const SoundsContext = createContext<SoundsContextType | null>(null)
 
-export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const processedInitialSounds = useMemo(
     () =>
       initialSounds.map((sound) => ({
@@ -52,14 +43,14 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
     loading: loadingRegularSounds,
     addUserSound: addRegularSound,
     removeUserSound: removeRegularSound,
-  } = useUserSounds("sound")
+  } = useUserSounds('sound')
 
   const {
     userSounds: userMusicSounds,
     loading: loadingMusicSounds,
     addUserSound: addMusicSound,
     removeUserSound: removeMusicSound,
-  } = useUserSounds("music")
+  } = useUserSounds('music')
 
   useEffect(() => {
     const soundMap = new Map<string, SoundData>()
@@ -94,14 +85,14 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [processedInitialMusic, userMusicSounds])
 
   const addSound = useCallback(
-    async (sound: SoundData, type: "sound" | "music") => {
+    async (sound: SoundData, type: 'sound' | 'music') => {
       const processedSound = {
         ...sound,
         id: sound.id || generateSoundId(sound.file),
         isUserAdded: true,
       }
       await window.electronAPI.addSound({ sound: processedSound, type })
-      if (type === "sound") {
+      if (type === 'sound') {
         addRegularSound(processedSound)
       } else {
         addMusicSound(processedSound)
@@ -111,16 +102,16 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
   )
 
   const removeSound = useCallback(
-    async (sound: SoundData, type: "sound" | "music") => {
+    async (sound: SoundData, type: 'sound' | 'music') => {
       try {
-        if (type === "sound") {
+        if (type === 'sound') {
           removeRegularSound(sound.id)
         } else {
           removeMusicSound(sound.id)
         }
 
         await window.electronAPI.deleteSound({ sound, type }).catch((error) => {
-          if (type === "sound") {
+          if (type === 'sound') {
             addRegularSound(sound)
           } else {
             addMusicSound(sound)
@@ -128,7 +119,7 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
           throw error
         })
       } catch (error) {
-        console.error("Error in removeSound:", error)
+        console.error('Error in removeSound:', error)
         throw error
       }
     },
@@ -153,7 +144,7 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useSounds = () => {
   const context = useContext(SoundsContext)
   if (!context) {
-    throw new Error("useSounds must be used within a SoundsProvider")
+    throw new Error('useSounds must be used within a SoundsProvider')
   }
   return context
 }

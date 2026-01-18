@@ -5,7 +5,5 @@
     "outDir": "./dist",
     "target": "ES2020"
   },
-  "include": [
-    "src/utils/preload.ts"
-  ]
+  "include": ["src/utils/preload.ts"]
 }

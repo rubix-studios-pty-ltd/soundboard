@@ -1,15 +1,14 @@
-import React, { useCallback } from "react"
+import { type DragEvent, type FC, useCallback } from 'react'
+import { Exit } from '@/components/icons'
+import HotkeyModal from '@/components/modals/hotkey'
+import SoundButton from '@/components/sounds/button'
+import { useAudio } from '@/context/audio'
+import { useSettings } from '@/context/setting'
+import { useSounds } from '@/context/sounds'
+import { useHotkeys } from '@/hooks/usehotkey'
+import { generateSoundId } from '@/utils/sound/id'
 
-import { useHotkeys } from "@/hooks/usehotkey"
-import { Exit } from "@/components/icons"
-import HotkeyModal from "@/components/modals/hotkey"
-import SoundButton from "@/components/sounds/button"
-import { useAudio } from "@/context/audio"
-import { useSettings } from "@/context/setting"
-import { useSounds } from "@/context/sounds"
-import { generateSoundId } from "@/utils/sound/id"
-
-const SoundGrid: React.FC = () => {
+const SoundGrid: FC = () => {
   const { settings, updateSettings } = useSettings()
   const { dragAndDropEnabled, popoutGrid } = settings
   const { sounds, music } = useSounds()
@@ -18,9 +17,7 @@ const SoundGrid: React.FC = () => {
 
   const handleSoundPlay = useCallback(
     (soundId: string) => {
-      const sound = allSounds.find(
-        (s) => s.id === soundId || generateSoundId(s.file) === soundId
-      )
+      const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
       if (sound) {
         playSound(sound.id, sound.file, sound.isUserAdded || false)
       }
@@ -28,22 +25,13 @@ const SoundGrid: React.FC = () => {
     [allSounds, playSound]
   )
 
-  const {
-    modalOpen,
-    currentHotkey,
-    showHotkeyModal,
-    assignHotkey,
-    clearHotkey,
-    closeModal,
-  } = useHotkeys(allSounds, handleSoundPlay)
+  const { modalOpen, currentHotkey, showHotkeyModal, assignHotkey, clearHotkey, closeModal } =
+    useHotkeys(allSounds, handleSoundPlay)
 
-  const handleDrop = (
-    e: React.DragEvent<HTMLDivElement>,
-    slotIndex: number
-  ) => {
+  const handleDrop = (e: DragEvent<HTMLDivElement>, slotIndex: number) => {
     e.preventDefault()
     e.stopPropagation()
-    const soundId = e.dataTransfer.getData("text/sound-id")
+    const soundId = e.dataTransfer.getData('text/sound-id')
     if (!soundId) {
       return
     }
@@ -78,21 +66,21 @@ const SoundGrid: React.FC = () => {
     if (dragAndDropEnabled) {
       e.preventDefault()
       e.stopPropagation()
-      e.dataTransfer.dropEffect = "move"
+      e.dataTransfer.dropEffect = 'move'
     }
   }
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     if (dragAndDropEnabled) {
       e.preventDefault()
-      e.currentTarget.style.borderColor = "#9CA3AF"
+      e.currentTarget.style.borderColor = '#9CA3AF'
     }
   }
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     if (dragAndDropEnabled) {
       e.preventDefault()
-      e.currentTarget.style.borderColor = "#4B5563"
+      e.currentTarget.style.borderColor = '#4B5563'
     }
   }
 
@@ -107,9 +95,7 @@ const SoundGrid: React.FC = () => {
 
   const usedSlots = popoutGrid.items
     .map((soundId) => {
-      const sound = allSounds.find(
-        (s) => s.id === soundId || generateSoundId(s.file) === soundId
-      )
+      const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
       if (sound) {
         return {
           ...sound,
@@ -138,9 +124,7 @@ const SoundGrid: React.FC = () => {
             <div
               key={index}
               className={`relative h-7 w-24 rounded ${
-                dragAndDropEnabled
-                  ? "border-2 border-dashed border-gray-600"
-                  : ""
+                dragAndDropEnabled ? 'border-2 border-dashed border-gray-600' : ''
               }`}
               onDrop={(e) => handleDrop(e, index)}
               onDragOver={handleDragOver}
@@ -149,7 +133,7 @@ const SoundGrid: React.FC = () => {
             >
               {sound && (
                 <div
-                  className={`relative ${dragAndDropEnabled ? "-translate-x-[2px] -translate-y-[3px] transform" : ""}`}
+                  className={`relative ${dragAndDropEnabled ? '-translate-x-[2px] -translate-y-[3px] transform' : ''}`}
                 >
                   <SoundButton
                     id={sound.id}
@@ -164,6 +148,7 @@ const SoundGrid: React.FC = () => {
                   />
                   {dragAndDropEnabled && (
                     <button
+                      type="button"
                       className="absolute -top-1 -right-1 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600"
                       onClick={() => removeSound(sound.id)}
                     >

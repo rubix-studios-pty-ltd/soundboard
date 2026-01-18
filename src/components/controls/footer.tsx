@@ -1,6 +1,6 @@
-import React from "react"
+import type { FC } from 'react'
 
-const Footer: React.FC = () => {
+const Footer: FC = () => {
   return (
     <footer className="flex items-center justify-between border-t border-[#333333] bg-[#1a1a1a] p-1">
       <p className="p-1 text-[9px] text-white">

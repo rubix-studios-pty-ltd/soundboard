@@ -1,4 +1,4 @@
-declare module "fluent-ffmpeg" {
+declare module 'fluent-ffmpeg' {
   interface FfmpegCommand {
     toFormat(format: string): this
     save(outputPath: string): this
@@ -6,8 +6,8 @@ declare module "fluent-ffmpeg" {
     audioFrequency(frequency: number): this
     audioBitrate(bitrate: number | string): this
     outputOptions(options: string[] | string): this
-    on(event: "end", callback: () => void): this
-    on(event: "error", callback: (err: Error) => void): this
+    on(event: 'end', callback: () => void): this
+    on(event: 'error', callback: (err: Error) => void): this
   }
 
   namespace ffmpeg {

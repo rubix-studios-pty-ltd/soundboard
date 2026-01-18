@@ -1,11 +1,5 @@
-declare module "electron-store" {
-  type JSONValue =
-    | string
-    | number
-    | boolean
-    | null
-    | JSONValue[]
-    | { [key: string]: JSONValue }
+declare module 'electron-store' {
+  type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue }
 
   class Store<T = Record<string, unknown>> {
     constructor(options?: Store.Options<T>)
