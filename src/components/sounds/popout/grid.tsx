@@ -22,6 +22,7 @@ const SoundGrid: FC = () => {
         playSound(sound.id, sound.file, sound.isUserAdded || false)
       }
     },
+     // biome-ignore lint:correctness/useExhaustiveDependencies: ignore
     [allSounds, playSound]
   )
 
@@ -121,6 +122,7 @@ const SoundGrid: FC = () => {
       <div className="relative z-10 mb-4">
         <div className="flex flex-wrap gap-1 p-0">
           {slots.map((sound, index) => (
+            /* biome-ignore lint/a11y/noStaticElementInteractions: not required here */
             <div
               key={index}
               className={`relative h-7 w-24 rounded ${

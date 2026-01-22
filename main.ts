@@ -22,13 +22,13 @@ try {
   if (
     !settings ||
     typeof settings.volume !== 'number' ||
-    isNaN(settings.volume) ||
+    Number.isNaN(settings.volume) ||
     settings.volume < 0 ||
     settings.volume > 1 ||
     typeof settings.maxPoolSize !== 'number' ||
-    isNaN(settings.maxPoolSize) ||
+    Number.isNaN(settings.maxPoolSize) ||
     typeof settings.maxInstancesPerSound !== 'number' ||
-    isNaN(settings.maxInstancesPerSound) ||
+    Number.isNaN(settings.maxInstancesPerSound) ||
     !Array.isArray(settings.hiddenSounds) ||
     typeof settings.buttonColors !== 'object' ||
     typeof settings.theme !== 'object' ||
@@ -41,19 +41,19 @@ try {
       volume:
         settings &&
         typeof settings.volume === 'number' &&
-        !isNaN(settings.volume) &&
+        !Number.isNaN(settings.volume) &&
         settings.volume >= 0 &&
         settings.volume <= 1
           ? settings.volume
           : 1,
       maxPoolSize:
-        settings && typeof settings.maxPoolSize === 'number' && !isNaN(settings.maxPoolSize)
+        settings && typeof settings.maxPoolSize === 'number' && !Number.isNaN(settings.maxPoolSize)
           ? settings.maxPoolSize
           : 100,
       maxInstancesPerSound:
         settings &&
         typeof settings.maxInstancesPerSound === 'number' &&
-        !isNaN(settings.maxInstancesPerSound)
+        !Number.isNaN(settings.maxInstancesPerSound)
           ? settings.maxInstancesPerSound
           : 20,
       hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],

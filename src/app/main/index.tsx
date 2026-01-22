@@ -3,14 +3,16 @@ import { createRoot } from 'react-dom/client'
 
 import App from '@/app/main/app'
 
-const rootElement = document.getElementById('root')
+let rootElement = document.getElementById('root')
+
 if (!rootElement) {
-  const root = document.createElement('div')
-  root.id = 'root'
-  document.body.appendChild(root)
+  rootElement = document.createElement('div')
+  rootElement.id = 'root'
+  document.body.appendChild(rootElement)
 }
 
-const root = createRoot(rootElement ?? document.getElementById('root')!)
+const root = createRoot(rootElement)
+
 root.render(
   <StrictMode>
     <App />

@@ -42,6 +42,7 @@ const SoundButton: FC<SoundButtonProps> = ({
   const { removeSound } = useSounds()
   const soundId = id
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ignore
   useEffect(() => {
     const checkPlayingState = () => {
       const playing = isPlaying(file)

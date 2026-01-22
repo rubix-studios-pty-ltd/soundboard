@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { SoundData } from '@/types'
 import { generateSoundId } from '@/utils/sound/id'
@@ -9,21 +9,24 @@ export const useUserSounds = (type: 'sound' | 'music') => {
   const loadedRef = useRef(false)
   const soundsMapRef = useRef(new Map<string, SoundData>())
 
-  const processSound = (sound: SoundData): SoundData => ({
-    ...sound,
-    isUserAdded: true,
-    id: sound.id || generateSoundId(sound.file),
-    file: sound.file,
-  })
+  const processSound = useCallback(
+    (sound: SoundData): SoundData => ({
+      ...sound,
+      isUserAdded: true,
+      id: sound.id || generateSoundId(sound.file),
+      file: sound.file,
+    }),
+    []
+  )
 
-  const validateSoundFile = async (sound: SoundData): Promise<boolean> => {
+  const validateSoundFile = useCallback(async (sound: SoundData): Promise<boolean> => {
     try {
       await window.electronAPI.validateSound(sound)
       return true
     } catch {
       return false
     }
-  }
+  }, [])
 
   useEffect(() => {
     const loadUserSounds = async () => {
@@ -41,6 +44,7 @@ export const useUserSounds = (type: 'sound' | 'music') => {
         for (const sound of sounds) {
           const processedSound = processSound(sound)
           const isValid = await validateSoundFile(processedSound)
+
           if (isValid) {
             validSounds.push(processedSound)
             validSoundsMap.set(processedSound.id, processedSound)
@@ -59,7 +63,7 @@ export const useUserSounds = (type: 'sound' | 'music') => {
     }
 
     loadUserSounds()
-  }, [type])
+  }, [type, processSound, validateSoundFile])
 
   const addUserSound = (sound: SoundData) => {
     if (!loadedRef.current) {

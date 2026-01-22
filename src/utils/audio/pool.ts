@@ -202,7 +202,9 @@ class AudioPool {
   }
 
   private cleanupAudioItem(item: AudioPoolItem): void {
-    item.cleanupListeners?.forEach((cleanup) => cleanup())
+    item.cleanupListeners?.forEach((cleanup) => {
+      cleanup()
+    })
     item.audio.src = ''
     item.isPlaying = false
     if (item.source) {
@@ -248,7 +250,9 @@ class AudioPool {
         if (oldestKey) {
           const item = this.pool.get(oldestKey)
           if (item) {
-            item.cleanupListeners?.forEach((cleanup) => cleanup())
+            item.cleanupListeners?.forEach((cleanup) => {
+              cleanup()
+            })
             item.audio.src = ''
             item.isPlaying = false
             this.recycleAudioElement(item.audio)
@@ -266,7 +270,9 @@ class AudioPool {
         }
       }
       if (lruItem) {
-        lruItem[1].cleanupListeners?.forEach((cleanup) => cleanup())
+        lruItem[1].cleanupListeners?.forEach((cleanup) => {
+          cleanup()
+        })
         lruItem[1].audio.src = ''
         lruItem[1].isPlaying = false
         this.recycleAudioElement(lruItem[1].audio)
@@ -278,7 +284,9 @@ class AudioPool {
             ([_, item]) => item === stoppedItem
           )?.[0]
           if (stoppedKey) {
-            stoppedItem.cleanupListeners?.forEach((cleanup) => cleanup())
+            stoppedItem.cleanupListeners?.forEach((cleanup) => {
+              cleanup()
+            })
             stoppedItem.audio.src = ''
             stoppedItem.isPlaying = false
             this.recycleAudioElement(stoppedItem.audio)
