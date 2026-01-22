@@ -16,7 +16,15 @@
     "useEditorconfig": true,
     "includes": ["**", "!**/dist/", "!**/build/", "!**/node_modules/", "!**/release/"]
   },
-  "linter": { "enabled": true, "rules": { "recommended": true } },
+  "linter": { 
+    "enabled": true, 
+    "rules": { 
+      "recommended": true, 
+      "suspicious": {
+        "noArrayIndexKey": "off"
+      } 
+    } 
+  },
   "javascript": {
     "formatter": {
       "jsxQuoteStyle": "double",
