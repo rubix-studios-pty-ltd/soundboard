@@ -1,4 +1,4 @@
-import React from "react"
+import type React from 'react'
 
 export const Menu = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -9,6 +9,7 @@ export const Menu = (props: React.SVGProps<SVGSVGElement>) => (
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
+    aria-hidden="true"
     {...props}
   >
     <rect x="2" y="4" width="12" height="1" />

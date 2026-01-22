@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react"
-
-import type { Settings } from "@/types"
-import { Separator } from "@/components/ui/separator"
-import { Slider } from "@/components/ui/slider"
-import SettingsControl from "@/components/controls/settings"
-import WindowsControls from "@/components/controls/window"
+import type React from 'react'
+import { useEffect, useState } from 'react'
+import SettingsControl from '@/components/controls/settings'
+import WindowsControls from '@/components/controls/window'
 import {
   Cog,
   Drag,
@@ -16,12 +13,15 @@ import {
   Popout,
   StopIcon,
   Volume,
-} from "@/components/icons"
-import AddSoundModal from "@/components/modals/sound"
-import { useAudio } from "@/context/audio"
-import { useSettings } from "@/context/setting"
-import { useSounds } from "@/context/sounds"
-import { addNewSound } from "@/utils/audio/convert"
+} from '@/components/icons'
+import AddSoundModal from '@/components/modals/sound'
+import { Separator } from '@/components/ui/separator'
+import { Slider } from '@/components/ui/slider'
+import { useAudio } from '@/context/audio'
+import { useSettings } from '@/context/setting'
+import { useSounds } from '@/context/sounds'
+import type { Settings } from '@/types'
+import { addNewSound } from '@/utils/audio/convert'
 
 const Header: React.FC = () => {
   const { stopAll } = useAudio()
@@ -31,11 +31,7 @@ const Header: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [popoutVisible, setPopoutVisible] = useState(false)
 
-  const handleAddSound = async (
-    type: "sound" | "music",
-    file: File,
-    title?: string
-  ) => {
+  const handleAddSound = async (type: 'sound' | 'music', file: File, title?: string) => {
     const newSound = await addNewSound(file, type, title)
     addSound(newSound, type)
     setIsAddModalOpen(false)
@@ -49,7 +45,7 @@ const Header: React.FC = () => {
   }
 
   const handleVolumeChange = (newVolume: number) => {
-    if (!isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
+    if (!Number.isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
       const update: Partial<Settings> = { volume: newVolume }
       updateSettings(update)
     }
@@ -70,9 +66,9 @@ const Header: React.FC = () => {
   const handleTogglePopout = async () => {
     try {
       if (popoutVisible) {
-        window.electronAPI.windowControl("close", "popout")
+        window.electronAPI.windowControl('close', 'popout')
       } else {
-        window.electronAPI.windowControl("show", "popout")
+        window.electronAPI.windowControl('show', 'popout')
       }
 
       setPopoutVisible((prevState) => !prevState)
@@ -85,50 +81,45 @@ const Header: React.FC = () => {
     if (settings.volume > 0) {
       setPreviousVolume(settings.volume)
     }
-  }, [])
+  }, [settings.volume])
 
   return (
-    <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b-[1px] border-[#333333] bg-[#1a1a1a]">
+    <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b border-[#333333] bg-[#1a1a1a]">
       <div className="draggable flex flex-1 flex-row items-center">
         <SettingsControl />
 
-        <div className="draggable px-2 text-xs font-medium text-white">
-          Soundboard
-        </div>
+        <div className="draggable px-2 text-xs font-medium text-white">Soundboard</div>
       </div>
 
       <div className="flex items-center">
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2.5">
             <button
+              type="button"
               className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
-              onClick={() =>
-                updateSettings({ showSoundGrid: true, showMusicGrid: true })
-              }
+              onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: true })}
             >
               <div className="h-3.5 w-3.5">
                 <Library className="h-full w-full" />
               </div>
             </button>
             <button
+              type="button"
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-                !settings.showMusicGrid ? "text-red-500" : "text-white"
+                !settings.showMusicGrid ? 'text-red-500' : 'text-white'
               }`}
-              onClick={() =>
-                updateSettings({ showSoundGrid: true, showMusicGrid: false })
-              }
+              onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: false })}
             >
               <div className="h-3.5 w-3.5">
                 <Note className="h-full w-full" />
               </div>
             </button>
             <button
+              type="button"
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-                !settings.showSoundGrid ? "text-red-500" : "text-white"
+                !settings.showSoundGrid ? 'text-red-500' : 'text-white'
               }`}
-              onClick={() =>
-                updateSettings({ showSoundGrid: false, showMusicGrid: true })
-              }
+              onClick={() => updateSettings({ showSoundGrid: false, showMusicGrid: true })}
             >
               <div className="h-3.5 w-3.5">
                 <Music className="h-full w-full" />
@@ -137,6 +128,7 @@ const Header: React.FC = () => {
           </div>
           <Separator orientation="vertical" />
           <button
+            type="button"
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={handleTogglePopout}
           >
@@ -147,8 +139,9 @@ const Header: React.FC = () => {
           <Separator orientation="vertical" />
           <div className="flex items-center gap-2.5">
             <button
+              type="button"
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-                settings.buttonSettings ? "text-red-500" : "text-white"
+                settings.buttonSettings ? 'text-red-500' : 'text-white'
               }`}
               onClick={buttonSettings}
             >
@@ -157,8 +150,9 @@ const Header: React.FC = () => {
               </div>
             </button>
             <button
+              type="button"
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
-                settings.dragAndDropEnabled ? "text-red-500" : "text-white"
+                settings.dragAndDropEnabled ? 'text-red-500' : 'text-white'
               }`}
               onClick={() =>
                 updateSettings({
@@ -171,6 +165,7 @@ const Header: React.FC = () => {
               </div>
             </button>
             <button
+              type="button"
               className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
               onClick={() => setIsAddModalOpen(true)}
             >
@@ -180,6 +175,7 @@ const Header: React.FC = () => {
             </button>
           </div>
           <button
+            type="button"
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={stopAll}
           >
@@ -192,9 +188,10 @@ const Header: React.FC = () => {
             onValueChange={(value) => handleVolumeChange(value[0] / 100)}
             max={100}
             step={1}
-            className="w-[50px] invert"
+            className="w-12.5 invert"
           />
           <button
+            type="button"
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={toggleMute}
           >

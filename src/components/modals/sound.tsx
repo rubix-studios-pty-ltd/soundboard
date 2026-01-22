@@ -1,44 +1,45 @@
-import React, { useEffect, useState } from "react"
+import type React from 'react'
+import { useEffect, useState } from 'react'
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import LoadingSpinner from "@/components/ui/spinner"
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import LoadingSpinner from '@/components/ui/spinner'
 
 interface AddSoundModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (type: "sound" | "music", file: File, title?: string) => Promise<void>
-  defaultType?: "sound" | "music"
+  onAdd: (type: 'sound' | 'music', file: File, title?: string) => Promise<void>
+  defaultType?: 'sound' | 'music'
 }
 
 const AddSoundModal: React.FC<AddSoundModalProps> = ({
   isOpen,
   onClose,
   onAdd,
-  defaultType = "sound",
+  defaultType = 'sound',
 }) => {
-  const [type, setType] = useState<"sound" | "music">(defaultType)
+  const [type, setType] = useState<'sound' | 'music'>(defaultType)
 
   useEffect(() => {
     setType(defaultType)
   }, [defaultType])
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [displayName, setDisplayName] = useState<string>("")
+  const [displayName, setDisplayName] = useState<string>('')
 
   useEffect(() => {
     if (!isOpen) {
       setSelectedFile(null)
-      setDisplayName("")
+      setDisplayName('')
     }
   }, [isOpen])
 
@@ -46,8 +47,8 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (!file.type.includes("audio/") && !file.type.includes("video/")) {
-      alert("Please select a valid audio or video file")
+    if (!file.type.includes('audio/') && !file.type.includes('video/')) {
+      alert('Please select a valid audio or video file')
       return
     }
 
@@ -62,7 +63,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
       try {
         await onAdd(type, selectedFile, displayName.trim() || undefined)
         setSelectedFile(null)
-        setDisplayName("")
+        setDisplayName('')
       } finally {
         setIsLoading(false)
       }
@@ -71,7 +72,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[300px] bg-[#1a1a1a] text-white">
+      <DialogContent className="max-w-75 bg-[#1a1a1a] text-white">
         {isLoading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-black">
             <div className="flex flex-col items-center gap-2">
@@ -103,7 +104,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
 
           <RadioGroup
             value={type}
-            onValueChange={(value: "sound" | "music") => setType(value)}
+            onValueChange={(value: 'sound' | 'music') => setType(value)}
             className="mt-1 flex gap-4"
           >
             <div className="flex items-center gap-2">
@@ -117,11 +118,7 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
           </RadioGroup>
 
           <div className="mt-2 flex justify-end gap-2">
-            <Button
-              variant="secondary"
-              onClick={handleAdd}
-              disabled={!selectedFile || isLoading}
-            >
+            <Button variant="secondary" onClick={handleAdd} disabled={!selectedFile || isLoading}>
               Thêm
             </Button>
             <Button variant="secondary" onClick={onClose}>

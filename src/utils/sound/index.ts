@@ -1,10 +1,10 @@
-import type { SoundData } from "@/types"
-import getEl from "@/lib/getelement"
-import AudioPool from "@/utils/audio/pool"
-import { generateSoundId } from "@/utils/sound/id"
-import HotkeyManager from "@/utils/system/hotkeys"
-import { soundData } from "@/data/audio"
-import { musicData } from "@/data/music"
+import { soundData } from '@/data/audio'
+import { musicData } from '@/data/music'
+import getEl from '@/lib/getelement'
+import type { SoundData } from '@/types'
+import AudioPool from '@/utils/audio/pool'
+import { generateSoundId } from '@/utils/sound/id'
+import HotkeyManager from '@/utils/system/hotkeys'
 
 interface SoundAppConfig {
   multiSoundEnabled: boolean
@@ -23,11 +23,11 @@ class SoundboardApp {
   private config: SoundAppConfig
 
   constructor(initialConfig: SoundAppConfig) {
-    this.container1 = getEl("container1")
-    this.container2 = getEl("container2")
-    this.stopAllButton = getEl("stopAllButton")
-    this.template = getEl("sound-button-template")
-    this.volumeSlider = getEl("volumeSlider")
+    this.container1 = getEl('container1')
+    this.container2 = getEl('container2')
+    this.stopAllButton = getEl('stopAllButton')
+    this.template = getEl('sound-button-template')
+    this.volumeSlider = getEl('volumeSlider')
 
     this.config = initialConfig
     this.audioPool = new AudioPool(
@@ -45,16 +45,16 @@ class SoundboardApp {
   updateConfig(newConfig: Partial<SoundAppConfig>): void {
     this.config = { ...this.config, ...newConfig }
 
-    if ("volume" in newConfig && typeof newConfig.volume === "number") {
+    if ('volume' in newConfig && typeof newConfig.volume === 'number') {
       this.volumeSlider.value = newConfig.volume.toString()
       this.audioPool.updateVolume(newConfig.volume)
     }
 
-    if ("multiSoundEnabled" in newConfig) {
+    if ('multiSoundEnabled' in newConfig) {
       this.audioPool.updateMultiSoundEnabled(!!newConfig.multiSoundEnabled)
     }
 
-    if ("repeatSoundEnabled" in newConfig) {
+    if ('repeatSoundEnabled' in newConfig) {
       this.audioPool.updateRepeatSoundEnabled(!!newConfig.repeatSoundEnabled)
     }
   }
@@ -71,19 +71,13 @@ class SoundboardApp {
       const isPlaying = this.audioPool.isPlaying(file)
 
       if (this.config.repeatSoundEnabled) {
-        await this.playSound(
-          file,
-          currentVolume,
-          buttonElement,
-          true,
-          isUserAdded
-        )
+        await this.playSound(file, currentVolume, buttonElement, true, isUserAdded)
         return
       }
 
       if (isPlaying) {
         this.audioPool.stopSpecific(file)
-        buttonElement.classList.remove("active")
+        buttonElement.classList.remove('active')
         return
       }
 
@@ -91,15 +85,9 @@ class SoundboardApp {
         await this.stopActiveSounds()
       }
 
-      await this.playSound(
-        file,
-        currentVolume,
-        buttonElement,
-        false,
-        isUserAdded
-      )
+      await this.playSound(file, currentVolume, buttonElement, false, isUserAdded)
     } catch {
-      buttonElement.classList.remove("active")
+      buttonElement.classList.remove('active')
       this.audioPool.stopSpecific(file)
     }
   }
@@ -112,18 +100,14 @@ class SoundboardApp {
     isUserAdded: boolean = false
   ): Promise<void> {
     await this.audioPool.play(file, isUserAdded, volume, repeat, () => {
-      buttonElement.classList.remove("active")
+      buttonElement.classList.remove('active')
     })
-    buttonElement.classList.add("active")
+    buttonElement.classList.add('active')
   }
 
   private async stopActiveSounds(): Promise<void> {
-    const soundButtons = Array.from(
-      document.querySelectorAll(".sound-button.active")
-    )
-    const uiButtons = Array.from(
-      document.querySelectorAll(".settings-control.active")
-    )
+    const soundButtons = Array.from(document.querySelectorAll('.sound-button.active'))
+    const uiButtons = Array.from(document.querySelectorAll('.settings-control.active'))
     const activeButtons = soundButtons.filter((btn) => !uiButtons.includes(btn))
 
     if (activeButtons.length > 0) {
@@ -132,42 +116,37 @@ class SoundboardApp {
         const soundFile = this.getSoundFileFromId(soundId)
         if (soundFile && this.audioPool.isPlaying(soundFile)) {
           this.audioPool.stopSpecific(soundFile)
-          btn.classList.remove("active")
+          btn.classList.remove('active')
         }
       }
     }
   }
 
   private getSoundFileFromId(id: string): string | undefined {
-    const foundSound = soundData.find(
-      (s) => s.id === id || generateSoundId(s.file) === id
-    )
+    const foundSound = soundData.find((s) => s.id === id || generateSoundId(s.file) === id)
     if (foundSound) {
       return foundSound.file
     }
 
-    const foundMusic = musicData.find(
-      (s) => s.id === id || generateSoundId(s.file) === id
-    )
+    const foundMusic = musicData.find((s) => s.id === id || generateSoundId(s.file) === id)
     return foundMusic?.file
   }
 
   private createSoundButton(data: SoundData): HTMLElement {
     const button = this.template.content.cloneNode(true) as HTMLElement
-    const btnElement = button.querySelector("button") as HTMLButtonElement
+    const btnElement = button.querySelector('button') as HTMLButtonElement
 
     const soundId = data.id ?? generateSoundId(data.file)
     btnElement.id = soundId
-    btnElement.setAttribute("data-sound-id", soundId)
-    btnElement.onclick = () =>
-      this.toggleSound(data.file, soundId, data.isUserAdded)
+    btnElement.setAttribute('data-sound-id', soundId)
+    btnElement.onclick = () => this.toggleSound(data.file, soundId, data.isUserAdded)
     btnElement.oncontextmenu = (e) => {
       e.preventDefault()
       this.hotkeyManager.showModal(soundId)
       return false
     }
 
-    const titleSpan = button.querySelector(".title") as HTMLSpanElement
+    const titleSpan = button.querySelector('.title') as HTMLSpanElement
     titleSpan.textContent = data.title
 
     return button
@@ -178,8 +157,8 @@ class SoundboardApp {
       return
     }
 
-    this.container1.innerHTML = ""
-    this.container2.innerHTML = ""
+    this.container1.innerHTML = ''
+    this.container2.innerHTML = ''
 
     soundData.forEach((data) => {
       this.container1.appendChild(this.createSoundButton(data))
@@ -191,21 +170,19 @@ class SoundboardApp {
   }
 
   private setupEventListeners(): void {
-    this.stopAllButton.addEventListener("click", () => {
-      const soundButtons = document.querySelectorAll(
-        ".sound-button:not(.settings-control).active"
-      )
+    this.stopAllButton.addEventListener('click', () => {
+      const soundButtons = document.querySelectorAll('.sound-button:not(.settings-control).active')
       soundButtons.forEach((button) => {
         const soundId = button.id
         const soundFile = this.getSoundFileFromId(soundId)
         if (soundFile) {
           this.audioPool.stopSpecific(soundFile)
-          button.classList.remove("active")
+          button.classList.remove('active')
         }
       })
     })
 
-    this.volumeSlider.addEventListener("input", () => {
+    this.volumeSlider.addEventListener('input', () => {
       const volume = parseFloat(this.volumeSlider.value)
       this.audioPool.updateVolume(volume)
     })

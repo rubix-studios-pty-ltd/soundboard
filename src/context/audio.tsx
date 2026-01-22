@@ -1,13 +1,8 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import type React from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
-import { useSettings } from "@/context/setting"
-import AudioPool from "@/utils/audio/pool"
+import { useSettings } from '@/context/setting'
+import AudioPool from '@/utils/audio/pool'
 
 interface AudioContextType {
   playSound: (
@@ -31,9 +26,7 @@ const AudioContext = createContext<AudioContextType>({
   isReady: false,
 })
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioPoolRef = useRef<AudioPool | null>(null)
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const [isReady, setIsReady] = useState(false)
@@ -91,7 +84,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
     repeatEnabled?: boolean
   ) => {
     if (!audioPoolRef.current || !isReady) {
-      console.warn("Audio system not ready")
+      console.warn('Audio system not ready')
       return
     }
 
@@ -103,7 +96,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
         repeatEnabled ?? settings.repeatSoundEnabled
       )
     } catch (error: unknown) {
-      console.error("Error playing sound:", error)
+      console.error('Error playing sound:', error)
       if (audioPoolRef.current) {
         audioPoolRef.current.stopSpecific(file)
       }
@@ -135,9 +128,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   return (
-    <AudioContext.Provider
-      value={{ playSound, stopAll, stopSound, isPlaying, isReady }}
-    >
+    <AudioContext.Provider value={{ playSound, stopAll, stopSound, isPlaying, isReady }}>
       {children}
     </AudioContext.Provider>
   )
@@ -146,7 +137,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useAudio = () => {
   const context = useContext(AudioContext)
   if (!context) {
-    throw new Error("useAudio must be used within an AudioProvider")
+    throw new Error('useAudio must be used within an AudioProvider')
   }
 
   return context

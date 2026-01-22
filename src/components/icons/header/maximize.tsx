@@ -1,4 +1,4 @@
-import React from "react"
+import type React from 'react'
 
 export const Maximize = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -9,6 +9,7 @@ export const Maximize = (props: React.SVGProps<SVGSVGElement>) => (
     strokeLinecap="round"
     strokeLinejoin="round"
     xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
     {...props}
   >
     <path d="M3 16m0 1a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v3a1 1 0 0 1 -1 1h-3a1 1 0 0 1 -1 -1z"></path>

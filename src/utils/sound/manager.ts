@@ -1,19 +1,17 @@
-import { app } from "electron"
-import { promises as fs } from "fs"
-import path from "path"
+import { promises as fs } from 'node:fs'
+import path from 'node:path'
+import { app } from 'electron'
 
-import type { SoundData } from "@/types"
+import type { SoundData } from '@/types'
 
-const shouldLog = () => process.argv.includes("--enable-logging")
+const shouldLog = () => process.argv.includes('--enable-logging')
 
-export function createSoundsManager(type: "sound" | "music") {
-  const jsonPath = path.join(app.getPath("userData"), `${type}s.json`)
+export function createSoundsManager(type: 'sound' | 'music') {
+  const jsonPath = path.join(app.getPath('userData'), `${type}s.json`)
 
   const validateSound = async (sound: SoundData): Promise<boolean> => {
     try {
-      const soundPath = path.normalize(
-        path.join(app.getPath("userData"), "sounds", sound.file)
-      )
+      const soundPath = path.normalize(path.join(app.getPath('userData'), 'sounds', sound.file))
       await fs.access(soundPath)
       return true
     } catch (error) {
@@ -31,7 +29,7 @@ export function createSoundsManager(type: "sound" | "music") {
         .then(() => true)
         .catch(() => false)
       if (exists) {
-        const content = await fs.readFile(jsonPath, "utf-8")
+        const content = await fs.readFile(jsonPath, 'utf-8')
         const sounds = JSON.parse(content) as SoundData[]
 
         const validatedSounds = []
@@ -51,7 +49,7 @@ export function createSoundsManager(type: "sound" | "music") {
       }
       return []
     } catch (error) {
-      if (shouldLog()) console.error("Error reading sounds JSON:", error)
+      if (shouldLog()) console.error('Error reading sounds JSON:', error)
       return []
     }
   }
@@ -59,14 +57,14 @@ export function createSoundsManager(type: "sound" | "music") {
   const saveSounds = async (sounds: SoundData[]): Promise<void> => {
     try {
       const tempPath = `${jsonPath}.tmp`
-      const mode = process.platform === "darwin" ? 0o644 : undefined
+      const mode = process.platform === 'darwin' ? 0o644 : undefined
       await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), {
-        encoding: "utf-8",
+        encoding: 'utf-8',
         mode,
       })
       await fs.rename(tempPath, jsonPath)
     } catch (error) {
-      if (shouldLog()) console.error("Error saving sounds JSON:", error)
+      if (shouldLog()) console.error('Error saving sounds JSON:', error)
       throw error
     }
   }
@@ -81,7 +79,7 @@ export function createSoundsManager(type: "sound" | "music") {
         sounds.push(sound)
         await saveSounds(sounds)
       } else {
-        throw new Error("Sound file does not exist")
+        throw new Error('Sound file does not exist')
       }
     },
     remove: async (soundId: string) => {
@@ -96,7 +94,7 @@ export function createSoundsManager(type: "sound" | "music") {
 
       try {
         const soundPath = path.normalize(
-          path.join(app.getPath("userData"), "sounds", soundToRemove.file)
+          path.join(app.getPath('userData'), 'sounds', soundToRemove.file)
         )
         const exists = await fs
           .access(soundPath)
@@ -106,7 +104,7 @@ export function createSoundsManager(type: "sound" | "music") {
           await fs.unlink(soundPath)
         }
       } catch (error) {
-        if (shouldLog()) console.error("Error deleting sound file:", error)
+        if (shouldLog()) console.error('Error deleting sound file:', error)
       }
     },
   }

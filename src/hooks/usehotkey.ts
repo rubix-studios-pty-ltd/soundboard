@@ -1,11 +1,8 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from 'react'
 
-import type { HotkeyMap, SoundData } from "@/types"
+import type { HotkeyMap, SoundData } from '@/types'
 
-export const useHotkeys = (
-  _soundData: SoundData[],
-  onSoundPlay: (soundId: string) => void
-) => {
+export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: string) => void) => {
   const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>({})
   const [modalOpen, setModalOpen] = useState(false)
   const [currentSoundId, setCurrentSoundId] = useState<string | null>(null)
@@ -16,7 +13,7 @@ export const useHotkeys = (
         const savedHotkeys = await window.electronAPI.loadHotkeys()
         setHotkeyMap(savedHotkeys)
       } catch (error) {
-        console.error("Error loading hotkeys:", error)
+        console.error('Error loading hotkeys:', error)
         setHotkeyMap({})
       }
     }
@@ -31,9 +28,7 @@ export const useHotkeys = (
       }
 
       const key = event.key.toLowerCase()
-      const soundId = Object.entries(hotkeyMap).find(
-        ([, hotkey]) => hotkey === key
-      )?.[0]
+      const soundId = Object.entries(hotkeyMap).find(([, hotkey]) => hotkey === key)?.[0]
 
       if (soundId) {
         onSoundPlay(soundId)
@@ -43,9 +38,9 @@ export const useHotkeys = (
   )
 
   useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress)
+    document.addEventListener('keydown', handleKeyPress)
     return () => {
-      document.removeEventListener("keydown", handleKeyPress)
+      document.removeEventListener('keydown', handleKeyPress)
     }
   }, [handleKeyPress])
 
@@ -61,9 +56,7 @@ export const useHotkeys = (
       }
 
       setHotkeyMap((prev) => {
-        const newMap = Object.fromEntries(
-          Object.entries(prev).filter(([, value]) => value !== key)
-        )
+        const newMap = Object.fromEntries(Object.entries(prev).filter(([, value]) => value !== key))
 
         newMap[currentSoundId] = key
 

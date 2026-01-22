@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from "react"
-import { buttonPreset } from "@/constants/themes"
+import { type CSSProperties, type FC, type MouseEvent, useEffect, useState } from 'react'
+import { Chevron, Close } from '@/components/icons'
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Separator } from "@/components/ui/separator"
-import { Chevron, Close } from "@/components/icons"
-import { useAudio } from "@/context/audio"
-import { useSettings } from "@/context/setting"
-import { useSounds } from "@/context/sounds"
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Separator } from '@/components/ui/separator'
+import { buttonPreset } from '@/constants/themes'
+import { useAudio } from '@/context/audio'
+import { useSettings } from '@/context/setting'
+import { useSounds } from '@/context/sounds'
 
 interface SoundButtonProps {
   id: string
@@ -25,10 +21,10 @@ interface SoundButtonProps {
   isInFavorites?: boolean
   isInPopout?: boolean
   isUserAdded?: boolean
-  type: "sound" | "music"
+  type: 'sound' | 'music'
 }
 
-const SoundButton: React.FC<SoundButtonProps> = ({
+const SoundButton: FC<SoundButtonProps> = ({
   id,
   file,
   title,
@@ -73,15 +69,13 @@ const SoundButton: React.FC<SoundButtonProps> = ({
     }
   }
 
-  const handleContextMenu = (e: React.MouseEvent) => {
+  const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
     onHotkeyAssign(soundId)
   }
 
   return (
-    <div
-      className={`relative ${isHidden && !settings.buttonSettings ? "hidden" : ""}`}
-    >
+    <div className={`relative ${isHidden && !settings.buttonSettings ? 'hidden' : ''}`}>
       {settings.buttonSettings && (
         <Popover>
           <PopoverTrigger asChild>
@@ -89,7 +83,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
           </PopoverTrigger>
           <PopoverContent
             align="start"
-            className="max-w-[200px] border-[#333333] bg-[#1a1a1a] p-4 text-white"
+            className="max-w-50 border-[#333333] bg-[#1a1a1a] p-4 text-white"
           >
             <div className="flex flex-col gap-4">
               {isInFavorites ||
@@ -109,6 +103,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
               <div className="grid grid-cols-5 gap-2">
                 {buttonPreset.map((presetColor) => (
                   <button
+                    type="button"
                     key={presetColor}
                     className="size-6 cursor-pointer rounded-full border transition-transform hover:scale-110"
                     style={{ backgroundColor: presetColor }}
@@ -123,6 +118,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                   />
                 ))}
                 <button
+                  type="button"
                   className="flex size-6 cursor-pointer items-center justify-center rounded-full border bg-white text-black hover:scale-110 hover:bg-gray-100"
                   onClick={() =>
                     updateSettings({
@@ -145,7 +141,7 @@ const SoundButton: React.FC<SoundButtonProps> = ({
                       try {
                         await removeSound({ id, file, title }, type)
                       } catch (error) {
-                        console.error("Failed to delete sound:", error)
+                        console.error('Failed to delete sound:', error)
                       }
                     }}
                   >
@@ -164,53 +160,51 @@ const SoundButton: React.FC<SoundButtonProps> = ({
         onDragStart={(e) => {
           if (isDraggable) {
             const soundIdToUse = soundId
-            e.dataTransfer.setData("text/sound-id", soundIdToUse)
-            e.dataTransfer.effectAllowed = "move"
+            e.dataTransfer.setData('text/sound-id', soundIdToUse)
+            e.dataTransfer.effectAllowed = 'move'
           }
         }}
         className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${
-          settings.buttonSettings && isHidden ? "opacity-50" : ""
-        } ${isDraggable ? "cursor-move" : ""}`}
+          settings.buttonSettings && isHidden ? 'opacity-50' : ''
+        } ${isDraggable ? 'cursor-move' : ''}`}
         style={
           {
             backgroundColor: settings?.buttonColors?.[soundId]
               ? isActive
-                ? "#000"
+                ? '#000'
                 : settings.buttonColors[soundId]
               : settings?.theme?.enabled
                 ? isActive
                   ? settings.theme.buttonActive
                   : settings.theme.buttonColor
                 : isActive
-                  ? "#000"
+                  ? '#000'
                   : undefined,
             color: settings?.buttonColors?.[soundId]
-              ? "#fff"
+              ? '#fff'
               : settings?.theme?.enabled
                 ? settings.theme.buttonText
                 : isActive
-                  ? "#fff"
+                  ? '#fff'
                   : undefined,
-            "--button-hover": settings?.buttonColors?.[soundId]
+            '--button-hover': settings?.buttonColors?.[soundId]
               ? isActive
-                ? "#000"
-                : "#404040"
+                ? '#000'
+                : '#404040'
               : settings?.theme?.enabled
                 ? isActive
                   ? settings.theme.buttonActive
                   : settings.theme.buttonHoverColor
                 : isActive
-                  ? "#404040"
-                  : "#e0e0e0",
-          } as React.CSSProperties
+                  ? '#404040'
+                  : '#e0e0e0',
+          } as CSSProperties
         }
         onClick={handleClick}
         onContextMenu={handleContextMenu}
         data-sound-id={soundId}
       >
-        <span className="w-full truncate text-center text-[11px] font-semibold">
-          {title}
-        </span>
+        <span className="w-full truncate text-center text-[11px] font-semibold">{title}</span>
       </Button>
     </div>
   )

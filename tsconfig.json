@@ -18,32 +18,12 @@
     "declaration": true,
     "declarationMap": true,
     "paths": {
-      "*": [
-        "node_modules/*"
-      ],
-      "@/*": [
-        "src/*"
-      ],
+      "*": ["node_modules/*"],
+      "@/*": ["src/*"]
     },
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ],
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ]
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "lib": ["esnext", "dom", "dom.iterable"]
   },
-  "include": [
-    "src/**/*",
-    "*.ts",
-    "*.mts",
-    "*.tsx",
-    "eslint.config.js"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*", "*.ts", "*.mts", "*.tsx", "eslint.config.js"],
+  "exclude": ["node_modules", "dist"]
 }
