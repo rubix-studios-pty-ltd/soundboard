@@ -10,7 +10,14 @@ if (!rootElement) {
   document.body.appendChild(root)
 }
 
-const root = createRoot(rootElement ?? document.getElementById('root')!)
+const actualRootElement = rootElement ?? document.getElementById('root');
+
+if (!actualRootElement) {
+  throw new Error('Root element not found');
+}
+
+const root = createRoot(actualRootElement);
+
 root.render(
   <StrictMode>
     <App />

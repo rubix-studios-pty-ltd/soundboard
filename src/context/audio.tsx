@@ -60,6 +60,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [
     settingsInitialized,
+    settings.volume,
     settings.multiSoundEnabled,
     settings.repeatSoundEnabled,
     settings.maxPoolSize,

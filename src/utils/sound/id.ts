@@ -11,7 +11,7 @@ export function generateSoundId(filename: string): string {
     }
 
     if (/^\d+$/.test(part)) {
-      const num = parseInt(part)
+      const num = parseInt(part, 10)
       const numberWords = [
         'One',
         'Two',
