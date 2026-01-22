@@ -64,7 +64,6 @@ jobs:
         
       - name: Build App
         run: |
-          pnpm run clean
           pnpm run build:prod
 
       - name: Build and Release Windows
