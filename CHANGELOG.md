@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.10](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.9...v3.18.10) (2026-01-22)
+
+
+### Bug Fixes
+
+* **security:** patch release ([c7ea97b](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c7ea97b5abb117631a878fb69624c06f88afa079))
+* **security:** patch release ([a3ff7eb](https://github.com/rubix-studios-pty-ltd/soundboard/commit/a3ff7eb183ec849398be635a4325647240ac5e67))
+
 ## [3.18.9](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.8...v3.18.9) (2025-12-19)
 
 
