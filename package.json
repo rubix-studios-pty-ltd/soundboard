@@ -30,8 +30,8 @@
     "@semantic-release/github": "^12.0.2",
     "@tailwindcss/cli": "^4.1.18",
     "@tailwindcss/postcss": "^4.1.18",
-    "@types/node": "^25.0.9",
-    "@types/react": "^19.2.8",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.2.9",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.23",
     "clsx": "^2.1.1",
@@ -80,7 +80,9 @@
         {
           "from": "src/vendor/ffmpeg/win32",
           "to": "ffmpeg/win32",
-          "filter": ["**/*"]
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
@@ -93,12 +95,16 @@
         {
           "from": "src/vendor/ffmpeg/darwin-arm64",
           "to": "ffmpeg/darwin-arm64",
-          "filter": ["**/*"]
+          "filter": [
+            "**/*"
+          ]
         },
         {
           "from": "src/vendor/ffmpeg/darwin-x64",
           "to": "ffmpeg/darwin-x64",
-          "filter": ["**/*"]
+          "filter": [
+            "**/*"
+          ]
         }
       ]
     },
