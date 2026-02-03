@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.11](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.10...v3.18.11) (2026-02-03)
+
+
+### Bug Fixes
+
+* update dependency array comment in SoundGrid component ([0e5800b](https://github.com/rubix-studios-pty-ltd/soundboard/commit/0e5800bc031aecb0fcb6629eb6e48d74fb05e80a))
+
 ## [3.18.10](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.9...v3.18.10) (2026-01-22)
 
 
