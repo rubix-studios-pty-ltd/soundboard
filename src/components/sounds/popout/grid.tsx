@@ -22,7 +22,7 @@ const SoundGrid: FC = () => {
         playSound(sound.id, sound.file, sound.isUserAdded || false)
       }
     },
-     // biome-ignore lint:correctness/useExhaustiveDependencies: ignore
+    // biome-ignore lint:correctness/useExhaustiveDependencies: ignore
     [allSounds, playSound]
   )
 
