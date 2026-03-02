@@ -123,5 +123,5 @@ input,
 }
 
 .sound-button:hover {
-  background-color: var(--button-hover) !important;
+  background-color: var(--button-hover);
 }
