@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.12](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.11...v3.18.12) (2026-03-02)
+
+
+### Bug Fixes
+
+* add lang attribute to HTML tags for accessibility and SEO ([0eacce2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/0eacce217a1a0da9836d9e9c079c56086b827e01))
+
 ## [3.18.11](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.10...v3.18.11) (2026-02-03)
 
 
