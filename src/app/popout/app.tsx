@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-
+import { Loading } from '@/components/controls/loading'
 import { Header } from '@/components/controls/popout/header'
 import { SoundGrid } from '@/components/sounds/popout/grid'
 import { AudioProvider, useAudio } from '@/context/audio'
@@ -20,14 +20,6 @@ export function App() {
   )
 }
 
-function LoadingScreen() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-gray-400">Loading</div>
-    </div>
-  )
-}
-
 function PopoutContent() {
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const { isReady: audioReady } = useAudio()
@@ -36,14 +28,12 @@ function PopoutContent() {
 
   const themeStyles = useMemo(
     () => ({
-      backgroundColor: theme?.enabled
-        ? theme.backgroundColor
-        : undefined,
+      backgroundColor: theme?.enabled ? theme.backgroundColor : undefined,
     }),
-    [theme],
+    [theme]
   )
 
-  if (!settingsInitialized || !audioReady) return <LoadingScreen />
+  if (!settingsInitialized || !audioReady) return <Loading />
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>

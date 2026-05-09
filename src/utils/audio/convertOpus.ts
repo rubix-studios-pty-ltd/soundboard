@@ -1,4 +1,4 @@
-import ffmpeg from 'fluent-ffmpeg'
+import { spawn } from 'node:child_process'
 
 import { getFfmpeg } from '@/utils/audio/getFfmpeg'
 
@@ -11,20 +11,51 @@ export async function convertOpus(filePath: string, outputPath: string): Promise
     throw new Error('FFmpeg binary not found.')
   }
 
-  ffmpeg.setFfmpegPath(resolved)
+  const args = [
+    '-y',
+    '-i',
+    filePath,
+    '-af',
+    audioFilters.join(','),
+    '-ar',
+    '48000',
+    '-b:a',
+    '64k',
+    '-map_metadata',
+    '-1',
+    '-f',
+    'opus',
+    outputPath,
+  ]
 
   return new Promise((resolve, reject) => {
-    ffmpeg(filePath)
-      .toFormat('opus')
-      .audioFilters(audioFilters)
-      .audioFrequency(48000)
-      .audioBitrate('64k')
-      .outputOptions(['-map_metadata', '-1'])
-      .save(outputPath)
-      .on('end', resolve)
-      .on('error', (err) => {
-        console.error('FFmpeg conversion error:', err)
-        reject(err)
-      })
+    const process = spawn(resolved, args, {
+      stdio: ['ignore', 'ignore', 'pipe'],
+      windowsHide: true,
+    })
+
+    let stderr = ''
+
+    process.stderr.on('data', (chunk: Buffer) => {
+      stderr += chunk.toString()
+    })
+
+    process.on('error', (err) => {
+      console.error('FFmpeg conversion error:', err)
+      reject(err)
+    })
+
+    process.on('close', (code) => {
+      if (code === 0) {
+        resolve()
+        return
+      }
+
+      const error = new Error(
+        `FFmpeg conversion failed with exit code ${String(code)}${stderr ? `: ${stderr}` : ''}`
+      )
+      console.error('FFmpeg conversion error:', error)
+      reject(error)
+    })
   })
 }
