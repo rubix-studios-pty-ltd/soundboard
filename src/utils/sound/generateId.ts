@@ -1,4 +1,4 @@
-export function generateSoundId(filename: string): string {
+export function generateId(filename: string): string {
   const baseName = filename.replace(/^sound\//, '').replace(/\.opus$/, '')
   const nameWithoutPrefix = baseName.replace(/^\d+/, '')
   const parts = nameWithoutPrefix.split(/[-_]/)

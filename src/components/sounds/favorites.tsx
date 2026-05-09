@@ -5,8 +5,8 @@ import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import { useHotkeys } from '@/hooks/usehotkey'
-import { generateSoundId } from '@/utils/sound/id'
+import { useHotkey } from '@/hooks/useHotkey'
+import { generateId } from '@/utils/sound/generateId'
 
 export function FavoriteGrid() {
   const { settings, updateSettings } = useSettings()
@@ -21,7 +21,7 @@ export function FavoriteGrid() {
 
   const handleSoundPlay = useCallback(
     (soundId: string) => {
-      const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
+      const sound = allSounds.find((s) => s.id === soundId || generateId(s.file) === soundId)
 
       if (sound) {
         playSound(sound.id, sound.file, sound.isUserAdded || false)
@@ -31,7 +31,7 @@ export function FavoriteGrid() {
   )
 
   const { modalOpen, currentHotkey, showHotkeyModal, assignHotkey, clearHotkey, closeModal } =
-    useHotkeys(allSounds, handleSoundPlay)
+    useHotkey(allSounds, handleSoundPlay)
 
   const handleDrop = (e: DragEvent<HTMLElement>, slotIndex: number) => {
     e.preventDefault()
@@ -100,11 +100,11 @@ export function FavoriteGrid() {
 
   const usedSlots = favorites.items
     .map((soundId) => {
-      const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
+      const sound = allSounds.find((s) => s.id === soundId || generateId(s.file) === soundId)
       if (sound) {
         return {
           ...sound,
-          id: sound.id || generateSoundId(sound.file),
+          id: sound.id || generateId(sound.file),
         }
       }
       return null

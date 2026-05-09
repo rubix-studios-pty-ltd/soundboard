@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import type { SoundData } from '@/types'
-import { generateSoundId } from '@/utils/sound/id'
+import { generateId } from '@/utils/sound/generateId'
 
-export function useUserSounds(type: 'sound' | 'music') {
+export function useSound(type: 'sound' | 'music') {
   const [userSounds, setUserSounds] = useState<SoundData[]>([])
   const [loading, setLoading] = useState(true)
   const loadedRef = useRef(false)
@@ -13,7 +13,7 @@ export function useUserSounds(type: 'sound' | 'music') {
     (sound: SoundData): SoundData => ({
       ...sound,
       isUserAdded: true,
-      id: sound.id || generateSoundId(sound.file),
+      id: sound.id || generateId(sound.file),
       file: sound.file,
     }),
     []

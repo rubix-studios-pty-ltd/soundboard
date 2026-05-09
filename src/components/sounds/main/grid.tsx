@@ -4,7 +4,7 @@ import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import { useHotkeys } from '@/hooks/usehotkey'
+import { useHotkey } from '@/hooks/useHotkey'
 
 interface SoundGridProps {
   type: 'sound' | 'music'
@@ -33,7 +33,7 @@ export function SoundGrid({ type, containerId }: SoundGridProps) {
   )
 
   const { modalOpen, currentHotkey, showHotkeyModal, assignHotkey, clearHotkey, closeModal } =
-    useHotkeys(sounds, handleSoundPlay)
+    useHotkey(sounds, handleSoundPlay)
 
   const handleToggleHide = (soundId: string) => {
     const currentHiddenSounds = settings.hiddenSounds || []

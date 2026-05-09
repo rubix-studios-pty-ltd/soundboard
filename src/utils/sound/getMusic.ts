@@ -1,10 +1,10 @@
 import { rawMusicData } from '@/constants/music'
 import type { SoundData } from '@/types'
-import { generateSoundId } from '@/utils/sound/id'
+import { generateId } from '@/utils/sound/generateId'
 
 export const getMusic = (): SoundData[] => {
   return rawMusicData.map(([file, title]) => ({
-    id: generateSoundId(file),
+    id: generateId(file),
     file,
     title,
   }))

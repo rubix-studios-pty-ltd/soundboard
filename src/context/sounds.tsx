@@ -8,11 +8,11 @@ import {
   useState,
 } from 'react'
 
-import { useUserSounds } from '@/hooks/usesounds'
+import { useSound } from '@/hooks/useSound'
 import type { SoundData } from '@/types'
+import { generateId } from '@/utils/sound/generateId'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
-import { generateSoundId } from '@/utils/sound/id'
 
 interface SoundsContextType {
   sounds: SoundData[]
@@ -25,45 +25,44 @@ interface SoundsContextType {
 const SoundsContext = createContext<SoundsContextType | null>(null)
 
 export function SoundsProvider({ children }: { children: ReactNode }) {
-  const processedInitialSounds = useMemo(
-    () =>
-      getSound().map((sound) => ({
-        ...sound,
-        id: generateSoundId(sound.file),
-      })),
-    []
-  )
-
-  const processedInitialMusic = useMemo(
-    () =>
-      getMusic().map((sound) => ({
-        ...sound,
-        id: generateSoundId(sound.file),
-      })),
-    []
-  )
-
-  const [sounds, setSounds] = useState<SoundData[]>([])
-  const [music, setMusic] = useState<SoundData[]>([])
-
   const {
     userSounds: userRegularSounds,
     loading: loadingRegularSounds,
     addUserSound: addRegularSound,
     removeUserSound: removeRegularSound,
-  } = useUserSounds('sound')
-
+  } = useSound('sound')
   const {
     userSounds: userMusicSounds,
     loading: loadingMusicSounds,
     addUserSound: addMusicSound,
     removeUserSound: removeMusicSound,
-  } = useUserSounds('music')
+  } = useSound('music')
+
+  const [sounds, setSounds] = useState<SoundData[]>([])
+  const [music, setMusic] = useState<SoundData[]>([])
+
+  const initialSounds = useMemo(
+    () =>
+      getSound().map((sound) => ({
+        ...sound,
+        id: generateId(sound.file),
+      })),
+    []
+  )
+
+  const initialMusic = useMemo(
+    () =>
+      getMusic().map((sound) => ({
+        ...sound,
+        id: generateId(sound.file),
+      })),
+    []
+  )
 
   useEffect(() => {
     const soundMap = new Map<string, SoundData>()
 
-    processedInitialSounds.forEach((sound) => {
+    initialSounds.forEach((sound) => {
       soundMap.set(sound.file, sound)
     })
 
@@ -74,12 +73,12 @@ export function SoundsProvider({ children }: { children: ReactNode }) {
     })
 
     setSounds(Array.from(soundMap.values()))
-  }, [processedInitialSounds, userRegularSounds])
+  }, [initialSounds, userRegularSounds])
 
   useEffect(() => {
     const musicMap = new Map<string, SoundData>()
 
-    processedInitialMusic.forEach((sound) => {
+    initialMusic.forEach((sound) => {
       musicMap.set(sound.file, sound)
     })
 
@@ -90,13 +89,13 @@ export function SoundsProvider({ children }: { children: ReactNode }) {
     })
 
     setMusic(Array.from(musicMap.values()))
-  }, [processedInitialMusic, userMusicSounds])
+  }, [initialMusic, userMusicSounds])
 
   const addSound = useCallback(
     async (sound: SoundData, type: 'sound' | 'music') => {
       const processedSound = {
         ...sound,
-        id: sound.id || generateSoundId(sound.file),
+        id: sound.id || generateId(sound.file),
         isUserAdded: true,
       }
       await window.electronAPI.addSound({ sound: processedSound, type })

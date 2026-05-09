@@ -1,72 +1,29 @@
-import { promises as fs } from 'node:fs'
-import path from 'node:path'
-import { app } from 'electron'
-
 import type { SoundData } from '@/types'
-
-const shouldLog = () => process.argv.includes('--enable-logging')
+import { shouldLog } from '@/utils/sound/logging'
+import { getAsset, getJson } from '@/utils/sound/paths'
+import { deleteSounds, readSounds, writeSounds } from '@/utils/sound/persistence'
+import { validateFile } from '@/utils/sound/validation'
 
 export function createSoundsManager(type: 'sound' | 'music') {
-  const jsonPath = path.join(app.getPath('userData'), `${type}s.json`)
-
-  const validateSound = async (sound: SoundData): Promise<boolean> => {
-    try {
-      const soundPath = path.normalize(path.join(app.getPath('userData'), 'sounds', sound.file))
-      await fs.access(soundPath)
-      return true
-    } catch (error) {
-      if (shouldLog()) {
-        console.error(`Error validating sound ${sound.id}:`, error)
-      }
-      return false
-    }
-  }
+  const jsonPath = getJson(type)
 
   const loadSounds = async (): Promise<SoundData[]> => {
-    try {
-      const exists = await fs
-        .access(jsonPath)
-        .then(() => true)
-        .catch(() => false)
-      if (exists) {
-        const content = await fs.readFile(jsonPath, 'utf-8')
-        const sounds = JSON.parse(content) as SoundData[]
+    const sounds = await readSounds(jsonPath)
+    const validated: SoundData[] = []
 
-        const validatedSounds = []
-        for (const sound of sounds) {
-          if (await validateSound(sound)) {
-            validatedSounds.push(sound)
-          } else if (shouldLog()) {
-            console.log(`Removing stale sound entry: ${sound.id}`)
-          }
-        }
-
-        if (validatedSounds.length !== sounds.length) {
-          await saveSounds(validatedSounds)
-        }
-
-        return validatedSounds
+    for (const sound of sounds) {
+      if (await validateFile(sound)) {
+        validated.push(sound)
+      } else if (shouldLog()) {
+        console.log(`Removing stale sound entry: ${sound.id}`)
       }
-      return []
-    } catch (error) {
-      if (shouldLog()) console.error('Error reading sounds JSON:', error)
-      return []
     }
-  }
 
-  const saveSounds = async (sounds: SoundData[]): Promise<void> => {
-    try {
-      const tempPath = `${jsonPath}.tmp`
-      const mode = process.platform === 'darwin' ? 0o644 : undefined
-      await fs.writeFile(tempPath, JSON.stringify(sounds, null, 2), {
-        encoding: 'utf-8',
-        mode,
-      })
-      await fs.rename(tempPath, jsonPath)
-    } catch (error) {
-      if (shouldLog()) console.error('Error saving sounds JSON:', error)
-      throw error
+    if (validated.length !== sounds.length) {
+      await writeSounds(jsonPath, validated)
     }
+
+    return validated
   }
 
   return {
@@ -74,10 +31,10 @@ export function createSoundsManager(type: 'sound' | 'music') {
       return await loadSounds()
     },
     add: async (sound: SoundData) => {
-      if (await validateSound(sound)) {
+      if (await validateFile(sound)) {
         const sounds = await loadSounds()
         sounds.push(sound)
-        await saveSounds(sounds)
+        await writeSounds(jsonPath, sounds)
       } else {
         throw new Error('Sound file does not exist')
       }
@@ -89,23 +46,10 @@ export function createSoundsManager(type: 'sound' | 'music') {
         return
       }
 
-      const filteredSounds = sounds.filter((s) => s.id !== soundId)
-      await saveSounds(filteredSounds)
+      const filtered = sounds.filter((s) => s.id !== soundId)
+      await writeSounds(jsonPath, filtered)
 
-      try {
-        const soundPath = path.normalize(
-          path.join(app.getPath('userData'), 'sounds', soundToRemove.file)
-        )
-        const exists = await fs
-          .access(soundPath)
-          .then(() => true)
-          .catch(() => false)
-        if (exists) {
-          await fs.unlink(soundPath)
-        }
-      } catch (error) {
-        if (shouldLog()) console.error('Error deleting sound file:', error)
-      }
+      await deleteSounds(getAsset(soundToRemove.file))
     },
   }
 }

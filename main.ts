@@ -6,7 +6,7 @@ import { setIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
 import type { HotkeyMap, SoundData } from '@/types'
 import type { Settings } from '@/types/settings'
-import { convertToOpus } from '@/utils/audio/ffmpeg'
+import { convertOpus } from '@/utils/audio/convertOpus'
 import { createSoundsManager } from '@/utils/sound/manager'
 import { createWindow, win } from '@/window/main'
 import { createPopoutWindow, popoutWin } from '@/window/popup'
@@ -320,7 +320,7 @@ function setupIPC(): void {
         const outputPath = path.normalize(path.join(soundsDir, outputName))
 
         await fs.writeFile(inputPath, Buffer.from(params.buffer), { mode })
-        await convertToOpus(inputPath, outputPath)
+        await convertOpus(inputPath, outputPath)
 
         try {
           await fs.unlink(inputPath)

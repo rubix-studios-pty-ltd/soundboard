@@ -1,8 +1,8 @@
-import { convertTrack } from '@/utils/audio/convert'
+import { createId } from '@/utils/audio/createId'
 
 export async function addTrack(file: File, type: 'sound' | 'music', customTitle?: string) {
   try {
-    const soundData = await convertTrack(file, type, customTitle)
+    const soundData = await createId(file, type, customTitle)
 
     await window.electronAPI.addSound({
       sound: soundData,

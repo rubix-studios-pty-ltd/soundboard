@@ -2,9 +2,9 @@ import HotkeyManager from '@/lib/system/hotkeys'
 import type { SoundData } from '@/types'
 import AudioPool from '@/utils/audio/pool'
 import { getElement } from '@/utils/getElement'
+import { generateId } from '@/utils/sound/generateId'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
-import { generateSoundId } from '@/utils/sound/id'
 
 interface SoundAppConfig {
   multiSoundEnabled: boolean
@@ -123,12 +123,12 @@ class SoundboardApp {
   }
 
   private getSoundFileFromId(id: string): string | undefined {
-    const foundSound = getSound().find((s) => s.id === id || generateSoundId(s.file) === id)
+    const foundSound = getSound().find((s) => s.id === id || generateId(s.file) === id)
     if (foundSound) {
       return foundSound.file
     }
 
-    const foundMusic = getMusic().find((s) => s.id === id || generateSoundId(s.file) === id)
+    const foundMusic = getMusic().find((s) => s.id === id || generateId(s.file) === id)
     return foundMusic?.file
   }
 
@@ -136,7 +136,7 @@ class SoundboardApp {
     const button = this.template.content.cloneNode(true) as HTMLElement
     const btnElement = button.querySelector('button') as HTMLButtonElement
 
-    const soundId = data.id ?? generateSoundId(data.file)
+    const soundId = data.id ?? generateId(data.file)
     btnElement.id = soundId
     btnElement.setAttribute('data-sound-id', soundId)
     btnElement.onclick = () => this.toggleSound(data.file, soundId, data.isUserAdded)

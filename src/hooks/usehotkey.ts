@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 import type { HotkeyMap, SoundData } from '@/types'
 
-export function useHotkeys(_soundData: SoundData[], onSoundPlay: (soundId: string) => void) {
+export function useHotkey(_soundData: SoundData[], onSoundPlay: (soundId: string) => void) {
   const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>({})
   const [modalOpen, setModalOpen] = useState(false)
   const [currentId, setCurrentId] = useState<string | null>(null)
