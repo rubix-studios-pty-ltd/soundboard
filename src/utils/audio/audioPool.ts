@@ -3,7 +3,7 @@ import type { Pool } from '@/types/pool'
 const silentAudio =
   'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA='
 
-class AudioPool {
+export class AudioPool {
   private pool: Map<string, Pool>
   private maxPoolSize: number
   private maxInstancesPerSound: number
@@ -468,5 +468,3 @@ class AudioPool {
     this.initializationPromise = null
   }
 }
-
-export default AudioPool

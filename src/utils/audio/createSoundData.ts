@@ -1,7 +1,11 @@
 import type { SoundData } from '@/types/sound'
 import { generateId } from '@/utils/sound/generateId'
 
-export const createSoundData = async (file: File, type: 'sound' | 'music', customTitle?: string) => {
+export const createSoundData = async (
+  file: File,
+  type: 'sound' | 'music',
+  customTitle?: string
+) => {
   try {
     if (!file.type.startsWith('audio/')) {
       throw new Error('Unsupported file type. Only audio files are allowed.')

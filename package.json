@@ -79,9 +79,7 @@
         {
           "from": "src/vendor/ffmpeg/win32",
           "to": "ffmpeg/win32",
-          "filter": [
-            "**/*"
-          ]
+          "filter": ["**/*"]
         }
       ]
     },
@@ -94,16 +92,12 @@
         {
           "from": "src/vendor/ffmpeg/darwin-arm64",
           "to": "ffmpeg/darwin-arm64",
-          "filter": [
-            "**/*"
-          ]
+          "filter": ["**/*"]
         },
         {
           "from": "src/vendor/ffmpeg/darwin-x64",
           "to": "ffmpeg/darwin-x64",
-          "filter": [
-            "**/*"
-          ]
+          "filter": ["**/*"]
         }
       ]
     },
