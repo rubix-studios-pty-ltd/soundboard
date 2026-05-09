@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, type MouseEvent, useEffect, useState } from 'react'
+import { type CSSProperties, type MouseEvent, useEffect, useState } from 'react'
 import { Chevron, Close } from '@/components/icons'
 
 import { Button } from '@/components/ui/button'

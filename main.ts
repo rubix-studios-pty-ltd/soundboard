@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, type IpcMainEvent, ipcMain } from 'electron'
 import { defaultSettings } from '@/constants/settings'
 import { setIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
@@ -78,7 +78,7 @@ function setupIPC(): void {
     return await soundManagers[type].getAll()
   })
 
-  ipcMain.on('window-control', (_: any, action: string, target: string = 'main') => {
+  ipcMain.on('window-control', (_event: IpcMainEvent, action: string, target: string = 'main') => {
     try {
       const targetWindow = target === 'popout' ? popoutWin : win
       if (!targetWindow) {
@@ -164,7 +164,7 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.on('save-hotkeys', (_: any, newHotkeys: HotkeyMapType) => {
+  ipcMain.on('save-hotkeys', (_event: IpcMainEvent, newHotkeys: HotkeyMapType) => {
     try {
       Store.set('hotkeys', newHotkeys)
     } catch (error) {
@@ -174,7 +174,7 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.on('save-settings', (_: any, settings: SettingsType) => {
+  ipcMain.on('save-settings', (_event: IpcMainEvent, settings: SettingsType) => {
     try {
       const validatedSettings: SettingsType = {
         multiSoundEnabled: Boolean(settings.multiSoundEnabled),
@@ -248,7 +248,7 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.on('toggle-always-on-top', (_: any, isEnabled: boolean) => {
+  ipcMain.on('toggle-always-on-top', (_event: IpcMainEvent, isEnabled: boolean) => {
     try {
       if (win) {
         win.setAlwaysOnTop(isEnabled)
