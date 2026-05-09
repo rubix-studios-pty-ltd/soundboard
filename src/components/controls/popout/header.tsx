@@ -1,11 +1,8 @@
 import { Exit, Minimize } from '@/components/icons'
 
 export function Header() {
-  const handleMinimize = () =>
-    window.electronAPI.windowControl('minimize', 'popout')
-
-  const handleClose = () =>
-    window.electronAPI.windowControl('close', 'popout')
+  const handleMinimize = () => window.electronAPI.windowControl('minimize', 'popout')
+  const handleClose = () => window.electronAPI.windowControl('close', 'popout')
 
   return (
     <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b border-[#333333] bg-[#1a1a1a]">

@@ -1,4 +1,4 @@
-import { type SoundData } from '@/types'
+import type { SoundData } from '@/types'
 import { generateSoundId } from '@/utils/sound/id'
 
 const rawSoundData: [string, string][] = [

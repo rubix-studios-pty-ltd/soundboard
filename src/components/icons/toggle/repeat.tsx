@@ -1,4 +1,4 @@
-import { type SVGProps } from 'react'
+import type { SVGProps } from 'react'
 
 export const Repeat = (props: SVGProps<SVGSVGElement>) => (
   <svg

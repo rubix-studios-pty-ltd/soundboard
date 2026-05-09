@@ -1,4 +1,4 @@
-import { useMemo, type CSSProperties } from 'react'
+import { type CSSProperties, useMemo } from 'react'
 
 import { Footer } from '@/components/controls/footer'
 import { Header } from '@/components/controls/main/header'
@@ -59,17 +59,11 @@ function AppContent() {
           <FavoriteGrid />
 
           <div className="flex flex-wrap items-start justify-around gap-1">
-            {settings.showSoundGrid && (
-              <SoundGrid type="sound" containerId="container1" />
-            )}
+            {settings.showSoundGrid && <SoundGrid type="sound" containerId="container1" />}
 
-            {settings.showSoundGrid && settings.showMusicGrid && (
-              <Separator className="my-1" />
-            )}
+            {settings.showSoundGrid && settings.showMusicGrid && <Separator className="my-1" />}
 
-            {settings.showMusicGrid && (
-              <SoundGrid type="music" containerId="container2" />
-            )}
+            {settings.showMusicGrid && <SoundGrid type="music" containerId="container2" />}
           </div>
         </div>
       </main>

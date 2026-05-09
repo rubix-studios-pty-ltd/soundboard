@@ -1,11 +1,9 @@
-import { useMemo, type CSSProperties } from 'react'
-
+import { type CSSProperties, useMemo } from 'react'
+import { Header } from '@/components/controls/popout/header'
+import { SoundGrid } from '@/components/sounds/popout/grid'
 import { AudioProvider, useAudio } from '@/context/audio'
 import { SettingsProvider, useSettings } from '@/context/setting'
 import { SoundsProvider } from '@/context/sounds'
-
-import { Header } from '@/components/controls/popout/header'
-import { SoundGrid } from '@/components/sounds/popout/grid'
 
 import '@/styles/tailwind.css'
 

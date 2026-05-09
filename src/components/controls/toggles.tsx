@@ -3,10 +3,7 @@ interface ToggleSwitchProps {
   onChange: (checked: boolean) => void
 }
 
-export default function ToggleSwitch({
-  checked,
-  onChange,
-}: ToggleSwitchProps) {
+export function ToggleSwitch({ checked, onChange }: ToggleSwitchProps) {
   return (
     <div className="flex flex-col items-center">
       <input

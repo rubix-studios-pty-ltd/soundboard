@@ -20,7 +20,12 @@ interface AddSoundModalProps {
   defaultType?: 'sound' | 'music'
 }
 
-export function AddSoundModal({ isOpen, onClose, onAdd, defaultType = 'sound' }: AddSoundModalProps) {
+export function AddSoundModal({
+  isOpen,
+  onClose,
+  onAdd,
+  defaultType = 'sound',
+}: AddSoundModalProps) {
   const [type, setType] = useState<'sound' | 'music'>(defaultType)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [displayName, setDisplayName] = useState<string>('')
@@ -122,4 +127,3 @@ export function AddSoundModal({ isOpen, onClose, onAdd, defaultType = 'sound' }:
     </Dialog>
   )
 }
-

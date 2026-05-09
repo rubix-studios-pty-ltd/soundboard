@@ -1,4 +1,5 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import type React from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { defaultSettings } from '@/constants/settings'
 
 import type { Settings } from '@/types'

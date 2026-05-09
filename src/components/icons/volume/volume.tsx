@@ -1,4 +1,4 @@
-import { type SVGProps } from 'react'
+import type { SVGProps } from 'react'
 
 export const Volume = (props: SVGProps<SVGSVGElement>) => (
   <svg

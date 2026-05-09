@@ -18,7 +18,13 @@ interface HotkeyModalProps {
   onAssign: (key: string) => void
 }
 
-export function HotkeyModal({ isOpen, onClose, onClear, currentHotkey, onAssign }: HotkeyModalProps) {
+export function HotkeyModal({
+  isOpen,
+  onClose,
+  onClear,
+  currentHotkey,
+  onAssign,
+}: HotkeyModalProps) {
   const [displayText, setDisplayText] = useState('Nhấn một phím bất kỳ để thiết lập phím tắt.')
 
   const handleKeyDown = useCallback(

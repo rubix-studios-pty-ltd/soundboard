@@ -19,7 +19,7 @@ import { Slider } from '@/components/ui/slider'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import { type Settings } from '@/types'
+import type { Settings } from '@/types'
 import { addNewSound } from '@/utils/audio/convert'
 
 export function Header() {
@@ -216,4 +216,3 @@ export function Header() {
     </div>
   )
 }
-
