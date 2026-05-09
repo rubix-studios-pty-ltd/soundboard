@@ -5,7 +5,7 @@ import type { HotkeyMap, SoundData } from '@/types'
 export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: string) => void) => {
   const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>({})
   const [modalOpen, setModalOpen] = useState(false)
-  const [currentSoundId, setCurrentSoundId] = useState<string | null>(null)
+  const [currentId, setCurrentId] = useState<string | null>(null)
 
   useEffect(() => {
     const loadHotkeys = async () => {
@@ -45,20 +45,20 @@ export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: strin
   }, [handleKeyPress])
 
   const showHotkeyModal = useCallback((soundId: string) => {
-    setCurrentSoundId(soundId)
+    setCurrentId(soundId)
     setModalOpen(true)
   }, [])
 
   const assignHotkey = useCallback(
     (key: string) => {
-      if (!currentSoundId) {
+      if (!currentId) {
         return
       }
 
       setHotkeyMap((prev) => {
         const newMap = Object.fromEntries(Object.entries(prev).filter(([, value]) => value !== key))
 
-        newMap[currentSoundId] = key
+        newMap[currentId] = key
 
         window.electronAPI.saveHotkeys(newMap)
 
@@ -67,17 +67,17 @@ export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: strin
 
       setModalOpen(false)
     },
-    [currentSoundId]
+    [currentId]
   )
 
   const clearHotkey = useCallback(() => {
-    if (!currentSoundId) {
+    if (!currentId) {
       return
     }
 
     setHotkeyMap((prev) => {
       const newMap = { ...prev }
-      delete newMap[currentSoundId]
+      delete newMap[currentId]
 
       window.electronAPI.saveHotkeys(newMap)
 
@@ -85,13 +85,13 @@ export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: strin
     })
 
     setModalOpen(false)
-  }, [currentSoundId])
+  }, [currentId])
 
   return {
     hotkeyMap,
     modalOpen,
-    currentSoundId,
-    currentHotkey: currentSoundId ? hotkeyMap[currentSoundId] : undefined,
+    currentSoundId: currentId,
+    currentHotkey: currentId ? hotkeyMap[currentId] : undefined,
     showHotkeyModal,
     assignHotkey,
     clearHotkey,

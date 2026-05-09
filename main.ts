@@ -4,7 +4,8 @@ import { app, BrowserWindow, type IpcMainEvent, ipcMain } from 'electron'
 import { defaultSettings } from '@/constants/settings'
 import { setIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
-import type { HotkeyMap as HotkeyMapType, Settings as SettingsType, SoundData } from '@/types'
+import type { HotkeyMap, SoundData } from '@/types'
+import type { Settings } from '@/types/settings'
 import { convertToOpus } from '@/utils/audio/ffmpeg'
 import { createSoundsManager } from '@/utils/sound/manager'
 import { createWindow, win } from '@/window/main'
@@ -142,7 +143,7 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.handle('load-hotkeys', (): HotkeyMapType => {
+  ipcMain.handle('load-hotkeys', (): HotkeyMap => {
     try {
       return Store.get('hotkeys') ?? {}
     } catch (error) {
@@ -153,7 +154,7 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.handle('load-settings', (): SettingsType => {
+  ipcMain.handle('load-settings', (): Settings => {
     try {
       return Store.get('settings') ?? defaultSettings
     } catch (error) {
@@ -164,7 +165,7 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.on('save-hotkeys', (_event: IpcMainEvent, newHotkeys: HotkeyMapType) => {
+  ipcMain.on('save-hotkeys', (_event: IpcMainEvent, newHotkeys: HotkeyMap) => {
     try {
       Store.set('hotkeys', newHotkeys)
     } catch (error) {
@@ -174,9 +175,9 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.on('save-settings', (_event: IpcMainEvent, settings: SettingsType) => {
+  ipcMain.on('save-settings', (_event: IpcMainEvent, settings: Settings) => {
     try {
-      const validatedSettings: SettingsType = {
+      const validatedSettings: Settings = {
         multiSoundEnabled: Boolean(settings.multiSoundEnabled),
         repeatSoundEnabled: Boolean(settings.repeatSoundEnabled),
         alwaysOnTop: Boolean(settings.alwaysOnTop),

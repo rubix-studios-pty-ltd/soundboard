@@ -1,10 +1,7 @@
 export function generateSoundId(filename: string): string {
   const baseName = filename.replace(/^sound\//, '').replace(/\.opus$/, '')
-
   const nameWithoutPrefix = baseName.replace(/^\d+/, '')
-
   const parts = nameWithoutPrefix.split(/[-_]/)
-
   const processedParts = parts.map((part, index) => {
     if (!part) {
       return ''
