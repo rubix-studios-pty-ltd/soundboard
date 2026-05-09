@@ -1,4 +1,4 @@
-import { type CSSProperties, type FC, type MouseEvent, useEffect, useState } from 'react'
+import { type CSSProperties, type MouseEvent, useEffect, useState } from 'react'
 import { Chevron, Close } from '@/components/icons'
 
 import { Button } from '@/components/ui/button'
@@ -24,7 +24,7 @@ interface SoundButtonProps {
   type: 'sound' | 'music'
 }
 
-const SoundButton: FC<SoundButtonProps> = ({
+export function SoundButton({
   id,
   file,
   title,
@@ -36,7 +36,7 @@ const SoundButton: FC<SoundButtonProps> = ({
   isInPopout = false,
   isUserAdded = false,
   type,
-}) => {
+}: SoundButtonProps) {
   const { playSound, stopSound, isPlaying } = useAudio()
   const [isActive, setIsActive] = useState(false)
   const { removeSound } = useSounds()
@@ -210,5 +210,3 @@ const SoundButton: FC<SoundButtonProps> = ({
     </div>
   )
 }
-
-export default SoundButton

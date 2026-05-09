@@ -1,6 +1,6 @@
-import type React from 'react'
+import type { SVGProps } from 'react'
 
-export const Minimize = (props: React.SVGProps<SVGSVGElement>) => (
+export const Minimize = (props: SVGProps<SVGSVGElement>) => (
   <svg
     stroke="currentColor"
     fill="currentColor"

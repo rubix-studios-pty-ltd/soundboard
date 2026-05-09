@@ -65,7 +65,7 @@
     "react-dom": "^19.2.6"
   },
   "engines": {
-    "node": ">=22 <24",
+    "node": ">=24 <25",
     "pnpm": ">=10"
   },
   "build": {
@@ -80,9 +80,7 @@
         {
           "from": "src/vendor/ffmpeg/win32",
           "to": "ffmpeg/win32",
-          "filter": [
-            "**/*"
-          ]
+          "filter": ["**/*"]
         }
       ]
     },
@@ -95,16 +93,12 @@
         {
           "from": "src/vendor/ffmpeg/darwin-arm64",
           "to": "ffmpeg/darwin-arm64",
-          "filter": [
-            "**/*"
-          ]
+          "filter": ["**/*"]
         },
         {
           "from": "src/vendor/ffmpeg/darwin-x64",
           "to": "ffmpeg/darwin-x64",
-          "filter": [
-            "**/*"
-          ]
+          "filter": ["**/*"]
         }
       ]
     },

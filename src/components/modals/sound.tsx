@@ -1,5 +1,4 @@
-import type React from 'react'
-import { useEffect, useState } from 'react'
+import { type ChangeEvent, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -21,29 +20,18 @@ interface AddSoundModalProps {
   defaultType?: 'sound' | 'music'
 }
 
-const AddSoundModal: React.FC<AddSoundModalProps> = ({
+export function AddSoundModal({
   isOpen,
   onClose,
   onAdd,
   defaultType = 'sound',
-}) => {
+}: AddSoundModalProps) {
   const [type, setType] = useState<'sound' | 'music'>(defaultType)
-
-  useEffect(() => {
-    setType(defaultType)
-  }, [defaultType])
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [displayName, setDisplayName] = useState<string>('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedFile(null)
-      setDisplayName('')
-    }
-  }, [isOpen])
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -54,8 +42,6 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
 
     setSelectedFile(file)
   }
-
-  const [isLoading, setIsLoading] = useState(false)
 
   const handleAdd = async () => {
     if (selectedFile) {
@@ -69,6 +55,17 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
       }
     }
   }
+
+  useEffect(() => {
+    setType(defaultType)
+  }, [defaultType])
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedFile(null)
+      setDisplayName('')
+    }
+  }, [isOpen])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -130,5 +127,3 @@ const AddSoundModal: React.FC<AddSoundModalProps> = ({
     </Dialog>
   )
 }
-
-export default AddSoundModal

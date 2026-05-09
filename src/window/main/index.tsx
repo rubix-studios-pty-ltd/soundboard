@@ -2,7 +2,7 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import type { BrowserWindow as BrowserWindowType } from 'electron'
 import { app, BrowserWindow, protocol } from 'electron'
-import { getMimeType } from '@/lib/getmime'
+import { getMime } from '@/lib/getMime'
 import { getIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
 
@@ -53,7 +53,7 @@ export async function createWindow(): Promise<void> {
         try {
           await fs.access(candidate)
           const data = await fs.readFile(candidate)
-          const contentType = getMimeType(extension)
+          const contentType = getMime(extension)
 
           return new Response(data, {
             headers: {

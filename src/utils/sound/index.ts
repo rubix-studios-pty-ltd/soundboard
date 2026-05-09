@@ -1,6 +1,6 @@
 import { soundData } from '@/data/audio'
 import { musicData } from '@/data/music'
-import getEl from '@/lib/getelement'
+import { getElement } from '@/lib/getElement'
 import type { SoundData } from '@/types'
 import AudioPool from '@/utils/audio/pool'
 import { generateSoundId } from '@/utils/sound/id'
@@ -23,11 +23,11 @@ class SoundboardApp {
   private config: SoundAppConfig
 
   constructor(initialConfig: SoundAppConfig) {
-    this.container1 = getEl('container1')
-    this.container2 = getEl('container2')
-    this.stopAllButton = getEl('stopAllButton')
-    this.template = getEl('sound-button-template')
-    this.volumeSlider = getEl('volumeSlider')
+    this.container1 = getElement('container1')
+    this.container2 = getElement('container2')
+    this.stopAllButton = getElement('stopAllButton')
+    this.template = getElement('sound-button-template')
+    this.volumeSlider = getElement('volumeSlider')
 
     this.config = initialConfig
     this.audioPool = new AudioPool(

@@ -1,27 +1,32 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
-    "jsx": "react-jsx",
-    "moduleResolution": "nodenext",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "strict": true,
+    "allowJs": true,
     "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noUncheckedSideEffectImports": false,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
     "outDir": "./dist",
     "rootDir": ".",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "paths": {
-      "*": ["./node_modules/*"],
-      "@/*": ["./src/*"]
-    },
+    "types": ["react", "react-dom"],
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "lib": ["esnext", "dom", "dom.iterable"]
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*", "*.ts", "*.mts", "*.tsx", "eslint.config.js"],
   "exclude": ["node_modules", "dist"]

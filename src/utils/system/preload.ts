@@ -6,11 +6,11 @@ import { defaultSettings } from '@/constants/settings'
 import type { HotkeyMap, IpcApi, Settings } from '@/types'
 
 const electronAPI: IpcApi = {
-  on: (channel: string, listener: (...args: any[]) => void) => {
+  on: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.on(channel, listener)
   },
 
-  off: (channel: string, listener: (...args: any[]) => void) => {
+  off: (channel: string, listener: (...args: unknown[]) => void) => {
     ipcRenderer.removeListener(channel, listener)
   },
 

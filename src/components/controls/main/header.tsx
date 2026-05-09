@@ -1,7 +1,6 @@
-import type React from 'react'
 import { useEffect, useState } from 'react'
-import SettingsControl from '@/components/controls/settings'
-import WindowsControls from '@/components/controls/window'
+import { SettingsControl } from '@/components/controls/settings'
+import { WindowsControls } from '@/components/controls/window'
 import {
   Cog,
   Drag,
@@ -14,16 +13,16 @@ import {
   StopIcon,
   Volume,
 } from '@/components/icons'
-import AddSoundModal from '@/components/modals/sound'
+import { AddSoundModal } from '@/components/modals/sound'
 import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import type { Settings } from '@/types'
-import { addNewSound } from '@/utils/audio/convert'
+import { addTrack } from '@/utils/audio/addTrack'
 
-const Header: React.FC = () => {
+export function Header() {
   const { stopAll } = useAudio()
   const { settings, updateSettings } = useSettings()
   const { addSound } = useSounds()
@@ -32,7 +31,7 @@ const Header: React.FC = () => {
   const [popoutVisible, setPopoutVisible] = useState(false)
 
   const handleAddSound = async (type: 'sound' | 'music', file: File, title?: string) => {
-    const newSound = await addNewSound(file, type, title)
+    const newSound = await addTrack(file, type, title)
     addSound(newSound, type)
     setIsAddModalOpen(false)
   }
@@ -217,5 +216,3 @@ const Header: React.FC = () => {
     </div>
   )
 }
-
-export default Header

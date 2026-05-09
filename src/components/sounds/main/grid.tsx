@@ -1,6 +1,6 @@
-import { type FC, useCallback } from 'react'
-import HotkeyModal from '@/components/modals/hotkey'
-import SoundButton from '@/components/sounds/button'
+import { useCallback } from 'react'
+import { HotkeyModal } from '@/components/modals/hotkey'
+import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
@@ -11,16 +11,16 @@ interface SoundGridProps {
   containerId: string
 }
 
-const SoundGrid: FC<SoundGridProps> = ({ type, containerId }) => {
+export function SoundGrid({ type, containerId }: SoundGridProps) {
   const { settings, updateSettings } = useSettings()
+  const { playSound } = useAudio()
   const { sounds: allSounds, music: allMusic } = useSounds()
+
   const rawSounds = type === 'sound' ? allSounds : allMusic
   const sounds = rawSounds.filter(
     (sound) =>
       !settings.favorites.items.includes(sound.id) && !settings.popoutGrid.items.includes(sound.id)
   )
-
-  const { playSound } = useAudio()
 
   const handleSoundPlay = useCallback(
     (soundId: string) => {
@@ -74,5 +74,3 @@ const SoundGrid: FC<SoundGridProps> = ({ type, containerId }) => {
     </div>
   )
 }
-
-export default SoundGrid

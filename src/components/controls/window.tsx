@@ -1,6 +1,6 @@
 import { Exit, Maximize, Minimize } from '@/components/icons'
 
-export default function WindowsControls() {
+export function WindowsControls() {
   const handleMinimize = () => window.electronAPI.minimizeWindow()
   const handleMaximize = () => window.electronAPI.maximizeWindow()
   const handleClose = () => window.electronAPI.closeWindow()

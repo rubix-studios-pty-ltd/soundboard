@@ -1,4 +1,4 @@
-import ToggleSwitch from '@/components/controls/toggles'
+import { ToggleSwitch } from '@/components/controls/toggles'
 import { Menu, Multi, Repeat, Windows } from '@/components/icons'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
@@ -7,7 +7,7 @@ import { presetThemes } from '@/constants/themes'
 import { useSettings } from '@/context/setting'
 import type { Settings } from '@/types'
 
-export default function SettingsControl() {
+export function SettingsControl() {
   const { settings, updateSettings } = useSettings()
 
   const handleThemeChange = (themeKey: string | null) => {

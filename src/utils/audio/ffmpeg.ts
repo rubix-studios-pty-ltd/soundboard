@@ -26,9 +26,9 @@ const getFfmpeg = (): string | null => {
   return null
 }
 
-const ffmpegPath = getFfmpeg()
-
 export async function convertToOpus(filePath: string, outputPath: string): Promise<void> {
+  const ffmpegPath = getFfmpeg()
+
   if (!ffmpegPath) {
     throw new Error('FFmpeg binary not found.')
   }

@@ -1,4 +1,4 @@
-import getEl from '@/lib/getelement'
+import { getElement } from '@/lib/getElement'
 import type { HotkeyMap } from '@/types'
 
 class HotkeyManager {
@@ -10,10 +10,10 @@ class HotkeyManager {
   private hotkeyMap: HotkeyMap
 
   constructor() {
-    this.modal = getEl('hotkeyModal')
-    this.assignedKeyLabel = getEl('assignedKeyLabel')
-    this.clearHotkeyButton = getEl('clearHotkeyButton')
-    this.closeModalButton = getEl('closeModalButton')
+    this.modal = getElement('hotkeyModal')
+    this.assignedKeyLabel = getElement('assignedKeyLabel')
+    this.clearHotkeyButton = getElement('clearHotkeyButton')
+    this.closeModalButton = getElement('closeModalButton')
     this.currentSoundId = null
     this.hotkeyMap = {}
     this.setupEventListeners()

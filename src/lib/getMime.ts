@@ -1,4 +1,4 @@
-export function getMimeType(ext: string): string {
+export function getMime(ext: string): string {
   switch (ext) {
     case '.opus':
       return 'audio/ogg; codecs=opus'

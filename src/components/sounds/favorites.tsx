@@ -1,14 +1,14 @@
-import { type DragEvent, type FC, useCallback } from 'react'
+import { type DragEvent, useCallback } from 'react'
 import { Exit } from '@/components/icons'
-import HotkeyModal from '@/components/modals/hotkey'
-import SoundButton from '@/components/sounds/button'
+import { HotkeyModal } from '@/components/modals/hotkey'
+import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import { useHotkeys } from '@/hooks/usehotkey'
 import { generateSoundId } from '@/utils/sound/id'
 
-const FavoriteGrid: FC = () => {
+export function FavoriteGrid() {
   const { settings, updateSettings } = useSettings()
   const { dragAndDropEnabled, favorites } = settings
   const { sounds, music } = useSounds()
@@ -171,5 +171,3 @@ const FavoriteGrid: FC = () => {
     </div>
   )
 }
-
-export default FavoriteGrid
