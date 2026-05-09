@@ -1,8 +1,8 @@
-import { soundData } from '@/data/audio'
-import { musicData } from '@/data/music'
-import { getElement } from '@/lib/getElement'
 import type { SoundData } from '@/types'
 import AudioPool from '@/utils/audio/pool'
+import { getElement } from '@/utils/getElement'
+import { getMusic } from '@/utils/sound/getMusic'
+import { getSound } from '@/utils/sound/getSound'
 import { generateSoundId } from '@/utils/sound/id'
 import HotkeyManager from '@/utils/system/hotkeys'
 
@@ -123,12 +123,12 @@ class SoundboardApp {
   }
 
   private getSoundFileFromId(id: string): string | undefined {
-    const foundSound = soundData.find((s) => s.id === id || generateSoundId(s.file) === id)
+    const foundSound = getSound().find((s) => s.id === id || generateSoundId(s.file) === id)
     if (foundSound) {
       return foundSound.file
     }
 
-    const foundMusic = musicData.find((s) => s.id === id || generateSoundId(s.file) === id)
+    const foundMusic = getMusic().find((s) => s.id === id || generateSoundId(s.file) === id)
     return foundMusic?.file
   }
 
@@ -160,11 +160,11 @@ class SoundboardApp {
     this.container1.innerHTML = ''
     this.container2.innerHTML = ''
 
-    soundData.forEach((data) => {
+    getSound().forEach((data) => {
       this.container1.appendChild(this.createSoundButton(data))
     })
 
-    musicData.forEach((data) => {
+    getMusic().forEach((data) => {
       this.container2.appendChild(this.createSoundButton(data))
     })
   }

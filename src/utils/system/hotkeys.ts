@@ -1,5 +1,5 @@
-import { getElement } from '@/lib/getElement'
 import type { HotkeyMap } from '@/types'
+import { getElement } from '@/utils/getElement'
 
 class HotkeyManager {
   private modal: HTMLElement

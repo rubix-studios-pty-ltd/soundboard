@@ -1,9 +1,9 @@
 import type React from 'react'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { soundData as initialSounds } from '@/data/audio'
-import { musicData as initialMusic } from '@/data/music'
 import { useUserSounds } from '@/hooks/usesounds'
 import type { SoundData } from '@/types'
+import { getMusic } from '@/utils/sound/getMusic'
+import { getSound } from '@/utils/sound/getSound'
 import { generateSoundId } from '@/utils/sound/id'
 
 interface SoundsContextType {
@@ -19,7 +19,7 @@ const SoundsContext = createContext<SoundsContextType | null>(null)
 export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const processedInitialSounds = useMemo(
     () =>
-      initialSounds.map((sound) => ({
+      getSound().map((sound) => ({
         ...sound,
         id: generateSoundId(sound.file),
       })),
@@ -28,7 +28,7 @@ export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const processedInitialMusic = useMemo(
     () =>
-      initialMusic.map((sound) => ({
+      getMusic().map((sound) => ({
         ...sound,
         id: generateSoundId(sound.file),
       })),

@@ -3,7 +3,8 @@ import { pathToFileURL } from 'node:url'
 import { contextBridge, ipcRenderer } from 'electron'
 import { defaultSettings } from '@/constants/settings'
 
-import type { HotkeyMap, IpcApi, Settings } from '@/types'
+import type { HotkeyMap, IpcApi } from '@/types'
+import type { Settings } from '@/types/settings'
 
 const electronAPI: IpcApi = {
   on: (channel: string, listener: (...args: unknown[]) => void) => {
