@@ -1,4 +1,4 @@
-import HotkeyManager from '@/lib/system/hotkeys'
+import { KeyManager } from '@/lib/system/hotkeys'
 import type { Config } from '@/types/config'
 import type { SoundData } from '@/types/sound'
 import { AudioPool } from '@/utils/audio/audioPool'
@@ -11,22 +11,22 @@ export class SoundboardApp {
   private container1: HTMLElement
   private container2: HTMLElement
   private audioPool: AudioPool
-  private hotkeyManager: HotkeyManager
-  private stopAllButton: HTMLButtonElement
+  private keyManager: KeyManager
+  private stop: HTMLButtonElement
   private template: HTMLTemplateElement
-  private volumeSlider: HTMLInputElement
+  private volume: HTMLInputElement
   private config: Config
 
-  constructor(initialConfig: Config) {
+  constructor(config: Config) {
     this.container1 = getElement('container1')
     this.container2 = getElement('container2')
-    this.stopAllButton = getElement('stopAllButton')
-    this.template = getElement('sound-button-template')
-    this.volumeSlider = getElement('volumeSlider')
+    this.stop = getElement('stop')
+    this.template = getElement('template')
+    this.volume = getElement('volume')
 
-    this.config = initialConfig
-    this.audioPool = new AudioPool(100, 10, initialConfig.enableMulti, initialConfig.enableRepeat)
-    this.hotkeyManager = new HotkeyManager()
+    this.config = config
+    this.audioPool = new AudioPool(100, 10, config.enableMulti, config.enableRepeat)
+    this.keyManager = new KeyManager()
 
     this.initializeSoundboard()
     this.setupEventListeners()
@@ -36,7 +36,7 @@ export class SoundboardApp {
     this.config = { ...this.config, ...newConfig }
 
     if ('volume' in newConfig && typeof newConfig.volume === 'number') {
-      this.volumeSlider.value = newConfig.volume.toString()
+      this.volume.value = newConfig.volume.toString()
       this.audioPool.updateVolume(newConfig.volume)
     }
 
@@ -55,7 +55,7 @@ export class SoundboardApp {
     isUserAdded: boolean = false
   ): Promise<void> {
     const buttonElement = document.getElementById(buttonId) as HTMLButtonElement
-    const currentVolume = parseFloat(this.volumeSlider.value)
+    const currentVolume = parseFloat(this.volume.value)
 
     try {
       const isPlaying = this.audioPool.isPlaying(file)
@@ -132,7 +132,7 @@ export class SoundboardApp {
     btnElement.onclick = () => this.toggleSound(data.file, soundId, data.isUserAdded)
     btnElement.oncontextmenu = (e) => {
       e.preventDefault()
-      this.hotkeyManager.showModal(soundId)
+      this.keyManager.showModal(soundId)
       return false
     }
 
@@ -160,7 +160,7 @@ export class SoundboardApp {
   }
 
   private setupEventListeners(): void {
-    this.stopAllButton.addEventListener('click', () => {
+    this.stop.addEventListener('click', () => {
       const soundButtons = document.querySelectorAll('.sound-button:not(.settings-control).active')
       soundButtons.forEach((button) => {
         const soundId = button.id
@@ -172,8 +172,8 @@ export class SoundboardApp {
       })
     })
 
-    this.volumeSlider.addEventListener('input', () => {
-      const volume = parseFloat(this.volumeSlider.value)
+    this.volume.addEventListener('input', () => {
+      const volume = parseFloat(this.volume.value)
       this.audioPool.updateVolume(volume)
     })
   }

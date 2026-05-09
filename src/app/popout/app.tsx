@@ -38,10 +38,8 @@ function PopoutContent() {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
       <Header />
-      <main className="flex-1">
-        <div className="p-1">
-          <SoundGrid />
-        </div>
+      <main className="flex-1 p-1">
+        <SoundGrid />
       </main>
     </div>
   )

@@ -1,8 +1,9 @@
 import type { SoundData } from '@/types/sound'
-import { shouldLog } from '@/utils/sound/logging'
+import { deleteSounds } from '@/utils/sound/deleteSound'
 import { getAsset, getJson } from '@/utils/sound/paths'
-import { deleteSounds, readSounds, writeSounds } from '@/utils/sound/persistence'
+import { readSounds } from '@/utils/sound/readSound'
 import { validateFile } from '@/utils/sound/validation'
+import { writePath } from '@/utils/sound/writePath'
 
 export function soundsManager(type: 'sound' | 'music') {
   const jsonPath = getJson(type)
@@ -14,13 +15,11 @@ export function soundsManager(type: 'sound' | 'music') {
     for (const sound of sounds) {
       if (await validateFile(sound)) {
         validated.push(sound)
-      } else if (shouldLog()) {
-        console.log(`Removing stale sound entry: ${sound.id}`)
       }
     }
 
     if (validated.length !== sounds.length) {
-      await writeSounds(jsonPath, validated)
+      await writePath(jsonPath, validated)
     }
 
     return validated
@@ -34,22 +33,16 @@ export function soundsManager(type: 'sound' | 'music') {
       if (await validateFile(sound)) {
         const sounds = await loadSounds()
         sounds.push(sound)
-        await writeSounds(jsonPath, sounds)
+        await writePath(jsonPath, sounds)
       } else {
         throw new Error('Sound file does not exist')
       }
     },
     remove: async (soundId: string) => {
       const sounds = await loadSounds()
-      const soundToRemove = sounds.find((s) => s.id === soundId)
-      if (!soundToRemove) {
-        return
-      }
-
-      const filtered = sounds.filter((s) => s.id !== soundId)
-      await writeSounds(jsonPath, filtered)
-
-      await deleteSounds(getAsset(soundToRemove.file))
+      const soundPath = sounds.find((s) => s.id === soundId)
+      if (!soundPath) return
+      await deleteSounds(getAsset(soundPath.file))
     },
   }
 }

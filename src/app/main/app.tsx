@@ -42,14 +42,12 @@ function AppContent() {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
       <Header />
-      <main className="flex-1">
-        <div className="p-1">
-          <FavoriteGrid />
-          <div className="flex flex-wrap items-start justify-around gap-1">
-            {showSoundGrid && <SoundGrid type="sound" containerId="container1" />}
-            {showSoundGrid && showMusicGrid && <Separator className="my-1" />}
-            {showMusicGrid && <SoundGrid type="music" containerId="container2" />}
-          </div>
+      <main className="flex-1 p-1">
+        <FavoriteGrid />
+        <div className="flex flex-wrap items-start justify-around gap-1">
+          {showSoundGrid && <SoundGrid type="sound" containerId="container1" />}
+          {showSoundGrid && showMusicGrid && <Separator className="my-1" />}
+          {showMusicGrid && <SoundGrid type="music" containerId="container2" />}
         </div>
       </main>
       <Footer />

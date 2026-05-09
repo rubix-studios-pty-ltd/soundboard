@@ -60,10 +60,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    const handleSettingsUpdate = (_: any, updatedSettings: Settings) => {
+    const handleSettingsUpdate = (updatedSettings: Settings) => {
       const validated = validateSettings(updatedSettings)
       setSettings(validated)
     }
+
     window.electronAPI.on('settings-updated', handleSettingsUpdate)
 
     const initializeSettings = async () => {
@@ -77,7 +78,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setIsInitialized(true)
       }
     }
+
     initializeSettings()
+
     return () => {
       window.electronAPI.off('settings-updated', handleSettingsUpdate)
     }
