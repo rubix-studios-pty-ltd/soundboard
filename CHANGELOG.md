@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.18.14](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.13...v3.18.14) (2026-05-09)
+
+
+### Bug Fixes
+
+* correct border style in Header component for consistency ([60c8e62](https://github.com/rubix-studios-pty-ltd/soundboard/commit/60c8e623317b6849fa69acb1495adff1a825cd6a))
+
 ## [3.18.13](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.12...v3.18.13) (2026-03-23)
 
 
