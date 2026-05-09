@@ -1,5 +1,4 @@
-import type React from 'react'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { useSettings } from '@/context/setting'
 import AudioPool from '@/utils/audio/pool'

@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC } from 'react'
 
 export const Drag: FC<{ className?: string }> = ({ className }) => (
   <svg

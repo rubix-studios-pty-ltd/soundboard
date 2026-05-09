@@ -1,5 +1,4 @@
-import type React from 'react'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SettingsControl from '@/components/controls/settings'
 import WindowsControls from '@/components/controls/window'
 import {

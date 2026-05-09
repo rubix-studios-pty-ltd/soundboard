@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { SoundData } from '@/types'
+import { type SoundData } from '@/types'
 import { generateSoundId } from '@/utils/sound/id'
 
 export const useUserSounds = (type: 'sound' | 'music') => {

@@ -1,5 +1,4 @@
-import type React from 'react'
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { soundData as initialSounds } from '@/data/audio'
 import { musicData as initialMusic } from '@/data/music'
 import { useUserSounds } from '@/hooks/usesounds'

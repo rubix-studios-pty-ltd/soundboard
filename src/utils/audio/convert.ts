@@ -1,4 +1,4 @@
-import type { SoundData } from '@/types'
+import { type SoundData } from '@/types'
 import { generateSoundId } from '@/utils/sound/id'
 
 export const convertToOpus = async (file: File, type: 'sound' | 'music', customTitle?: string) => {
