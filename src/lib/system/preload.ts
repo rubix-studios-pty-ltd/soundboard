@@ -6,13 +6,32 @@ import { defaultSettings } from '@/constants/settings'
 import type { HotkeyMap, IpcApi } from '@/types'
 import type { Settings } from '@/types/settings'
 
+const listeners = new Map<
+  (...args: unknown[]) => void,
+  (event: Electron.IpcRendererEvent, ...args: unknown[]) => void
+>()
+
 const electronAPI: IpcApi = {
   on: (channel: string, listener: (...args: unknown[]) => void) => {
-    ipcRenderer.on(channel, listener)
+    const subscription = (_event: Electron.IpcRendererEvent, ...args: unknown[]) => {
+      listener(...args)
+    }
+
+    listeners.set(listener, subscription)
+
+    ipcRenderer.on(channel, subscription)
   },
 
   off: (channel: string, listener: (...args: unknown[]) => void) => {
-    ipcRenderer.removeListener(channel, listener)
+    const subscription = listeners.get(listener)
+
+    if (!subscription) {
+      return
+    }
+
+    ipcRenderer.removeListener(channel, subscription)
+
+    listeners.delete(listener)
   },
 
   loadSounds: async (type: 'sound' | 'music') => {
