@@ -9,7 +9,7 @@ import {
 } from 'react'
 
 import { useSound } from '@/hooks/useSound'
-import type { SoundData } from '@/types'
+import type { SoundData } from '@/types/sound'
 import { generateId } from '@/utils/sound/generateId'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'

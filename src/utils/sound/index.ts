@@ -1,5 +1,5 @@
 import HotkeyManager from '@/lib/system/hotkeys'
-import type { SoundData } from '@/types'
+import type { SoundData } from '@/types/sound'
 import AudioPool from '@/utils/audio/pool'
 import { getElement } from '@/utils/getElement'
 import { generateId } from '@/utils/sound/generateId'

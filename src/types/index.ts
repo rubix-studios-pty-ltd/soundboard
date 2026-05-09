@@ -1,13 +1,5 @@
 import type { Settings } from '@/types/settings'
-
-export interface SoundData {
-  id: string
-  file: string
-  title: string
-  frequent?: boolean
-  isUserAdded?: boolean
-  format?: 'opus' | 'mp3'
-}
+import type { SoundData } from '@/types/sound'
 
 export interface HotkeyMap {
   [soundId: string]: string
@@ -41,10 +33,4 @@ export interface IpcApi {
   validateSound: (sound: SoundData) => Promise<boolean>
   getAppDataPath: () => Promise<string>
   resolveUserSoundPath: (url: string) => Promise<string>
-}
-
-declare global {
-  interface Window {
-    electronAPI: IpcApi
-  }
 }

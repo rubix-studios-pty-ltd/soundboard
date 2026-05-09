@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs'
 
-import type { SoundData } from '@/types'
+import type { SoundData } from '@/types/sound'
 import { shouldLog } from '@/utils/sound/logging'
 
 export async function readSounds(jsonPath: string): Promise<SoundData[]> {
