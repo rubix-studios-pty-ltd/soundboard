@@ -7,15 +7,15 @@ import Store from '@/store/settings'
 import type { HotkeyMap, SoundData } from '@/types'
 import type { Settings } from '@/types/settings'
 import { convertOpus } from '@/utils/audio/convertOpus'
-import { createSoundsManager } from '@/utils/sound/manager'
+import { soundsManager } from '@/utils/sound/manager'
 import { createWindow, win } from '@/window/main'
 import { createPopoutWindow, popoutWin } from '@/window/popup'
 
 const shouldLog = () => process.argv.includes('--enable-logging')
 
 const soundManagers = {
-  sound: createSoundsManager('sound'),
-  music: createSoundsManager('music'),
+  sound: soundsManager('sound'),
+  music: soundsManager('music'),
 }
 
 try {

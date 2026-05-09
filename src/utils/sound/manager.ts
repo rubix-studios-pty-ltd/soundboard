@@ -4,7 +4,7 @@ import { getAsset, getJson } from '@/utils/sound/paths'
 import { deleteSounds, readSounds, writeSounds } from '@/utils/sound/persistence'
 import { validateFile } from '@/utils/sound/validation'
 
-export function createSoundsManager(type: 'sound' | 'music') {
+export function soundsManager(type: 'sound' | 'music') {
   const jsonPath = getJson(type)
 
   const loadSounds = async (): Promise<SoundData[]> => {
