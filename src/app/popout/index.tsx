@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import App from '@/app/popout/app'
+import { App } from '@/app/popout/app'
 
 let rootElement = document.getElementById('root')
 

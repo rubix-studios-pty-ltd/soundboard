@@ -1,40 +1,45 @@
-import { type FC, useMemo } from 'react'
+import { useMemo, type CSSProperties } from 'react'
 
 import { AudioProvider, useAudio } from '@/context/audio'
 import { SettingsProvider, useSettings } from '@/context/setting'
 import { SoundsProvider } from '@/context/sounds'
 
-import '@/styles/tailwind.css'
-
 import { Header } from '@/components/controls/popout/header'
 import { SoundGrid } from '@/components/sounds/popout/grid'
 
-const App: FC = () => (
-  <SettingsProvider>
-    <AudioProvider>
-      <SoundsProvider>
-        <PopoutContent />
-      </SoundsProvider>
-    </AudioProvider>
-  </SettingsProvider>
-)
+import '@/styles/tailwind.css'
 
-const LoadingScreen: FC = () => (
-  <div className="flex min-h-screen items-center justify-center">
-    <div className="text-gray-400">Loading</div>
-  </div>
-)
+export function App() {
+  return (
+    <SettingsProvider>
+      <AudioProvider>
+        <SoundsProvider>
+          <PopoutContent />
+        </SoundsProvider>
+      </AudioProvider>
+    </SettingsProvider>
+  )
+}
 
-const PopoutContent: FC = () => {
+function LoadingScreen() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="text-gray-400">Loading</div>
+    </div>
+  )
+}
+
+function PopoutContent() {
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
-  const themeStyles = useMemo(() => {
+  const themeStyles = useMemo<CSSProperties>(() => {
     if (settings?.theme?.enabled) {
       return {
         backgroundColor: settings.theme.backgroundColor,
-      } as React.CSSProperties
+      }
     }
+
     return {}
   }, [settings?.theme])
 
@@ -45,6 +50,7 @@ const PopoutContent: FC = () => {
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
       <Header />
+
       <main className="flex-1">
         <div className="p-1">
           <SoundGrid />
@@ -53,5 +59,3 @@ const PopoutContent: FC = () => {
     </div>
   )
 }
-
-export default App
