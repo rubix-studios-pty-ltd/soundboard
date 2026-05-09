@@ -1,7 +1,4 @@
-import type { SoundData } from '@/types'
-import { generateSoundId } from '@/utils/sound/id'
-
-const rawSoundData: [string, string][] = [
+export const rawSoundData: [string, string][] = [
   ['sound/laugh-1.opus', 'Cười'],
   ['sound/laugh-2.opus', 'Cười 2'],
   ['sound/laugh-group.opus', 'Cười 3'],
@@ -94,9 +91,3 @@ const rawSoundData: [string, string][] = [
   ['sound/giangho.opus', 'Giang Hồ'],
   ['sound/thatim.opus', 'Thả Tim'],
 ]
-
-export const soundData: SoundData[] = rawSoundData.map(([file, title]) => ({
-  id: generateSoundId(file),
-  file,
-  title,
-}))

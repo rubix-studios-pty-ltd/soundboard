@@ -5,7 +5,6 @@ import { Header } from '@/components/controls/main/header'
 import { FavoriteGrid } from '@/components/sounds/favorites'
 import { SoundGrid } from '@/components/sounds/main/grid'
 import { Separator } from '@/components/ui/separator'
-
 import { AudioProvider, useAudio } from '@/context/audio'
 import { SettingsProvider, useSettings } from '@/context/setting'
 import { SoundsProvider } from '@/context/sounds'

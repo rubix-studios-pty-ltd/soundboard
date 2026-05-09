@@ -51,7 +51,7 @@ const buildOptions = [
   },
   {
     ...nodeOptions,
-    entryPoints: ['src/utils/system/preload.ts'],
+    entryPoints: ['src/lib/system/preload.ts'],
     outfile: 'dist/preload.cjs',
   },
   {

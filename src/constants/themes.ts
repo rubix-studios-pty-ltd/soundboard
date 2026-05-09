@@ -1,3 +1,5 @@
+import type { ThemePreset } from '@/types/theme'
+
 export const buttonPreset = [
   '#ef4444',
   '#3b82f6',
@@ -11,15 +13,6 @@ export const buttonPreset = [
   '#fb7185',
   '#e879f9',
 ]
-
-export interface ThemePreset {
-  name: string
-  backgroundColor: string
-  buttonColor: string
-  buttonText: string
-  buttonActive: string
-  buttonHoverColor: string
-}
 
 export const presetThemes: Record<string, ThemePreset> = {
   blue: {

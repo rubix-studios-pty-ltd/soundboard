@@ -1,4 +1,5 @@
 import { type CSSProperties, useMemo } from 'react'
+
 import { Header } from '@/components/controls/popout/header'
 import { SoundGrid } from '@/components/sounds/popout/grid'
 import { AudioProvider, useAudio } from '@/context/audio'

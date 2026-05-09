@@ -2,9 +2,9 @@ import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import type { BrowserWindow as BrowserWindowType } from 'electron'
 import { app, BrowserWindow, protocol } from 'electron'
-import { getMime } from '@/lib/getMime'
 import { getIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
+import { getMime } from '@/utils/getMime'
 
 const ROOT_PATH = path.join(__dirname, '..')
 export let win: BrowserWindowType | null = null

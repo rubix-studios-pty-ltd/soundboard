@@ -1,4 +1,4 @@
-import type { Settings } from '@/types'
+import type { Settings } from '@/types/settings'
 
 export const defaultSettings: Settings = {
   multiSoundEnabled: true,
