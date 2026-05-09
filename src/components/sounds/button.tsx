@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { buttonPreset } from '@/constants/themes'
+import { presetButtons } from '@/constants/themes'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 
-interface SoundButtonProps {
+interface ButtonProps {
   id: string
   file: string
   title: string
@@ -36,7 +36,7 @@ export function SoundButton({
   isInPopout = false,
   isUserAdded = false,
   type,
-}: SoundButtonProps) {
+}: ButtonProps) {
   const { playSound, stopSound, isPlaying } = useAudio()
   const { removeSound } = useSounds()
   const [isActive, setIsActive] = useState(false)
@@ -60,7 +60,7 @@ export function SoundButton({
   const { settings, updateSettings } = useSettings()
 
   const handleClick = async () => {
-    if (settings.repeatSoundEnabled) {
+    if (settings.enableRepeat) {
       await playSound(id, file, isUserAdded)
     } else if (isActive) {
       stopSound(file)
@@ -101,7 +101,7 @@ export function SoundButton({
                   </>
                 ))}
               <div className="grid grid-cols-5 gap-2">
-                {buttonPreset.map((presetColor) => (
+                {presetButtons.map((presetColor) => (
                   <button
                     type="button"
                     key={presetColor}

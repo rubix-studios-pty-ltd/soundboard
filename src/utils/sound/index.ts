@@ -1,18 +1,13 @@
-import type { SoundData } from '@/types'
+import HotkeyManager from '@/lib/system/hotkeys'
+import type { Config } from '@/types/config'
+import type { SoundData } from '@/types/sound'
 import AudioPool from '@/utils/audio/pool'
 import { getElement } from '@/utils/getElement'
+import { generateId } from '@/utils/sound/generateId'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
-import { generateSoundId } from '@/utils/sound/id'
-import HotkeyManager from '@/lib/system/hotkeys'
 
-interface SoundAppConfig {
-  multiSoundEnabled: boolean
-  repeatSoundEnabled: boolean
-  volume: number
-}
-
-class SoundboardApp {
+export class SoundboardApp {
   private container1: HTMLElement
   private container2: HTMLElement
   private audioPool: AudioPool
@@ -20,9 +15,9 @@ class SoundboardApp {
   private stopAllButton: HTMLButtonElement
   private template: HTMLTemplateElement
   private volumeSlider: HTMLInputElement
-  private config: SoundAppConfig
+  private config: Config
 
-  constructor(initialConfig: SoundAppConfig) {
+  constructor(initialConfig: Config) {
     this.container1 = getElement('container1')
     this.container2 = getElement('container2')
     this.stopAllButton = getElement('stopAllButton')
@@ -30,19 +25,14 @@ class SoundboardApp {
     this.volumeSlider = getElement('volumeSlider')
 
     this.config = initialConfig
-    this.audioPool = new AudioPool(
-      100,
-      10,
-      initialConfig.multiSoundEnabled,
-      initialConfig.repeatSoundEnabled
-    )
+    this.audioPool = new AudioPool(100, 10, initialConfig.enableMulti, initialConfig.enableRepeat)
     this.hotkeyManager = new HotkeyManager()
 
     this.initializeSoundboard()
     this.setupEventListeners()
   }
 
-  updateConfig(newConfig: Partial<SoundAppConfig>): void {
+  updateConfig(newConfig: Partial<Config>): void {
     this.config = { ...this.config, ...newConfig }
 
     if ('volume' in newConfig && typeof newConfig.volume === 'number') {
@@ -50,12 +40,12 @@ class SoundboardApp {
       this.audioPool.updateVolume(newConfig.volume)
     }
 
-    if ('multiSoundEnabled' in newConfig) {
-      this.audioPool.updateMultiSoundEnabled(!!newConfig.multiSoundEnabled)
+    if ('enableMulti' in newConfig) {
+      this.audioPool.updateMulti(!!newConfig.enableMulti)
     }
 
-    if ('repeatSoundEnabled' in newConfig) {
-      this.audioPool.updateRepeatSoundEnabled(!!newConfig.repeatSoundEnabled)
+    if ('enableRepeat' in newConfig) {
+      this.audioPool.updateRepeat(!!newConfig.enableRepeat)
     }
   }
 
@@ -70,7 +60,7 @@ class SoundboardApp {
     try {
       const isPlaying = this.audioPool.isPlaying(file)
 
-      if (this.config.repeatSoundEnabled) {
+      if (this.config.enableRepeat) {
         await this.playSound(file, currentVolume, buttonElement, true, isUserAdded)
         return
       }
@@ -81,7 +71,7 @@ class SoundboardApp {
         return
       }
 
-      if (!this.config.multiSoundEnabled) {
+      if (!this.config.enableMulti) {
         await this.stopActiveSounds()
       }
 
@@ -123,12 +113,12 @@ class SoundboardApp {
   }
 
   private getSoundFileFromId(id: string): string | undefined {
-    const foundSound = getSound().find((s) => s.id === id || generateSoundId(s.file) === id)
+    const foundSound = getSound().find((s) => s.id === id || generateId(s.file) === id)
     if (foundSound) {
       return foundSound.file
     }
 
-    const foundMusic = getMusic().find((s) => s.id === id || generateSoundId(s.file) === id)
+    const foundMusic = getMusic().find((s) => s.id === id || generateId(s.file) === id)
     return foundMusic?.file
   }
 
@@ -136,7 +126,7 @@ class SoundboardApp {
     const button = this.template.content.cloneNode(true) as HTMLElement
     const btnElement = button.querySelector('button') as HTMLButtonElement
 
-    const soundId = data.id ?? generateSoundId(data.file)
+    const soundId = data.id ?? generateId(data.file)
     btnElement.id = soundId
     btnElement.setAttribute('data-sound-id', soundId)
     btnElement.onclick = () => this.toggleSound(data.file, soundId, data.isUserAdded)
@@ -188,6 +178,3 @@ class SoundboardApp {
     })
   }
 }
-
-export type { SoundAppConfig }
-export default SoundboardApp

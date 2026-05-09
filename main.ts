@@ -4,18 +4,19 @@ import { app, BrowserWindow, type IpcMainEvent, ipcMain } from 'electron'
 import { defaultSettings } from '@/constants/settings'
 import { setIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
-import type { HotkeyMap, SoundData } from '@/types'
+import type { HotkeyMap } from '@/types'
 import type { Settings } from '@/types/settings'
-import { convertToOpus } from '@/utils/audio/ffmpeg'
-import { createSoundsManager } from '@/utils/sound/manager'
+import type { SoundData } from '@/types/sound'
+import { convertOpus } from '@/utils/audio/convertOpus'
+import { soundsManager } from '@/utils/sound/manager'
 import { createWindow, win } from '@/window/main'
 import { createPopoutWindow, popoutWin } from '@/window/popup'
 
 const shouldLog = () => process.argv.includes('--enable-logging')
 
 const soundManagers = {
-  sound: createSoundsManager('sound'),
-  music: createSoundsManager('music'),
+  sound: soundsManager('sound'),
+  music: soundsManager('music'),
 }
 
 try {
@@ -178,8 +179,8 @@ function setupIPC(): void {
   ipcMain.on('save-settings', (_event: IpcMainEvent, settings: Settings) => {
     try {
       const validatedSettings: Settings = {
-        multiSoundEnabled: Boolean(settings.multiSoundEnabled),
-        repeatSoundEnabled: Boolean(settings.repeatSoundEnabled),
+        enableMulti: Boolean(settings.enableMulti),
+        enableRepeat: Boolean(settings.enableRepeat),
         alwaysOnTop: Boolean(settings.alwaysOnTop),
         volume: Number(settings.volume),
         maxPoolSize:
@@ -320,7 +321,7 @@ function setupIPC(): void {
         const outputPath = path.normalize(path.join(soundsDir, outputName))
 
         await fs.writeFile(inputPath, Buffer.from(params.buffer), { mode })
-        await convertToOpus(inputPath, outputPath)
+        await convertOpus(inputPath, outputPath)
 
         try {
           await fs.unlink(inputPath)

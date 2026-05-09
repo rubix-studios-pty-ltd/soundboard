@@ -1,7 +1,6 @@
-import type React from 'react'
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { defaultSettings } from '@/constants/settings'
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 
+import { defaultSettings } from '@/constants/settings'
 import type { Settings } from '@/types/settings'
 
 interface SettingsContextType {
@@ -56,7 +55,7 @@ const SettingsContext = createContext<SettingsContextType>({
   isInitialized: false,
 })
 
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Settings>(defaultSettings)
   const [isInitialized, setIsInitialized] = useState(false)
 
@@ -93,7 +92,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
       ;(async () => {
         try {
-          await window.electronAPI.saveSettings(updated)
+          window.electronAPI.saveSettings(updated)
         } catch (error) {
           console.error('Failed to save settings:', error)
         }
@@ -121,5 +120,3 @@ export const useSettings = () => {
   }
   return context
 }
-
-export default SettingsContext

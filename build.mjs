@@ -25,7 +25,7 @@ const nodeOptions = {
   ...baseOptions,
   platform: 'node',
   format: 'cjs',
-  target: 'node22',
+  target: 'node24',
 }
 
 const browserOptions = {

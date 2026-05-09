@@ -1,8 +1,8 @@
 import type { Settings } from '@/types/settings'
 
 export const defaultSettings: Settings = {
-  multiSoundEnabled: true,
-  repeatSoundEnabled: false,
+  enableMulti: true,
+  enableRepeat: false,
   alwaysOnTop: false,
   volume: 1,
   maxPoolSize: 100,

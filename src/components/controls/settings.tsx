@@ -67,10 +67,10 @@ export function SettingsControl() {
               <p className="text-foreground-muted text-xs">Phát nhiều âm thanh cùng lúc.</p>
             </div>
             <ToggleSwitch
-              checked={settings.multiSoundEnabled}
+              checked={settings.enableMulti}
               onChange={(checked) => {
                 const update: Partial<Settings> = {
-                  multiSoundEnabled: checked,
+                  enableMulti: checked,
                 }
                 updateSettings(update)
               }}
@@ -85,10 +85,10 @@ export function SettingsControl() {
               <p className="text-foreground-muted text-xs">Phát chồng âm thanh.</p>
             </div>
             <ToggleSwitch
-              checked={settings.repeatSoundEnabled}
+              checked={settings.enableRepeat}
               onChange={(checked) => {
                 const update: Partial<Settings> = {
-                  repeatSoundEnabled: checked,
+                  enableRepeat: checked,
                 }
                 updateSettings(update)
               }}

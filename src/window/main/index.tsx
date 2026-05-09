@@ -1,33 +1,39 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
-import type { BrowserWindow as BrowserWindowType } from 'electron'
 import { app, BrowserWindow, protocol } from 'electron'
 import { getIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
 import { getMime } from '@/utils/getMime'
 
 const ROOT_PATH = path.join(__dirname, '..')
-export let win: BrowserWindowType | null = null
-let popoutWin: BrowserWindowType | null = null
+
+export let win: BrowserWindow | null = null
+let popoutWin: BrowserWindow | null = null
 
 export async function createWindow(): Promise<void> {
   const settings = Store.get('settings')
+
   win = new BrowserWindow({
     width: 614,
     height: 984,
     resizable: true,
     alwaysOnTop: settings?.alwaysOnTop ?? false,
     frame: false,
-    titleBarStyle: 'hidden',
-    trafficLightPosition: { x: -999999, y: -999999 },
     show: false,
-    icon: path.join(__dirname, '..', 'icon.ico'),
+    titleBarStyle: 'hidden',
+    icon: path.join(ROOT_PATH, 'icon.ico'),
+    ...(process.platform === 'darwin'
+      ? {
+          titleBarStyle: 'hidden',
+          trafficLightPosition: { x: -100, y: -100 },
+        }
+      : {}),
     webPreferences: {
       partition: 'persist:soundboard',
       preload: path.join(ROOT_PATH, 'dist', 'preload.cjs'),
-      sandbox: false,
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: false,
       backgroundThrottling: false,
       spellcheck: false,
     },

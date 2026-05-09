@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { SoundData } from '@/types'
-import { generateSoundId } from '@/utils/sound/id'
+import type { SoundData } from '@/types/sound'
+import { generateId } from '@/utils/sound/generateId'
 
-export const useUserSounds = (type: 'sound' | 'music') => {
+export function useSound(type: 'sound' | 'music') {
   const [userSounds, setUserSounds] = useState<SoundData[]>([])
   const [loading, setLoading] = useState(true)
   const loadedRef = useRef(false)
@@ -13,7 +13,7 @@ export const useUserSounds = (type: 'sound' | 'music') => {
     (sound: SoundData): SoundData => ({
       ...sound,
       isUserAdded: true,
-      id: sound.id || generateSoundId(sound.file),
+      id: sound.id || generateId(sound.file),
       file: sound.file,
     }),
     []
@@ -27,6 +27,39 @@ export const useUserSounds = (type: 'sound' | 'music') => {
       return false
     }
   }, [])
+
+  const addUserSound = (sound: SoundData) => {
+    if (!loadedRef.current) {
+      return
+    }
+    const processedSound = processSound(sound)
+    soundsMapRef.current.set(processedSound.id, processedSound)
+    setUserSounds((prev) => [...prev, processedSound])
+  }
+
+  const removeUserSound = (soundId: string) => {
+    if (!loadedRef.current) {
+      return
+    }
+    soundsMapRef.current.delete(soundId)
+    setUserSounds((prev) => prev.filter((s) => s.id !== soundId))
+  }
+
+  const reloadSounds = async () => {
+    try {
+      const sounds = await window.electronAPI.loadSounds(type)
+      const processedSounds = sounds.map(processSound)
+
+      soundsMapRef.current = new Map(processedSounds.map((sound) => [sound.id, sound]))
+      setUserSounds(processedSounds)
+      loadedRef.current = true
+    } catch {
+      soundsMapRef.current = new Map()
+      setUserSounds([])
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     const loadUserSounds = async () => {
@@ -64,39 +97,6 @@ export const useUserSounds = (type: 'sound' | 'music') => {
 
     loadUserSounds()
   }, [type, processSound, validateSoundFile])
-
-  const addUserSound = (sound: SoundData) => {
-    if (!loadedRef.current) {
-      return
-    }
-    const processedSound = processSound(sound)
-    soundsMapRef.current.set(processedSound.id, processedSound)
-    setUserSounds((prev) => [...prev, processedSound])
-  }
-
-  const removeUserSound = (soundId: string) => {
-    if (!loadedRef.current) {
-      return
-    }
-    soundsMapRef.current.delete(soundId)
-    setUserSounds((prev) => prev.filter((s) => s.id !== soundId))
-  }
-
-  const reloadSounds = async () => {
-    try {
-      const sounds = await window.electronAPI.loadSounds(type)
-      const processedSounds = sounds.map(processSound)
-
-      soundsMapRef.current = new Map(processedSounds.map((sound) => [sound.id, sound]))
-      setUserSounds(processedSounds)
-      loadedRef.current = true
-    } catch {
-      soundsMapRef.current = new Map()
-      setUserSounds([])
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return { userSounds, loading, addUserSound, removeUserSound, reloadSounds }
 }

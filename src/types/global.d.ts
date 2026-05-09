@@ -1,3 +1,11 @@
+import { IpcApi } from '@/types'
+
+declare global {
+  interface Window {
+    electronAPI: IpcApi
+  }
+}
+
 declare module 'electron-store' {
   type JSONValue = string | number | boolean | null | JSONValue[] | { [key: string]: JSONValue }
 
