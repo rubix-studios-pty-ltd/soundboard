@@ -3,7 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "jsx": "react-jsx",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
@@ -13,13 +13,12 @@
     "isolatedModules": true,
     "outDir": "./dist",
     "rootDir": ".",
-    "baseUrl": ".",
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "paths": {
-      "*": ["node_modules/*"],
-      "@/*": ["src/*"]
+      "*": ["./node_modules/*"],
+      "@/*": ["./src/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "lib": ["esnext", "dom", "dom.iterable"]
