@@ -1,54 +1,62 @@
 import path from 'node:path'
-import type { BrowserWindow as BrowserWindowType } from 'electron'
 import { BrowserWindow } from 'electron'
+
 import { getIsQuitting } from '@/store/quitting'
 import Store from '@/store/settings'
 
 const ROOT_PATH = path.join(__dirname, '..')
-export let popoutWin: BrowserWindowType | null = null
+
+export let popoutWin: BrowserWindow | null = null
 
 export async function createPopoutWindow(): Promise<void> {
   const settings = Store.get('settings')
-  popoutWin = new BrowserWindow({
+
+  const popup = settings?.popoutGrid?.window
+
+  const window = new BrowserWindow({
     width: 312,
     height: 498,
     resizable: true,
     alwaysOnTop: settings?.alwaysOnTop ?? false,
     frame: false,
-    titleBarStyle: 'hidden',
-    trafficLightPosition: { x: -999999, y: -999999 },
     show: false,
-    type: 'toolbar',
     skipTaskbar: true,
-    icon: path.join(__dirname, '..', 'icon.ico'),
+    icon: path.join(ROOT_PATH, 'icon.ico'),
+    ...(process.platform === 'darwin'
+      ? {
+          titleBarStyle: 'hidden',
+          trafficLightPosition: { x: -100, y: -100 },
+        }
+      : {}),
     webPreferences: {
       partition: 'persist:soundboard',
       preload: path.join(ROOT_PATH, 'dist', 'preload.cjs'),
-      sandbox: false,
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: false,
       backgroundThrottling: false,
       spellcheck: false,
     },
   })
 
-  if (popoutWin) {
-    popoutWin.once('ready-to-show', () => {
-      if (settings?.popoutGrid?.window?.isOpen || settings?.popoutGrid?.window?.showOnStartup) {
-        popoutWin?.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
-        popoutWin?.show()
-      }
-    })
+  popoutWin = window
 
-    popoutWin.loadFile(path.join(ROOT_PATH, 'popout.html'))
+  window.once('ready-to-show', () => {
+    if (popup?.isOpen || popup?.showOnStartup) {
+      window.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
+      window.show()
+    }
+  })
 
-    popoutWin.on('close', (e) => {
-      if (!getIsQuitting()) {
-        e.preventDefault()
-        popoutWin?.hide()
-      }
-    })
-  }
+  void window.loadFile(path.join(ROOT_PATH, 'popout.html'))
+
+  window.on('close', (event) => {
+    if (!getIsQuitting()) {
+      event.preventDefault()
+
+      window.hide()
+    }
+  })
 }
 
 export function destroyPopoutWindow(): void {

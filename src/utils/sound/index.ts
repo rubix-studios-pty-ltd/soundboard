@@ -1,10 +1,10 @@
+import HotkeyManager from '@/lib/system/hotkeys'
 import type { SoundData } from '@/types'
 import AudioPool from '@/utils/audio/pool'
 import { getElement } from '@/utils/getElement'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
 import { generateSoundId } from '@/utils/sound/id'
-import HotkeyManager from '@/lib/system/hotkeys'
 
 interface SoundAppConfig {
   multiSoundEnabled: boolean
