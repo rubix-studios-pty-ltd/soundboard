@@ -1,4 +1,4 @@
-import { type CSSProperties, useMemo } from 'react'
+import { useMemo } from 'react'
 
 import { Header } from '@/components/controls/popout/header'
 import { SoundGrid } from '@/components/sounds/popout/grid'
@@ -32,15 +32,16 @@ function PopoutContent() {
   const { settings, isInitialized: settingsInitialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
-  const themeStyles = useMemo<CSSProperties>(() => {
-    if (settings?.theme?.enabled) {
-      return {
-        backgroundColor: settings.theme.backgroundColor,
-      }
-    }
+  const { theme } = settings
 
-    return {}
-  }, [settings?.theme])
+  const themeStyles = useMemo(
+    () => ({
+      backgroundColor: theme?.enabled
+        ? theme.backgroundColor
+        : undefined,
+    }),
+    [theme],
+  )
 
   if (!settingsInitialized || !audioReady) return <LoadingScreen />
 
