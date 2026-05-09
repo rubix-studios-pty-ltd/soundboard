@@ -1,10 +1,9 @@
-import { type FC } from 'react'
-
-const Footer: FC = () => {
+export function Footer() {
   return (
     <footer className="flex items-center justify-between border-t border-[#333333] bg-[#1a1a1a] p-1">
       <p className="p-1 text-[9px] text-white">
         <span className="mr-0.5">&copy;{new Date().getFullYear()}</span>
+
         <a
           href="https://rubixstudios.com.au"
           target="_blank"
@@ -17,5 +16,3 @@ const Footer: FC = () => {
     </footer>
   )
 }
-
-export default Footer

@@ -1,6 +1,6 @@
-import type React from 'react'
+import { type SVGProps } from 'react'
 
-export const Music = (props: React.SVGProps<SVGSVGElement>) => (
+export const Music = (props: SVGProps<SVGSVGElement>) => (
   <svg
     stroke="currentColor"
     fill="currentColor"

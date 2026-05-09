@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,22 +18,8 @@ interface HotkeyModalProps {
   onAssign: (key: string) => void
 }
 
-const HotkeyModal: FC<HotkeyModalProps> = ({
-  isOpen,
-  onClose,
-  onClear,
-  currentHotkey,
-  onAssign,
-}) => {
+export function HotkeyModal({ isOpen, onClose, onClear, currentHotkey, onAssign }: HotkeyModalProps) {
   const [displayText, setDisplayText] = useState('Nhấn một phím bất kỳ để thiết lập phím tắt.')
-
-  useEffect(() => {
-    if (currentHotkey) {
-      setDisplayText(`Hiện tại: "${currentHotkey}". \nNhấn phím mới để thay đổi.`)
-    } else {
-      setDisplayText('Nhấn một phím bất kỳ để thiết lập phím tắt.')
-    }
-  }, [currentHotkey])
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -45,6 +31,14 @@ const HotkeyModal: FC<HotkeyModalProps> = ({
     },
     [isOpen, onAssign]
   )
+
+  useEffect(() => {
+    if (currentHotkey) {
+      setDisplayText(`Hiện tại: "${currentHotkey}". \nNhấn phím mới để thay đổi.`)
+    } else {
+      setDisplayText('Nhấn một phím bất kỳ để thiết lập phím tắt.')
+    }
+  }, [currentHotkey])
 
   useEffect(() => {
     if (isOpen) {
@@ -74,5 +68,3 @@ const HotkeyModal: FC<HotkeyModalProps> = ({
     </Dialog>
   )
 }
-
-export default HotkeyModal

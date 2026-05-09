@@ -1,6 +1,6 @@
-import type React from 'react'
+import { type SVGProps } from 'react'
 
-export const Exit = (props: React.SVGProps<SVGSVGElement>) => (
+export const Exit = (props: SVGProps<SVGSVGElement>) => (
   <svg
     stroke="currentColor"
     fill="currentColor"

@@ -6,8 +6,8 @@ import { SoundsProvider } from '@/context/sounds'
 
 import '@/styles/tailwind.css'
 
-import Header from '@/components/controls/popout/header'
-import SoundGrid from '@/components/sounds/popout/grid'
+import { Header } from '@/components/controls/popout/header'
+import { SoundGrid } from '@/components/sounds/popout/grid'
 
 const App: FC = () => (
   <SettingsProvider>

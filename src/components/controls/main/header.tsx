@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import SettingsControl from '@/components/controls/settings'
-import WindowsControls from '@/components/controls/window'
+import { useEffect, useState } from 'react'
+import { SettingsControl } from '@/components/controls/settings'
+import { WindowsControls } from '@/components/controls/window'
 import {
   Cog,
   Drag,
@@ -13,16 +13,16 @@ import {
   StopIcon,
   Volume,
 } from '@/components/icons'
-import AddSoundModal from '@/components/modals/sound'
+import { AddSoundModal } from '@/components/modals/sound'
 import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import type { Settings } from '@/types'
+import { type Settings } from '@/types'
 import { addNewSound } from '@/utils/audio/convert'
 
-const Header: React.FC = () => {
+export function Header() {
   const { stopAll } = useAudio()
   const { settings, updateSettings } = useSettings()
   const { addSound } = useSounds()
@@ -217,4 +217,3 @@ const Header: React.FC = () => {
   )
 }
 
-export default Header

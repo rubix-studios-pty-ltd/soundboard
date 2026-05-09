@@ -1,14 +1,14 @@
-import { type DragEvent, type FC, useCallback } from 'react'
+import { type DragEvent, useCallback } from 'react'
 import { Exit } from '@/components/icons'
-import HotkeyModal from '@/components/modals/hotkey'
-import SoundButton from '@/components/sounds/button'
+import { HotkeyModal } from '@/components/modals/hotkey'
+import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import { useHotkeys } from '@/hooks/usehotkey'
 import { generateSoundId } from '@/utils/sound/id'
 
-const SoundGrid: FC = () => {
+export function SoundGrid() {
   const { settings, updateSettings } = useSettings()
   const { dragAndDropEnabled, popoutGrid } = settings
   const { sounds, music } = useSounds()
@@ -135,7 +135,7 @@ const SoundGrid: FC = () => {
             >
               {sound && (
                 <div
-                  className={`relative ${dragAndDropEnabled ? '-translate-x-[2px] -translate-y-[3px] transform' : ''}`}
+                  className={`relative ${dragAndDropEnabled ? '-translate-x-0.5 -translate-y-0.75 transform' : ''}`}
                 >
                   <SoundButton
                     id={sound.id}
@@ -174,4 +174,3 @@ const SoundGrid: FC = () => {
   )
 }
 
-export default SoundGrid

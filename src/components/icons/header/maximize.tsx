@@ -1,6 +1,6 @@
-import type React from 'react'
+import { type SVGProps } from 'react'
 
-export const Maximize = (props: React.SVGProps<SVGSVGElement>) => (
+export const Maximize = (props: SVGProps<SVGSVGElement>) => (
   <svg
     stroke="currentColor"
     fill="none"

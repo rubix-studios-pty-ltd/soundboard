@@ -1,11 +1,12 @@
-import { type FC } from 'react'
-
 interface ToggleSwitchProps {
   checked: boolean
   onChange: (checked: boolean) => void
 }
 
-const ToggleSwitch: FC<ToggleSwitchProps> = ({ checked, onChange }) => {
+export default function ToggleSwitch({
+  checked,
+  onChange,
+}: ToggleSwitchProps) {
   return (
     <div className="flex flex-col items-center">
       <input
@@ -17,5 +18,3 @@ const ToggleSwitch: FC<ToggleSwitchProps> = ({ checked, onChange }) => {
     </div>
   )
 }
-
-export default ToggleSwitch

@@ -1,6 +1,6 @@
-import type React from 'react'
+import { type SVGProps } from 'react'
 
-export const Windows = (props: React.SVGProps<SVGSVGElement>) => (
+export const Windows = (props: SVGProps<SVGSVGElement>) => (
   <svg
     stroke="currentColor"
     fill="none"

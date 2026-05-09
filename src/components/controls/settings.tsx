@@ -7,7 +7,7 @@ import { presetThemes } from '@/constants/themes'
 import { useSettings } from '@/context/setting'
 import { type Settings } from '@/types'
 
-export default function SettingsControl() {
+export function SettingsControl() {
   const { settings, updateSettings } = useSettings()
 
   const handleThemeChange = (themeKey: string | null) => {

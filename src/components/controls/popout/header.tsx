@@ -1,10 +1,11 @@
-import type React from 'react'
-
 import { Exit, Minimize } from '@/components/icons'
 
-const Header: React.FC = () => {
-  const handleMinimize = () => window.electronAPI.windowControl('minimize', 'popout')
-  const handleClose = () => window.electronAPI.windowControl('close', 'popout')
+export function Header() {
+  const handleMinimize = () =>
+    window.electronAPI.windowControl('minimize', 'popout')
+
+  const handleClose = () =>
+    window.electronAPI.windowControl('close', 'popout')
 
   return (
     <div className="sticky top-0 z-50 flex h-7 items-center justify-between border-b border-[#333333] bg-[#1a1a1a]">
@@ -16,6 +17,7 @@ const Header: React.FC = () => {
         >
           <Minimize className="h-4 w-4 text-white" />
         </button>
+
         <button
           type="button"
           onClick={handleClose}
@@ -27,5 +29,3 @@ const Header: React.FC = () => {
     </div>
   )
 }
-
-export default Header
