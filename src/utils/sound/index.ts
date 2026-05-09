@@ -4,7 +4,7 @@ import { getElement } from '@/utils/getElement'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
 import { generateSoundId } from '@/utils/sound/id'
-import HotkeyManager from '@/utils/system/hotkeys'
+import HotkeyManager from '@/lib/system/hotkeys'
 
 interface SoundAppConfig {
   multiSoundEnabled: boolean
