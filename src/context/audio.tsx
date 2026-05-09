@@ -143,5 +143,3 @@ export const useAudio = () => {
 
   return context
 }
-
-export default AudioContext

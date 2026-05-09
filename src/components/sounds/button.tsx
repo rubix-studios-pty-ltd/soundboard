@@ -10,7 +10,7 @@ import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 
-interface SoundButtonProps {
+interface ButtonProps {
   id: string
   file: string
   title: string
@@ -36,7 +36,7 @@ export function SoundButton({
   isInPopout = false,
   isUserAdded = false,
   type,
-}: SoundButtonProps) {
+}: ButtonProps) {
   const { playSound, stopSound, isPlaying } = useAudio()
   const { removeSound } = useSounds()
   const [isActive, setIsActive] = useState(false)

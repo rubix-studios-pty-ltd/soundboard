@@ -42,14 +42,11 @@ function PopoutContent() {
     return {}
   }, [settings?.theme])
 
-  if (!settingsInitialized || !audioReady) {
-    return <LoadingScreen />
-  }
+  if (!settingsInitialized || !audioReady) return <LoadingScreen />
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
       <Header />
-
       <main className="flex-1">
         <div className="p-1">
           <SoundGrid />

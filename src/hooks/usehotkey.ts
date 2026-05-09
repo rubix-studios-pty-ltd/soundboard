@@ -2,24 +2,10 @@ import { useCallback, useEffect, useState } from 'react'
 
 import type { HotkeyMap, SoundData } from '@/types'
 
-export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: string) => void) => {
+export function useHotkeys(_soundData: SoundData[], onSoundPlay: (soundId: string) => void) {
   const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>({})
   const [modalOpen, setModalOpen] = useState(false)
   const [currentId, setCurrentId] = useState<string | null>(null)
-
-  useEffect(() => {
-    const loadHotkeys = async () => {
-      try {
-        const savedHotkeys = await window.electronAPI.loadHotkeys()
-        setHotkeyMap(savedHotkeys)
-      } catch (error) {
-        console.error('Error loading hotkeys:', error)
-        setHotkeyMap({})
-      }
-    }
-
-    loadHotkeys()
-  }, [])
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
@@ -36,13 +22,6 @@ export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: strin
     },
     [hotkeyMap, modalOpen, onSoundPlay]
   )
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyPress)
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress)
-    }
-  }, [handleKeyPress])
 
   const showHotkeyModal = useCallback((soundId: string) => {
     setCurrentId(soundId)
@@ -86,6 +65,27 @@ export const useHotkeys = (_soundData: SoundData[], onSoundPlay: (soundId: strin
 
     setModalOpen(false)
   }, [currentId])
+
+  useEffect(() => {
+    const loadHotkeys = async () => {
+      try {
+        const savedHotkeys = await window.electronAPI.loadHotkeys()
+        setHotkeyMap(savedHotkeys)
+      } catch (error) {
+        console.error('Error loading hotkeys:', error)
+        setHotkeyMap({})
+      }
+    }
+
+    loadHotkeys()
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress)
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [handleKeyPress])
 
   return {
     hotkeyMap,

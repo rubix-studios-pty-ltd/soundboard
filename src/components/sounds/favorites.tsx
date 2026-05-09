@@ -33,7 +33,7 @@ export function FavoriteGrid() {
   const { modalOpen, currentHotkey, showHotkeyModal, assignHotkey, clearHotkey, closeModal } =
     useHotkeys(allSounds, handleSoundPlay)
 
-  const handleDrop = (e: DragEvent<HTMLDivElement>, slotIndex: number) => {
+  const handleDrop = (e: DragEvent<HTMLElement>, slotIndex: number) => {
     e.preventDefault()
     e.stopPropagation()
     const soundId = e.dataTransfer.getData('text/sound-id')
@@ -67,7 +67,7 @@ export function FavoriteGrid() {
     })
   }
 
-  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (e: DragEvent<HTMLElement>) => {
     if (dragAndDropEnabled) {
       e.preventDefault()
       e.stopPropagation()
@@ -75,14 +75,14 @@ export function FavoriteGrid() {
     }
   }
 
-  const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
+  const handleDragEnter = (e: DragEvent<HTMLElement>) => {
     if (dragAndDropEnabled) {
       e.preventDefault()
       e.currentTarget.style.borderColor = '#9CA3AF'
     }
   }
 
-  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (e: DragEvent<HTMLElement>) => {
     if (dragAndDropEnabled) {
       e.preventDefault()
       e.currentTarget.style.borderColor = '#4B5563'
@@ -125,13 +125,13 @@ export function FavoriteGrid() {
     <div className="relative z-10 mb-4">
       <div className="flex flex-wrap gap-1 p-0">
         {slots.map((sound, index) => (
-          /* biome-ignore lint/a11y/noStaticElementInteractions: not required here */
-          <div
+          <button
             key={index}
+            type="button"
             className={`relative h-7 w-24 rounded ${
               dragAndDropEnabled ? 'border-2 border-dashed border-gray-600' : ''
             }`}
-            onDrop={(e) => handleDrop(e, index)}
+            onDrop={(event) => handleDrop(event, index)}
             onDragOver={handleDragOver}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -162,7 +162,7 @@ export function FavoriteGrid() {
                 )}
               </div>
             )}
-          </div>
+          </button>
         ))}
       </div>
       <HotkeyModal

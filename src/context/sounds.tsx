@@ -1,5 +1,13 @@
-import type React from 'react'
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
 import { useUserSounds } from '@/hooks/usesounds'
 import type { SoundData } from '@/types'
 import { getMusic } from '@/utils/sound/getMusic'
@@ -16,7 +24,7 @@ interface SoundsContextType {
 
 const SoundsContext = createContext<SoundsContextType | null>(null)
 
-export const SoundsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function SoundsProvider({ children }: { children: ReactNode }) {
   const processedInitialSounds = useMemo(
     () =>
       getSound().map((sound) => ({
@@ -148,5 +156,3 @@ export const useSounds = () => {
   }
   return context
 }
-
-export default SoundsContext
