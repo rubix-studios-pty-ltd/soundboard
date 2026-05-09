@@ -38,12 +38,12 @@ export function SoundButton({
   type,
 }: SoundButtonProps) {
   const { playSound, stopSound, isPlaying } = useAudio()
-  const [isActive, setIsActive] = useState(false)
   const { removeSound } = useSounds()
-  const soundId = id
+  const [isActive, setIsActive] = useState(false)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ignore
   useEffect(() => {
+    if (!id) return
+
     const checkPlayingState = () => {
       const playing = isPlaying(file)
       if (isActive !== playing) {
@@ -54,7 +54,6 @@ export function SoundButton({
     checkPlayingState()
 
     const interval = setInterval(checkPlayingState, 100)
-
     return () => clearInterval(interval)
   }, [file, isPlaying, isActive, id])
 
@@ -62,17 +61,17 @@ export function SoundButton({
 
   const handleClick = async () => {
     if (settings.repeatSoundEnabled) {
-      await playSound(soundId, file, isUserAdded)
+      await playSound(id, file, isUserAdded)
     } else if (isActive) {
       stopSound(file)
     } else {
-      await playSound(soundId, file, isUserAdded)
+      await playSound(id, file, isUserAdded)
     }
   }
 
   const handleContextMenu = (e: MouseEvent) => {
     e.preventDefault()
-    onHotkeyAssign(soundId)
+    onHotkeyAssign(id)
   }
 
   return (
@@ -95,7 +94,7 @@ export function SoundButton({
                       <Checkbox
                         className="z-10 cursor-pointer border border-white bg-white text-black focus-visible:ring-0"
                         checked={isHidden}
-                        onCheckedChange={() => onToggleHide?.(soundId)}
+                        onCheckedChange={() => onToggleHide?.(id)}
                       />
                     </div>
                     <Separator />
@@ -112,7 +111,7 @@ export function SoundButton({
                       updateSettings({
                         buttonColors: {
                           ...(settings.buttonColors || {}),
-                          [soundId]: presetColor,
+                          [id]: presetColor,
                         },
                       })
                     }
@@ -125,7 +124,7 @@ export function SoundButton({
                     updateSettings({
                       buttonColors: {
                         ...(settings.buttonColors || {}),
-                        [soundId]: undefined,
+                        [id]: undefined,
                       },
                     })
                   }
@@ -160,8 +159,7 @@ export function SoundButton({
         draggable={isDraggable}
         onDragStart={(e) => {
           if (isDraggable) {
-            const soundIdToUse = soundId
-            e.dataTransfer.setData('text/sound-id', soundIdToUse)
+            e.dataTransfer.setData('text/sound-id', id)
             e.dataTransfer.effectAllowed = 'move'
           }
         }}
@@ -170,10 +168,10 @@ export function SoundButton({
         } ${isDraggable ? 'cursor-move' : ''}`}
         style={
           {
-            backgroundColor: settings?.buttonColors?.[soundId]
+            backgroundColor: settings?.buttonColors?.[id]
               ? isActive
                 ? '#000'
-                : settings.buttonColors[soundId]
+                : settings.buttonColors[id]
               : settings?.theme?.enabled
                 ? isActive
                   ? settings.theme.buttonActive
@@ -181,14 +179,14 @@ export function SoundButton({
                 : isActive
                   ? '#000'
                   : undefined,
-            color: settings?.buttonColors?.[soundId]
+            color: settings?.buttonColors?.[id]
               ? '#fff'
               : settings?.theme?.enabled
                 ? settings.theme.buttonText
                 : isActive
                   ? '#fff'
                   : undefined,
-            '--button-hover': settings?.buttonColors?.[soundId]
+            '--button-hover': settings?.buttonColors?.[id]
               ? isActive
                 ? '#000'
                 : '#404040'
@@ -203,7 +201,7 @@ export function SoundButton({
         }
         onClick={handleClick}
         onContextMenu={handleContextMenu}
-        data-sound-id={soundId}
+        data-sound-id={id}
       >
         <span className="w-full truncate text-center text-[11px] font-semibold">{title}</span>
       </Button>

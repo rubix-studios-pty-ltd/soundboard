@@ -1,4 +1,4 @@
-import { type DragEvent, useCallback } from 'react'
+import { type DragEvent, useCallback, useMemo } from 'react'
 import { Exit } from '@/components/icons'
 import { HotkeyModal } from '@/components/modals/hotkey'
 import { SoundButton } from '@/components/sounds/button'
@@ -10,19 +10,23 @@ import { generateSoundId } from '@/utils/sound/id'
 
 export function FavoriteGrid() {
   const { settings, updateSettings } = useSettings()
-  const { dragAndDropEnabled, favorites } = settings
   const { sounds, music } = useSounds()
   const { playSound } = useAudio()
-  const allSounds = [...sounds, ...music]
+
+  const { dragAndDropEnabled, favorites } = settings
+
+  const allSounds = useMemo(() => {
+    return [...sounds, ...music]
+  }, [sounds, music])
 
   const handleSoundPlay = useCallback(
     (soundId: string) => {
       const sound = allSounds.find((s) => s.id === soundId || generateSoundId(s.file) === soundId)
+
       if (sound) {
         playSound(sound.id, sound.file, sound.isUserAdded || false)
       }
     },
-    // biome-ignore lint:correctness/useExhaustiveDependencies: ignore
     [allSounds, playSound]
   )
 
