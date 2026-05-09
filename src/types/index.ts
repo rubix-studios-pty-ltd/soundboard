@@ -5,11 +5,6 @@ export interface HotkeyMap {
   [soundId: string]: string
 }
 
-export interface AudioPoolItem {
-  audio: HTMLAudioElement
-  isPlaying: boolean
-}
-
 export interface IpcApi {
   on: (channel: string, listener: (...args: any[]) => void) => void
   off: (channel: string, listener: (...args: any[]) => void) => void

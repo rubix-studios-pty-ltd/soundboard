@@ -1,8 +1,8 @@
 export interface SoundData {
   id: string
-  file: string
-  title: string
-  frequent?: boolean
   isUserAdded?: boolean
+  file: string
   format?: 'opus' | 'mp3'
+  frequent?: boolean
+  title: string
 }

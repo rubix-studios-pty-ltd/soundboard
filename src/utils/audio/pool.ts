@@ -1,18 +1,10 @@
-export interface AudioPoolItem {
-  audio: HTMLAudioElement
-  source: string
-  isPlaying: boolean
-  cleanupListeners: (() => void)[]
-  onEnd?: () => void
-  lastUsed: number
-  duration?: number
-}
+import type { Pool } from '@/types/pool'
 
 const silentAudio =
   'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA='
 
 class AudioPool {
-  private pool: Map<string, AudioPoolItem>
+  private pool: Map<string, Pool>
   private maxPoolSize: number
   private maxInstancesPerSound: number
   private multiSoundEnabled: boolean
@@ -67,18 +59,18 @@ class AudioPool {
     return audio
   }
 
-  private getEntriesForSource(source: string): [string, AudioPoolItem][] {
+  private getEntriesForSource(source: string): [string, Pool][] {
     return Array.from(this.pool.entries()).filter(([, item]) => item.source === source)
   }
 
-  private detachAudioListeners(poolItem: AudioPoolItem): void {
+  private detachAudioListeners(poolItem: Pool): void {
     poolItem.cleanupListeners?.forEach((cleanup) => {
       cleanup()
     })
     poolItem.cleanupListeners = []
   }
 
-  private releaseAudioItem(poolItem: AudioPoolItem): void {
+  private releaseAudioItem(poolItem: Pool): void {
     this.detachAudioListeners(poolItem)
     poolItem.audio.src = ''
     poolItem.isPlaying = false
@@ -97,7 +89,7 @@ class AudioPool {
   }
 
   private pruneOldestAvailableItem(): boolean {
-    let lruItem: [string, AudioPoolItem] | undefined
+    let lruItem: [string, Pool] | undefined
 
     for (const [key, item] of this.pool.entries()) {
       if (!item.isPlaying && (!lruItem || item.lastUsed < lruItem[1].lastUsed)) {
@@ -219,7 +211,7 @@ class AudioPool {
     }
   }
 
-  private setupAudioListeners(poolItem: AudioPoolItem): void {
+  private setupAudioListeners(poolItem: Pool): void {
     const endedListener = () => {
       poolItem.isPlaying = false
       poolItem.onEnd?.()
@@ -259,7 +251,7 @@ class AudioPool {
     ]
   }
 
-  private cleanupAudioItem(item: AudioPoolItem): void {
+  private cleanupAudioItem(item: Pool): void {
     this.releaseAudioItem(item)
   }
 
@@ -310,7 +302,7 @@ class AudioPool {
     try {
       const audioElement = this.getAudioElement()
 
-      const poolItem: AudioPoolItem = {
+      const poolItem: Pool = {
         audio: audioElement,
         source,
         isPlaying: false,
@@ -395,7 +387,7 @@ class AudioPool {
   updateRepeatSoundEnabled(enabled: boolean): void {
     this.repeatSoundEnabled = enabled
     if (!enabled) {
-      const soundGroups = new Map<string, [string, AudioPoolItem][]>()
+      const soundGroups = new Map<string, [string, Pool][]>()
 
       for (const entry of this.pool.entries()) {
         const [key, item] = entry
@@ -439,11 +431,11 @@ class AudioPool {
     return entries[0]?.[1].audio
   }
 
-  getPlayingAudios(): Map<string, AudioPoolItem> {
+  getPlayingAudios(): Map<string, Pool> {
     return this.pool
   }
 
-  private findStoppedAudio(): AudioPoolItem | undefined {
+  private findStoppedAudio(): Pool | undefined {
     for (const [, item] of this.pool) {
       if (!item.isPlaying && (item.audio.ended || item.audio.paused)) {
         return item
