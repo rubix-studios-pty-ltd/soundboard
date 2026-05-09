@@ -3,18 +3,14 @@ import { createRoot } from 'react-dom/client'
 
 import { App } from '@/app/popout/app'
 
-let rootElement = document.getElementById('root')
+const rootElement = document.getElementById('root')
 
 if (!rootElement) {
-  rootElement = document.createElement('div')
-  rootElement.id = 'root'
-  document.body.appendChild(rootElement)
+  throw new Error('Root element #root not found')
 }
 
-const root = createRoot(rootElement)
-
-root.render(
+createRoot(rootElement).render(
   <StrictMode>
     <App />
-  </StrictMode>
+  </StrictMode>,
 )
