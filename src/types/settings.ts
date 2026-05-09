@@ -1,6 +1,6 @@
 export interface Settings {
-  multiSoundEnabled: boolean
-  repeatSoundEnabled: boolean
+  enableMulti: boolean
+  enableRepeat: boolean
   alwaysOnTop: boolean
   volume: number
   maxPoolSize: number

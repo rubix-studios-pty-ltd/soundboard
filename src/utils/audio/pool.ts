@@ -7,8 +7,8 @@ class AudioPool {
   private pool: Map<string, Pool>
   private maxPoolSize: number
   private maxInstancesPerSound: number
-  private multiSoundEnabled: boolean
-  private repeatSoundEnabled: boolean
+  private enableMulti: boolean
+  private enableRepeat: boolean
   private unusedAudioElements: HTMLAudioElement[]
   private instanceCounts: Map<string, number>
   private audioContext: AudioContext
@@ -19,16 +19,16 @@ class AudioPool {
   constructor(
     maxPoolSize: number = 100,
     maxInstancesPerSound: number = 20,
-    multiSoundEnabled: boolean = true,
-    repeatSoundEnabled: boolean = false
+    enableMulti: boolean = true,
+    enableRepeat: boolean = false
   ) {
     this.pool = new Map()
     this.maxPoolSize = maxPoolSize
     this.maxInstancesPerSound = maxInstancesPerSound
     this.unusedAudioElements = []
     this.instanceCounts = new Map()
-    this.multiSoundEnabled = multiSoundEnabled
-    this.repeatSoundEnabled = repeatSoundEnabled
+    this.enableMulti = enableMulti
+    this.enableRepeat = enableRepeat
     this.initialized = false
     this.audioContext = new AudioContext()
     this.loadingSounds = new Set()
@@ -162,8 +162,8 @@ class AudioPool {
       return
     }
 
-    if (!this.multiSoundEnabled) {
-      if (this.repeatSoundEnabled) {
+    if (!this.enableMulti) {
+      if (this.enableRepeat) {
         for (const [key, item] of this.pool.entries()) {
           if (item.source !== source) {
             this.cleanupAudioItem(item)
@@ -173,7 +173,7 @@ class AudioPool {
       } else {
         this.stopAll()
       }
-    } else if (!this.repeatSoundEnabled) {
+    } else if (!this.enableRepeat) {
       this.stopSpecific(source)
     }
 
@@ -184,7 +184,7 @@ class AudioPool {
         source,
         isUserAdded,
         volume,
-        this.repeatSoundEnabled && repeat,
+        this.enableRepeat && repeat,
         onEnd
       )
     } finally {
@@ -365,8 +365,8 @@ class AudioPool {
     })
   }
 
-  updateMultiSoundEnabled(enabled: boolean): void {
-    this.multiSoundEnabled = enabled
+  updateMulti(enabled: boolean): void {
+    this.enableMulti = enabled
     if (!enabled) {
       const playingSounds = Array.from(this.pool.entries())
         .filter(([_, item]) => item.isPlaying)
@@ -384,8 +384,8 @@ class AudioPool {
     }
   }
 
-  updateRepeatSoundEnabled(enabled: boolean): void {
-    this.repeatSoundEnabled = enabled
+  updateRepeat(enabled: boolean): void {
+    this.enableRepeat = enabled
     if (!enabled) {
       const soundGroups = new Map<string, [string, Pool][]>()
 

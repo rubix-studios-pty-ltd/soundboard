@@ -60,7 +60,7 @@ export function SoundButton({
   const { settings, updateSettings } = useSettings()
 
   const handleClick = async () => {
-    if (settings.repeatSoundEnabled) {
+    if (settings.enableRepeat) {
       await playSound(id, file, isUserAdded)
     } else if (isActive) {
       stopSound(file)

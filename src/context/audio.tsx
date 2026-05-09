@@ -43,8 +43,8 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     audioPoolRef.current = new AudioPool(
       settings.maxPoolSize,
       settings.maxInstancesPerSound,
-      settings.multiSoundEnabled,
-      settings.repeatSoundEnabled
+      settings.enableMulti,
+      settings.enableRepeat
     )
 
     if (settings.volume >= 0 && settings.volume <= 1) {
@@ -61,8 +61,8 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [
     settingsInitialized,
     settings.volume,
-    settings.multiSoundEnabled,
-    settings.repeatSoundEnabled,
+    settings.enableMulti,
+    settings.enableRepeat,
     settings.maxPoolSize,
     settings.maxInstancesPerSound,
   ])
@@ -94,7 +94,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         file,
         isUserAdded,
         volume ?? settings.volume,
-        repeatEnabled ?? settings.repeatSoundEnabled
+        repeatEnabled ?? settings.enableRepeat
       )
     } catch (error: unknown) {
       console.error('Error playing sound:', error)

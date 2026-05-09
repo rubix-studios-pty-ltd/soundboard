@@ -179,8 +179,8 @@ function setupIPC(): void {
   ipcMain.on('save-settings', (_event: IpcMainEvent, settings: Settings) => {
     try {
       const validatedSettings: Settings = {
-        multiSoundEnabled: Boolean(settings.multiSoundEnabled),
-        repeatSoundEnabled: Boolean(settings.repeatSoundEnabled),
+        enableMulti: Boolean(settings.enableMulti),
+        enableRepeat: Boolean(settings.enableRepeat),
         alwaysOnTop: Boolean(settings.alwaysOnTop),
         volume: Number(settings.volume),
         maxPoolSize:
