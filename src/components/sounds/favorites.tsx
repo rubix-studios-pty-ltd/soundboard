@@ -5,7 +5,7 @@ import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import { useHotkey } from '@/hooks/useHotkey'
+import { useHotkey } from '@/hooks/useHot'
 import { generateId } from '@/utils/sound/generateId'
 
 export function FavoriteGrid() {
