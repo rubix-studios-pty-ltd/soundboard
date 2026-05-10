@@ -1,7 +1,7 @@
 import { type SoundData } from '@/types/sound'
-import { generateId } from '@/utils/sound/generateId'
+import { generateId } from '@/utils/audio/generateId'
 
-export const createSoundData = async (
+export const createAudioData = async (
   file: File,
   type: 'sound' | 'music',
   customTitle?: string

@@ -1,15 +1,16 @@
 import { type SoundData } from '@/types/sound'
-import { deleteSounds } from '@/utils/sound/deleteSound'
-import { getAsset, getJson } from '@/utils/sound/paths'
-import { readSounds } from '@/utils/sound/readSound'
-import { validateFile } from '@/utils/sound/validation'
-import { writePath } from '@/utils/sound/writePath'
+import { deleteAudio } from '@/utils/audio/deleteAudio'
+import { readAudio } from '@/utils/audio/readAudio'
+import { getAsset } from '@/utils/getAsset'
+import { getJson } from '@/utils/getJson'
+import { validateFile } from '@/utils/validateFile'
+import { writePath } from '@/utils/writePath'
 
-export function soundsManager(type: 'sound' | 'music') {
+export function audioManager(type: 'sound' | 'music') {
   const jsonPath = getJson(type)
 
   const loadSounds = async (): Promise<SoundData[]> => {
-    const sounds = await readSounds(jsonPath)
+    const sounds = await readAudio(jsonPath)
     const validated: SoundData[] = []
 
     for (const sound of sounds) {
@@ -35,14 +36,14 @@ export function soundsManager(type: 'sound' | 'music') {
         sounds.push(sound)
         await writePath(jsonPath, sounds)
       } else {
-        throw new Error('Sound file does not exist')
+        throw new Error('Audio file does not exist')
       }
     },
     remove: async (soundId: string) => {
       const sounds = await loadSounds()
       const soundPath = sounds.find((s) => s.id === soundId)
       if (!soundPath) return
-      await deleteSounds(getAsset(soundPath.file))
+      await deleteAudio(getAsset(soundPath.file))
     },
   }
 }

@@ -2,22 +2,27 @@ import { createContext, type ReactNode, useCallback, useContext, useMemo } from 
 
 import { useSound } from '@/hooks/useSound'
 import { type SoundData, type SoundsContextType, type SoundType } from '@/types/sound'
-import { generateId } from '@/utils/sound/generateId'
+import { generateId } from '@/utils/audio/generateId'
+import { mergeAudio } from '@/utils/audio/mergeAudio'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
-import { mergeSounds } from '@/utils/sound/mergeSounds'
 
 const SoundsContext = createContext<SoundsContextType | null>(null)
 
 export function SoundsProvider({ children }: { children: ReactNode }) {
-  const regular = useSound('sound')
+  const soundState = useSound('sound')
   const musicState = useSound('music')
+  const setSound = getSound()
+  const setMusic = getMusic()
 
-  const sounds = useMemo(() => mergeSounds(getSound(), regular.userSounds), [regular.userSounds])
+  const sounds = useMemo(
+    () => mergeAudio(setSound, soundState.userSounds),
+    [setSound, soundState.userSounds]
+  )
 
   const music = useMemo(
-    () => mergeSounds(getMusic(), musicState.userSounds),
-    [musicState.userSounds]
+    () => mergeAudio(setMusic, musicState.userSounds),
+    [setMusic, musicState.userSounds]
   )
 
   const addSound = useCallback(
@@ -34,19 +39,19 @@ export function SoundsProvider({ children }: { children: ReactNode }) {
       })
 
       if (type === 'sound') {
-        regular.addUserSound(processedSound)
+        soundState.addUserSound(processedSound)
         return
       }
 
       musicState.addUserSound(processedSound)
     },
-    [regular, musicState]
+    [soundState, musicState]
   )
 
   const removeSound = useCallback(
     async (sound: SoundData, type: SoundType) => {
-      const remove = type === 'sound' ? regular.removeUserSound : musicState.removeUserSound
-      const restore = type === 'sound' ? regular.addUserSound : musicState.addUserSound
+      const remove = type === 'sound' ? soundState.removeUserSound : musicState.removeUserSound
+      const restore = type === 'sound' ? soundState.addUserSound : musicState.addUserSound
 
       try {
         remove(sound.id)
@@ -60,7 +65,7 @@ export function SoundsProvider({ children }: { children: ReactNode }) {
         throw error
       }
     },
-    [regular, musicState]
+    [soundState, musicState]
   )
 
   const value = useMemo<SoundsContextType>(
@@ -69,9 +74,9 @@ export function SoundsProvider({ children }: { children: ReactNode }) {
       music,
       addSound,
       removeSound,
-      isLoading: regular.loading || musicState.loading,
+      isLoading: soundState.loading || musicState.loading,
     }),
-    [sounds, music, addSound, removeSound, regular.loading, musicState.loading]
+    [sounds, music, addSound, removeSound, soundState.loading, musicState.loading]
   )
 
   return <SoundsContext.Provider value={value}>{children}</SoundsContext.Provider>

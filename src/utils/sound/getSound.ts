@@ -1,11 +1,13 @@
-import { rawSoundData } from '@/constants/audio'
+import { SoundList } from '@/constants/audio'
 import { type SoundData } from '@/types/sound'
-import { generateId } from '@/utils/sound/generateId'
+import { generateId } from '@/utils/audio/generateId'
 
-export const getSound = (): SoundData[] => {
-  return rawSoundData.map(([file, title]) => ({
-    id: generateId(file),
-    file,
-    title,
-  }))
+export const sound: SoundData[] = SoundList.map(([file, title]) => ({
+  id: generateId(file),
+  file,
+  title,
+}))
+
+export function getSound(): SoundData[] {
+  return sound
 }

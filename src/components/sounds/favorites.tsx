@@ -7,7 +7,7 @@ import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import { useHotkey } from '@/hooks/useHotkey'
-import { generateId } from '@/utils/sound/generateId'
+import { generateId } from '@/utils/audio/generateId'
 
 export function FavoriteGrid() {
   const { settings, updateSettings } = useSettings()

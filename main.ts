@@ -8,16 +8,16 @@ import { Electron } from '@/store/settings'
 import { type HotkeyMap } from '@/types/hotkeys'
 import { type Settings } from '@/types/settings'
 import { type SoundData } from '@/types/sound'
+import { audioManager } from '@/utils/audio/audioManager'
 import { convertOpus } from '@/utils/audio/convertOpus'
-import { soundsManager } from '@/utils/sound/manager'
 import { createWindow, win } from '@/window/main'
 import { createPopoutWindow, popoutWin } from '@/window/popup'
 
 const shouldLog = () => process.argv.includes('--enable-logging')
 
-const soundManagers = {
-  sound: soundsManager('sound'),
-  music: soundsManager('music'),
+const manager = {
+  sound: audioManager('sound'),
+  music: audioManager('music'),
 }
 
 try {
@@ -78,7 +78,7 @@ try {
 
 function setupIPC(): void {
   ipcMain.handle('load-sounds', async (_, type: 'sound' | 'music') => {
-    return await soundManagers[type].getAll()
+    return await manager[type].getAll()
   })
 
   ipcMain.on('window-control', (_event: IpcMainEvent, action: string, target: string = 'main') => {
@@ -344,7 +344,7 @@ function setupIPC(): void {
 
   ipcMain.handle('add-sound', async (_, params: { sound: SoundData; type: 'sound' | 'music' }) => {
     try {
-      await soundManagers[params.type].add(params.sound)
+      await manager[params.type].add(params.sound)
     } catch (error) {
       if (shouldLog()) {
         console.error('Error adding sound:', error)
@@ -357,7 +357,7 @@ function setupIPC(): void {
     'delete-sound',
     async (_, params: { sound: SoundData; type: 'sound' | 'music' }) => {
       try {
-        await soundManagers[params.type].remove(params.sound.id)
+        await manager[params.type].remove(params.sound.id)
       } catch (error) {
         if (shouldLog()) {
           console.error('Error deleting sound:', error)

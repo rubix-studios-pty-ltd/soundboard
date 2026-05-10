@@ -1,7 +1,7 @@
 import { type SoundData } from '@/types/sound'
-import { generateId } from '@/utils/sound/generateId'
+import { generateId } from '@/utils/audio/generateId'
 
-export function mergeSounds(defaults: SoundData[], userSounds: SoundData[]): SoundData[] {
+export function mergeAudio(defaults: SoundData[], userSounds: SoundData[]): SoundData[] {
   const map = new Map<string, SoundData>()
 
   for (const sound of defaults) {

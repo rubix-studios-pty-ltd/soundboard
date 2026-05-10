@@ -2,8 +2,8 @@ import { KeyManager } from '@/lib/system/hotkeys'
 import { type Config } from '@/types/config'
 import { type SoundData } from '@/types/sound'
 import { AudioPool } from '@/utils/audio/audioPool'
+import { generateId } from '@/utils/audio/generateId'
 import { getElement } from '@/utils/getElement'
-import { generateId } from '@/utils/sound/generateId'
 import { getMusic } from '@/utils/sound/getMusic'
 import { getSound } from '@/utils/sound/getSound'
 
@@ -113,12 +113,15 @@ export class SoundboardApp {
   }
 
   private getSoundFileFromId(id: string): string | undefined {
-    const foundSound = getSound().find((s) => s.id === id || generateId(s.file) === id)
+    const setSound = getSound()
+    const setMusic = getMusic()
+
+    const foundSound = setSound.find((s) => s.id === id || generateId(s.file) === id)
     if (foundSound) {
       return foundSound.file
     }
 
-    const foundMusic = getMusic().find((s) => s.id === id || generateId(s.file) === id)
+    const foundMusic = setMusic.find((s) => s.id === id || generateId(s.file) === id)
     return foundMusic?.file
   }
 
@@ -143,6 +146,9 @@ export class SoundboardApp {
   }
 
   private initializeSoundboard(): void {
+    const setSound = getSound()
+    const setMusic = getMusic()
+
     if (!this.container1 || !this.container2) {
       return
     }
@@ -150,11 +156,11 @@ export class SoundboardApp {
     this.container1.innerHTML = ''
     this.container2.innerHTML = ''
 
-    getSound().forEach((data) => {
+    setSound.forEach((data) => {
       this.container1.appendChild(this.createSoundButton(data))
     })
 
-    getMusic().forEach((data) => {
+    setMusic.forEach((data) => {
       this.container2.appendChild(this.createSoundButton(data))
     })
   }

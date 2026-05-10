@@ -21,7 +21,7 @@ import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import { type Settings } from '@/types/settings'
-import { addTrack } from '@/utils/audio/addTrack'
+import { addAudio } from '@/utils/audio/addAudio'
 
 export function Header() {
   const { stopAll } = useAudio()
@@ -32,7 +32,7 @@ export function Header() {
   const [popoutVisible, setPopoutVisible] = useState(false)
 
   const handleAddSound = async (type: 'sound' | 'music', file: File, title?: string) => {
-    const newSound = await addTrack(file, type, title)
+    const newSound = await addAudio(file, type, title)
     addSound(newSound, type)
     setIsAddModalOpen(false)
   }

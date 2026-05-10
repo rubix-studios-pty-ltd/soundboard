@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs'
 
 import { type SoundData } from '@/types/sound'
-import { getAsset } from '@/utils/sound/paths'
+import { getAsset } from '@/utils/getAsset'
 
 export async function validateFile(sound: SoundData): Promise<boolean> {
   try {

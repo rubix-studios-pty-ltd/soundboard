@@ -1,4 +1,4 @@
-export const rawSoundData: [string, string][] = [
+export const SoundList: [string, string][] = [
   ['sound/laugh-1.opus', 'Cười'],
   ['sound/laugh-2.opus', 'Cười 2'],
   ['sound/laugh-group.opus', 'Cười 3'],
