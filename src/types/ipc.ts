@@ -23,6 +23,7 @@ export interface IPC {
   addSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
   deleteSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
   validateSound: (sound: SoundData) => Promise<boolean>
+  stopAllSounds: () => void
   getAppDataPath: () => Promise<string>
   userSoundPath: (url: string) => Promise<string>
 }

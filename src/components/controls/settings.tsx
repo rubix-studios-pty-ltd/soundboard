@@ -24,8 +24,8 @@ export function SettingsControl() {
     const theme = presetThemes[themeKey]
     updateSettings({
       theme: {
-        enabled: true,
         ...theme,
+        enabled: true,
       },
     })
   }

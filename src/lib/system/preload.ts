@@ -154,6 +154,14 @@ const electronAPI: IPC = {
     }
   },
 
+  stopAllSounds: () => {
+    try {
+      ipcRenderer.send('stop-all-audio')
+    } catch (error) {
+      console.error('Error stopping all sounds:', error)
+    }
+  },
+
   getAppDataPath: async () => {
     try {
       return await ipcRenderer.invoke('get-app-data-path')

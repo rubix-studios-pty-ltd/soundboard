@@ -15,6 +15,7 @@ import { createWindow, win } from '@/window/main'
 import { createPopoutWindow, popoutWin } from '@/window/popup'
 
 const shouldLog = () => process.argv.includes('--enable-logging')
+let hasCleanedUpIPC = false
 
 const manager = {
   sound: audioManager('sound'),
@@ -67,8 +68,8 @@ function setupIPC(): void {
             })
           } else {
             setIsQuitting(true)
-            cleanupWindows()
             cleanupIPC()
+            cleanupWindows()
             app.quit()
           }
           break
@@ -258,6 +259,12 @@ function setupIPC(): void {
     }
   })
 
+  ipcMain.on('stop-all-audio', () => {
+    for (const window of BrowserWindow.getAllWindows()) {
+      window.webContents.send('stop-all-audio')
+    }
+  })
+
   ipcMain.handle('get-app-data-path', async () => {
     return app.getPath('userData')
   })
@@ -307,8 +314,13 @@ function cleanupWindows(): void {
 }
 
 function cleanupIPC(): void {
+  if (hasCleanedUpIPC) {
+    return
+  }
+
+  hasCleanedUpIPC = true
+
   ipcMain.removeAllListeners()
-  win?.webContents?.session.protocol.unhandle('app')
 }
 
 app.once('before-quit', async () => {
@@ -331,8 +343,8 @@ app.on('window-all-closed', () => {
 })
 
 app.on('will-quit', () => {
-  cleanupWindows()
   cleanupIPC()
+  cleanupWindows()
 })
 
 process.on('uncaughtException', (error: Error) => {

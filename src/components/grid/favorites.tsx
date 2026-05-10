@@ -1,8 +1,8 @@
 import { type DragEvent, useCallback, useMemo } from 'react'
 
+import { SoundButton } from '@/components/grid/button'
 import { Exit } from '@/components/icons'
 import { HotkeyModal } from '@/components/modals/hotkey'
-import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
@@ -124,11 +124,10 @@ export function FavoriteGrid() {
 
   return (
     <div className="relative z-10 mb-4">
-      <div className="flex flex-wrap gap-1 p-0">
+      <ul className="flex flex-wrap gap-1 p-0">
         {slots.map((sound, index) => (
-          <button
+          <li
             key={index}
-            type="button"
             className={`relative h-7 w-24 rounded ${
               dragAndDropEnabled ? 'border-2 border-dashed border-gray-600' : ''
             }`}
@@ -163,9 +162,9 @@ export function FavoriteGrid() {
                 )}
               </div>
             )}
-          </button>
+          </li>
         ))}
-      </div>
+      </ul>
       <HotkeyModal
         isOpen={modalOpen}
         onClose={closeModal}
