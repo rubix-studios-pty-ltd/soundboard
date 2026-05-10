@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [3.20.0](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.19.0...v3.20.0) (2026-05-10)
+
+
+### Features
+
+* **release:** rename functions for consistency and clarity, update loading text, and implement useAudio hook ([de31afb](https://github.com/rubix-studios-pty-ltd/soundboard/commit/de31afba702c54309b67f4918b1091a36d9aa528))
+
 # [3.19.0](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.14...v3.19.0) (2026-05-09)
 
 
