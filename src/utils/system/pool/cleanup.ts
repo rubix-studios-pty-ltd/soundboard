@@ -29,7 +29,7 @@ export function releaseAudio(state: PoolState, poolItem: Pool): void {
   recycleAudio(poolItem.audio, state.unusedAudio, state.maxPool)
 }
 
-export function finalizePoolItem(
+export function poolItems(
   state: PoolState,
   poolItem: Pool,
   options: { removeKey?: string } = {}

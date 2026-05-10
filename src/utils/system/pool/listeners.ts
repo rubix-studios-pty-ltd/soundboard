@@ -1,14 +1,14 @@
 import { type Pool } from '@/types/pool'
-import { finalizePoolItem, type PoolState } from '@/utils/system/pool/cleanup'
+import { type PoolState, poolItems } from '@/utils/system/pool/cleanup'
 
 export function audioListeners(state: PoolState, poolItem: Pool): void {
   const endedListener = () => {
-    finalizePoolItem(state, poolItem)
+    poolItems(state, poolItem)
   }
 
   const pauseListener = () => {
     if (!poolItem.audio.ended) {
-      finalizePoolItem(state, poolItem)
+      poolItems(state, poolItem)
     }
   }
 
@@ -16,7 +16,7 @@ export function audioListeners(state: PoolState, poolItem: Pool): void {
     const itemKey = Array.from(state.pool.entries()).find(([_, item]) => item === poolItem)?.[0]
 
     if (itemKey) {
-      finalizePoolItem(state, poolItem, { removeKey: itemKey })
+      poolItems(state, poolItem, { removeKey: itemKey })
     }
   }
 
