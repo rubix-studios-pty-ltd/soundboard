@@ -1,4 +1,4 @@
-import { type CSSProperties, type MouseEvent, useEffect, useState } from 'react'
+import { type MouseEvent, useEffect, useState } from 'react'
 
 import { Chevron, Close } from '@/components/icons'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { presetButtons } from '@/constants/themes'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
+import { getStyle } from '@/utils/getStyle'
 
 interface ButtonProps {
   id: string
@@ -44,22 +45,22 @@ export function SoundButton({
   useEffect(() => {
     if (!id) return
 
-    const checkPlayingState = () => {
+    const playing = () => {
       const playing = isPlaying(file)
       if (isActive !== playing) {
         setIsActive(playing)
       }
     }
 
-    checkPlayingState()
+    playing()
 
-    const interval = setInterval(checkPlayingState, 100)
+    const interval = setInterval(playing, 100)
     return () => clearInterval(interval)
   }, [file, isPlaying, isActive, id])
 
   const { settings, updateSettings } = useSettings()
 
-  const handleClick = async () => {
+  const click = async () => {
     if (settings.enableRepeat) {
       await playSound(id, file, isUserAdded)
     } else if (isActive) {
@@ -69,7 +70,7 @@ export function SoundButton({
     }
   }
 
-  const handleContextMenu = (e: MouseEvent) => {
+  const context = (e: MouseEvent) => {
     e.preventDefault()
     onHotkeyAssign(id)
   }
@@ -166,41 +167,9 @@ export function SoundButton({
         className={`sound-button h-7 w-24 items-center justify-center overflow-hidden rounded p-1 transition-all ${
           settings.buttonSettings && isHidden ? 'opacity-50' : ''
         } ${isDraggable ? 'cursor-move' : ''}`}
-        style={
-          {
-            backgroundColor: settings?.buttonColors?.[id]
-              ? isActive
-                ? '#000'
-                : settings.buttonColors[id]
-              : settings?.theme?.enabled
-                ? isActive
-                  ? settings.theme.buttonActive
-                  : settings.theme.buttonColor
-                : isActive
-                  ? '#000'
-                  : undefined,
-            color: settings?.buttonColors?.[id]
-              ? '#fff'
-              : settings?.theme?.enabled
-                ? settings.theme.buttonText
-                : isActive
-                  ? '#fff'
-                  : undefined,
-            '--button-hover': settings?.buttonColors?.[id]
-              ? isActive
-                ? '#000'
-                : '#404040'
-              : settings?.theme?.enabled
-                ? isActive
-                  ? settings.theme.buttonActive
-                  : settings.theme.buttonHoverColor
-                : isActive
-                  ? '#404040'
-                  : '#e0e0e0',
-          } as CSSProperties
-        }
-        onClick={handleClick}
-        onContextMenu={handleContextMenu}
+        style={getStyle(settings, id, isActive)}
+        onClick={click}
+        onContextMenu={context}
         data-sound-id={id}
       >
         <span className="w-full truncate text-center text-[11px] font-semibold">{title}</span>

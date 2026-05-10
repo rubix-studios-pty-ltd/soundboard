@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useCallback, useContext, useMemo } from 'react'
 
-import { useSound } from '@/hooks/useSound'
+import { useAudio } from '@/hooks/useAudio'
 import { type SoundData, type SoundsContextType, type SoundType } from '@/types/sound'
 import { generateId } from '@/utils/audio/generateId'
 import { mergeAudio } from '@/utils/audio/mergeAudio'
@@ -10,19 +10,19 @@ import { getSound } from '@/utils/getSound'
 const SoundsContext = createContext<SoundsContextType | null>(null)
 
 export function SoundsProvider({ children }: { children: ReactNode }) {
-  const soundState = useSound('sound')
-  const musicState = useSound('music')
+  const soundState = useAudio('sound')
+  const musicState = useAudio('music')
   const setSound = getSound()
   const setMusic = getMusic()
 
   const sounds = useMemo(
-    () => mergeAudio(setSound, soundState.userSounds),
-    [setSound, soundState.userSounds]
+    () => mergeAudio(setSound, soundState.userAudio),
+    [setSound, soundState.userAudio]
   )
 
   const music = useMemo(
-    () => mergeAudio(setMusic, musicState.userSounds),
-    [setMusic, musicState.userSounds]
+    () => mergeAudio(setMusic, musicState.userAudio),
+    [setMusic, musicState.userAudio]
   )
 
   const addSound = useCallback(
@@ -39,19 +39,19 @@ export function SoundsProvider({ children }: { children: ReactNode }) {
       })
 
       if (type === 'sound') {
-        soundState.addUserSound(processedSound)
+        soundState.addUserAudio(processedSound)
         return
       }
 
-      musicState.addUserSound(processedSound)
+      musicState.addUserAudio(processedSound)
     },
     [soundState, musicState]
   )
 
   const removeSound = useCallback(
     async (sound: SoundData, type: SoundType) => {
-      const remove = type === 'sound' ? soundState.removeUserSound : musicState.removeUserSound
-      const restore = type === 'sound' ? soundState.addUserSound : musicState.addUserSound
+      const remove = type === 'sound' ? soundState.removeUserAudio : musicState.removeUserAudio
+      const restore = type === 'sound' ? soundState.addUserAudio : musicState.addUserAudio
 
       try {
         remove(sound.id)

@@ -10,7 +10,7 @@ import { type Settings } from '@/types/settings'
 export function SettingsControl() {
   const { settings, updateSettings } = useSettings()
 
-  const handleThemeChange = (themeKey: string | null) => {
+  const changeTheme = (themeKey: string | null) => {
     if (themeKey === null) {
       updateSettings({
         theme: {
@@ -97,7 +97,7 @@ export function SettingsControl() {
           <Separator />
           <div className="flex gap-2">
             <div className="text-sm font-semibold">Giao diện</div>
-            <ThemePicker onThemeChange={handleThemeChange} />
+            <ThemePicker onThemeChange={changeTheme} />
           </div>
         </div>
       </PopoverContent>
