@@ -1,5 +1,4 @@
-import type React from 'react'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from 'react'
 
 import { useSettings } from '@/context/setting'
 import { AudioPool } from '@/utils/system/pool'
@@ -26,10 +25,11 @@ const AudioContext = createContext<AudioContextType>({
   isReady: false,
 })
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const audioPoolRef = useRef<AudioPool | null>(null)
+export function AudioProvider({ children }: { children: ReactNode }) {
   const { settings, isInitialized: initialized } = useSettings()
   const [isReady, setIsReady] = useState(false)
+
+  const audioPoolRef = useRef<AudioPool | null>(null)
 
   useEffect(() => {
     if (!initialized) {

@@ -36,9 +36,7 @@ export function generateId(filename: string): string {
 
       const lower = normalized.toLowerCase()
 
-      return index === 0
-        ? lower
-        : lower.charAt(0).toUpperCase() + lower.slice(1)
+      return index === 0 ? lower : lower.charAt(0).toUpperCase() + lower.slice(1)
     })
     .join('')
 }
