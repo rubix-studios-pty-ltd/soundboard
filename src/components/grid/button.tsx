@@ -9,6 +9,7 @@ import { presetButtons } from '@/constants/themes'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
+import { type SoundType } from '@/types/sound'
 import { getStyle } from '@/utils/getStyle'
 
 interface ButtonProps {
@@ -22,7 +23,7 @@ interface ButtonProps {
   isInFavorites?: boolean
   isInPopout?: boolean
   isUserAdded?: boolean
-  type: 'sound' | 'music'
+  type: SoundType
 }
 
 export function SoundButton({

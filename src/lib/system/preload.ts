@@ -6,6 +6,7 @@ import { defaultSettings } from '@/constants/settings'
 import { type HotkeyMap } from '@/types/hotkeys'
 import { type IPC } from '@/types/ipc'
 import { type Settings } from '@/types/settings'
+import { type SoundType } from '@/types/sound'
 
 const listeners = new Map<
   (...args: unknown[]) => void,
@@ -35,7 +36,7 @@ const electronAPI: IPC = {
     listeners.delete(listener)
   },
 
-  loadSounds: async (type: 'sound' | 'music') => {
+  loadSounds: async (type: SoundType) => {
     try {
       return await ipcRenderer.invoke('load-sounds', type)
     } catch (error) {

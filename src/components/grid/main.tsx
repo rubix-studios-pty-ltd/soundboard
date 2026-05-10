@@ -6,10 +6,11 @@ import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import { useHotkey } from '@/hooks/useHotkey'
+import { type SoundType } from '@/types/sound'
 import { generateId } from '@/utils/audio/generateId'
 
 interface AudioGridProps {
-  type: 'sound' | 'music'
+  type: SoundType
   containerId: string
 }
 
