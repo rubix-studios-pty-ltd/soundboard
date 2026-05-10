@@ -163,7 +163,7 @@ const electronAPI: IPC = {
     }
   },
 
-  resolveUserSoundPath: async (url: string) => {
+  userSoundPath: async (url: string) => {
     try {
       const userDataPath = await ipcRenderer.invoke('get-app-data-path')
       const filePath = path.normalize(path.join(userDataPath, 'sounds', url))

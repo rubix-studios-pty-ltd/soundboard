@@ -22,7 +22,7 @@ export function App() {
 }
 
 function PopoutContent() {
-  const { settings, isInitialized: settingsInitialized } = useSettings()
+  const { settings, isInitialized: initialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
   const { theme } = settings
@@ -34,7 +34,7 @@ function PopoutContent() {
     [theme]
   )
 
-  if (!settingsInitialized || !audioReady) return <Loading />
+  if (!initialized || !audioReady) return <Loading />
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>

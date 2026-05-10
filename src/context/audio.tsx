@@ -2,7 +2,7 @@ import type React from 'react'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { useSettings } from '@/context/setting'
-import { AudioPool } from '@/utils/audio/audioPool'
+import { AudioPool } from '@/utils/system/pool'
 
 interface AudioContextType {
   playSound: (
@@ -28,11 +28,11 @@ const AudioContext = createContext<AudioContextType>({
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioPoolRef = useRef<AudioPool | null>(null)
-  const { settings, isInitialized: settingsInitialized } = useSettings()
+  const { settings, isInitialized: initialized } = useSettings()
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    if (!settingsInitialized) {
+    if (!initialized) {
       return
     }
 
@@ -40,12 +40,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       audioPoolRef.current.dispose()
     }
 
-    audioPoolRef.current = new AudioPool(
-      settings.maxPoolSize,
-      settings.maxInstancesPerSound,
-      settings.enableMulti,
-      settings.enableRepeat
-    )
+    audioPoolRef.current = new AudioPool(settings.enableMulti, settings.enableRepeat)
 
     if (settings.volume >= 0 && settings.volume <= 1) {
       audioPoolRef.current.updateVolume(settings.volume)
@@ -58,14 +53,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         audioPoolRef.current.dispose()
       }
     }
-  }, [
-    settingsInitialized,
-    settings.volume,
-    settings.enableMulti,
-    settings.enableRepeat,
-    settings.maxPoolSize,
-    settings.maxInstancesPerSound,
-  ])
+  }, [initialized, settings.volume, settings.enableMulti, settings.enableRepeat])
 
   useEffect(() => {
     if (!audioPoolRef.current || !isReady) {
@@ -90,7 +78,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     try {
-      await audioPoolRef.current.play(
+      await audioPoolRef.current.playAudio(
         file,
         isUserAdded,
         volume ?? settings.volume,

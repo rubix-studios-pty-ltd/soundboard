@@ -1,19 +1,24 @@
 import { type Settings } from '@/types/settings'
 
+export const maxPool = 100
+export const maxInstance = 10
+export const maxFavorites = 18
+export const maxPopout = 42
+
 export const defaultSettings: Settings = {
   enableMulti: true,
   enableRepeat: false,
   alwaysOnTop: false,
   volume: 1,
-  maxPoolSize: 100,
-  maxInstancesPerSound: 10,
+  maxPoolSize: maxPool,
+  maxInstancesPerSound: maxInstance,
   buttonSettings: false,
   hiddenSounds: [] as string[],
   buttonColors: {},
   dragAndDropEnabled: false,
   favorites: {
     items: [],
-    maxItems: 18,
+    maxItems: maxFavorites,
   },
   theme: {
     enabled: false,
@@ -25,7 +30,7 @@ export const defaultSettings: Settings = {
   },
   popoutGrid: {
     items: [],
-    maxItems: 42,
+    maxItems: maxPopout,
     window: {
       isOpen: false,
       showOnStartup: false,

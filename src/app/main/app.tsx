@@ -25,7 +25,7 @@ export function App() {
 }
 
 function AppContent() {
-  const { settings, isInitialized: settingsInitialized } = useSettings()
+  const { settings, isInitialized: initialized } = useSettings()
   const { isReady: audioReady } = useAudio()
 
   const { theme, showSoundGrid, showMusicGrid } = settings
@@ -37,7 +37,7 @@ function AppContent() {
     [theme]
   )
 
-  if (!settingsInitialized || !audioReady) return <Loading />
+  if (!initialized || !audioReady) return <Loading />
 
   return (
     <div className="flex h-screen flex-col overflow-hidden" style={themeStyles}>

@@ -1,13 +1,13 @@
 import { KeyManager } from '@/lib/system/hotkeys'
 import { type Config } from '@/types/config'
 import { type SoundData } from '@/types/sound'
-import { AudioPool } from '@/utils/audio/audioPool'
 import { generateId } from '@/utils/audio/generateId'
 import { getElement } from '@/utils/getElement'
 import { getMusic } from '@/utils/getMusic'
 import { getSound } from '@/utils/getSound'
+import { AudioPool } from '@/utils/system/pool'
 
-export class SoundboardApp {
+export class Soundboard {
   private container1: HTMLElement
   private container2: HTMLElement
   private audioPool: AudioPool
@@ -25,7 +25,7 @@ export class SoundboardApp {
     this.volume = getElement('volume')
 
     this.config = config
-    this.audioPool = new AudioPool(100, 10, config.enableMulti, config.enableRepeat)
+    this.audioPool = new AudioPool(config.enableMulti, config.enableRepeat)
     this.keyManager = new KeyManager()
 
     this.initializeSoundboard()
@@ -89,7 +89,7 @@ export class SoundboardApp {
     repeat: boolean,
     isUserAdded: boolean = false
   ): Promise<void> {
-    await this.audioPool.play(file, isUserAdded, volume, repeat, () => {
+    await this.audioPool.playAudio(file, isUserAdded, volume, repeat, () => {
       buttonElement.classList.remove('active')
     })
     buttonElement.classList.add('active')

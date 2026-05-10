@@ -3,8 +3,8 @@ import { type Settings } from '@/types/settings'
 import { type SoundData } from '@/types/sound'
 
 export interface IPC {
-  on: (channel: string, listener: (...args: any[]) => void) => void
-  off: (channel: string, listener: (...args: any[]) => void) => void
+  on: (channel: string, listener: (...args: unknown[]) => void) => void
+  off: (channel: string, listener: (...args: unknown[]) => void) => void
   minimizeWindow: () => void
   maximizeWindow: () => void
   closeWindow: () => void
@@ -24,5 +24,5 @@ export interface IPC {
   deleteSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
   validateSound: (sound: SoundData) => Promise<boolean>
   getAppDataPath: () => Promise<string>
-  resolveUserSoundPath: (url: string) => Promise<string>
+  userSoundPath: (url: string) => Promise<string>
 }

@@ -10,6 +10,7 @@ import { type Settings } from '@/types/settings'
 import { type SoundData } from '@/types/sound'
 import { audioManager } from '@/utils/audio/audioManager'
 import { convertOpus } from '@/utils/audio/convertOpus'
+import { savedSettings } from '@/utils/savedSettings'
 import { createWindow, win } from '@/window/main'
 import { createPopoutWindow, popoutWin } from '@/window/popup'
 
@@ -20,54 +21,9 @@ const manager = {
   music: audioManager('music'),
 }
 
-const maxPool = 100
-const maxInstance = 10
-const maxFavorites = 18
-const maxPopout = 42
-
-function sanitizeSettings(raw: unknown): Settings {
-  const s = (typeof raw === 'object' && raw) ? (raw as Partial<Settings>) : {}
-
-  const themeOk =
-    typeof s.theme === 'object' &&
-    typeof s.theme?.buttonText === 'string' &&
-    typeof s.theme?.buttonActive === 'string' &&
-    typeof s.theme?.buttonColor === 'string' &&
-    typeof s.theme?.backgroundColor === 'string' &&
-    typeof s.theme?.buttonHoverColor === 'string'
-
-  return {
-    enableMulti: Boolean(s.enableMulti),
-    enableRepeat: Boolean(s.enableRepeat),
-    alwaysOnTop: Boolean(s.alwaysOnTop),
-    volume: Number.isFinite(Number((s as any).volume)) ? Number((s as any).volume) : defaultSettings.volume,
-    maxPoolSize: maxPool,
-    maxInstancesPerSound: maxInstance,
-    buttonSettings: Boolean(s.buttonSettings),
-    hiddenSounds: Array.isArray(s.hiddenSounds) ? s.hiddenSounds as string[] : [],
-    buttonColors: typeof s.buttonColors === 'object' && s.buttonColors ? s.buttonColors || {} : {},
-    dragAndDropEnabled: Boolean(s.dragAndDropEnabled),
-    favorites: {
-      items: Array.isArray(s.favorites?.items) ? s.favorites!.items : [],
-      maxItems: maxFavorites,
-    },
-    theme: themeOk ? (s.theme as Settings['theme']) : defaultSettings.theme,
-    popoutGrid: {
-      items: Array.isArray(s.popoutGrid?.items) ? s.popoutGrid!.items : [],
-      maxItems: maxPopout,
-      window: {
-        isOpen: Boolean(s.popoutGrid?.window?.isOpen),
-        showOnStartup: Boolean(s.popoutGrid?.window?.showOnStartup),
-      },
-    },
-    showSoundGrid: Boolean(s.showSoundGrid),
-    showMusicGrid: Boolean(s.showMusicGrid),
-  }
-}
-
 try {
   const raw = Electron.get('settings')
-  Electron.set('settings', sanitizeSettings(raw))
+  Electron.set('settings', savedSettings(raw))
 } catch {
   Electron.set('settings', defaultSettings)
 }
@@ -175,13 +131,13 @@ function setupIPC(): void {
 
   ipcMain.on('save-settings', (_event: IpcMainEvent, settings: Settings) => {
     try {
-
-      const validatedSettings = sanitizeSettings(settings)
+      const validatedSettings = savedSettings(settings)
       Electron.set('settings', validatedSettings)
 
       if (win) {
         win.setAlwaysOnTop(validatedSettings.alwaysOnTop)
       }
+
       if (popoutWin) {
         popoutWin.setAlwaysOnTop(validatedSettings.alwaysOnTop)
       }
@@ -210,7 +166,7 @@ function setupIPC(): void {
           popoutWin.setAlwaysOnTop(isEnabled)
         }
         const currentSettings = Electron.get('settings') ?? defaultSettings
-        const updatedSettings = sanitizeSettings({ ...currentSettings, alwaysOnTop: isEnabled })
+        const updatedSettings = savedSettings({ ...currentSettings, alwaysOnTop: isEnabled })
         Electron.set('settings', updatedSettings)
       }
     } catch (error) {
