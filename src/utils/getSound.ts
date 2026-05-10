@@ -1,4 +1,4 @@
-import { SoundList } from '@/constants/audio'
+import { SoundList } from '@/constants/sound'
 import { type SoundData } from '@/types/sound'
 import { generateId } from '@/utils/audio/generateId'
 

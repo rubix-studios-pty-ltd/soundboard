@@ -3,6 +3,7 @@ import { type DragEvent, useCallback, useMemo } from 'react'
 import { SoundButton } from '@/components/grid/button'
 import { Exit } from '@/components/icons'
 import { HotkeyModal } from '@/components/modals/hotkey'
+import { maxFavorites } from '@/constants/settings'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
@@ -11,28 +12,28 @@ import { generateId } from '@/utils/audio/generateId'
 
 export function FavoriteGrid() {
   const { settings, updateSettings } = useSettings()
-  const { sounds, music } = useSounds()
   const { playSound } = useAudio()
+  const { sounds, music } = useSounds()
 
   const { dragAndDropEnabled, favorites } = settings
 
-  const allSounds = useMemo(() => {
+  const allAudio = useMemo(() => {
     return [...sounds, ...music]
   }, [sounds, music])
 
-  const handleSoundPlay = useCallback(
-    (soundId: string) => {
-      const sound = allSounds.find((s) => s.id === soundId || generateId(s.file) === soundId)
+  const playAudio = useCallback(
+    (audioId: string) => {
+      const audio = allAudio.find((a) => a.id === audioId || generateId(a.file) === audioId)
 
-      if (sound) {
-        playSound(sound.id, sound.file, sound.isUserAdded || false)
+      if (audio) {
+        playSound(audio.id, audio.file, audio.isUserAdded || false)
       }
     },
-    [allSounds, playSound]
+    [allAudio, playSound]
   )
 
   const { modalOpen, currentHotkey, showHotkeyModal, assignHotkey, clearHotkey, closeModal } =
-    useHotkey(allSounds, handleSoundPlay)
+    useHotkey(allAudio, playAudio)
 
   const handleDrop = (e: DragEvent<HTMLElement>, slotIndex: number) => {
     e.preventDefault()
@@ -57,7 +58,7 @@ export function FavoriteGrid() {
       favorites: {
         ...favorites,
         items: newItems,
-        maxItems: 18,
+        maxItems: maxFavorites,
       },
       popoutGrid: settings.popoutGrid.items.includes(soundId)
         ? {
@@ -100,12 +101,12 @@ export function FavoriteGrid() {
   }
 
   const usedSlots = favorites.items
-    .map((soundId) => {
-      const sound = allSounds.find((s) => s.id === soundId || generateId(s.file) === soundId)
-      if (sound) {
+    .map((audioId) => {
+      const audio = allAudio.find((a) => a.id === audioId || generateId(a.file) === audioId)
+      if (audio) {
         return {
-          ...sound,
-          id: sound.id || generateId(sound.file),
+          ...audio,
+          id: audio.id || generateId(audio.file),
         }
       }
       return null
@@ -125,7 +126,7 @@ export function FavoriteGrid() {
   return (
     <div className="relative z-10 mb-4">
       <ul className="flex flex-wrap gap-1 p-0">
-        {slots.map((sound, index) => (
+        {slots.map((audio, index) => (
           <li
             key={index}
             className={`relative h-7 w-24 rounded ${
@@ -136,26 +137,26 @@ export function FavoriteGrid() {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
           >
-            {sound && (
+            {audio && (
               <div
                 className={`relative ${dragAndDropEnabled ? '-translate-x-0.5 -translate-y-0.75 transform' : ''}`}
               >
                 <SoundButton
-                  id={sound.id}
-                  file={sound.file}
-                  title={sound.title}
+                  id={audio.id}
+                  file={audio.file}
+                  title={audio.title}
                   onHotkeyAssign={showHotkeyModal}
                   isDraggable={dragAndDropEnabled}
                   isInFavorites={true}
                   isInPopout={false}
-                  isUserAdded={sound.isUserAdded}
+                  isUserAdded={audio.isUserAdded}
                   type="sound"
                 />
                 {dragAndDropEnabled && (
                   <button
                     type="button"
                     className="absolute -top-1 -right-1 flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-red-500 text-[10px] text-white hover:bg-red-600"
-                    onClick={() => removeFavorite(sound.id)}
+                    onClick={() => removeFavorite(audio.id)}
                   >
                     <Exit className="h-3 w-3" />
                   </button>

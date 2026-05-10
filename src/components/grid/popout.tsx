@@ -3,6 +3,7 @@ import { type DragEvent, useCallback, useMemo } from 'react'
 import { SoundButton } from '@/components/grid/button'
 import { Exit } from '@/components/icons'
 import { HotkeyModal } from '@/components/modals/hotkey'
+import { maxPopout } from '@/constants/settings'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
@@ -57,7 +58,7 @@ export function AudioGrid() {
       popoutGrid: {
         ...popoutGrid,
         items: newItems,
-        maxItems: 42,
+        maxItems: maxPopout,
       },
       favorites: settings.favorites.items.includes(soundId)
         ? {
