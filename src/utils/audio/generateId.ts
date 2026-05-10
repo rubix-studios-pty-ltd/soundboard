@@ -1,36 +1,30 @@
-const numberText = [
-  'Zero',
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'Ten',
-]
-
-function normalize(part: string): string {
-  return part
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
-}
-
 export function generateId(filename: string): string {
-  const cleaned = filename
+  const numberText = [
+    'Zero',
+    'One',
+    'Two',
+    'Three',
+    'Four',
+    'Five',
+    'Six',
+    'Seven',
+    'Eight',
+    'Nine',
+    'Ten',
+  ]
+
+  return filename
     .replace(/^sound[\\/]/, '')
     .replace(/\.[^/.]+$/, '')
     .replace(/^\d+/, '')
-
-  const parts = cleaned.split(/[-_]/).filter(Boolean)
-
-  return parts
+    .split(/[-_]/)
+    .filter(Boolean)
     .map((part, index) => {
-      const normalized = normalize(part)
+      const normalized = part
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
 
       if (/^\d+$/.test(normalized)) {
         const value = Number(normalized)
@@ -42,11 +36,9 @@ export function generateId(filename: string): string {
 
       const lower = normalized.toLowerCase()
 
-      if (index === 0) {
-        return lower
-      }
-
-      return lower.charAt(0).toUpperCase() + lower.slice(1)
+      return index === 0
+        ? lower
+        : lower.charAt(0).toUpperCase() + lower.slice(1)
     })
     .join('')
 }
