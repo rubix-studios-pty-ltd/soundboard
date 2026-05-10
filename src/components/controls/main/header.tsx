@@ -30,7 +30,7 @@ export function Header() {
 
   const [preVolume, setPreVolume] = useState(1)
   const [audioModal, setAudioModal] = useState(false)
-  const [showPopup, setShowPopup] = useState(false)
+  const [showPopout, setShowPopout] = useState(false)
 
   const loadAudio = async (type: 'sound' | 'music', file: File, title?: string) => {
     const newSound = await addAudio(file, type, title)
@@ -66,15 +66,15 @@ export function Header() {
 
   const handleTogglePopout = async () => {
     try {
-      if (showPopup) {
+      if (showPopout) {
         window.electronAPI.windowControl('close', 'popout')
       } else {
         window.electronAPI.windowControl('show', 'popout')
       }
 
-      setShowPopup((prevState) => !prevState)
+      setShowPopout((prevState) => !prevState)
     } catch {
-      setShowPopup(false)
+      setShowPopout(false)
     }
   }
 

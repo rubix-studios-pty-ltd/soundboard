@@ -12,7 +12,7 @@ import { audioManager } from '@/utils/audio/audioManager'
 import { convertOpus } from '@/utils/audio/convertOpus'
 import { savedSettings } from '@/utils/savedSettings'
 import { createWindow, win } from '@/window/main'
-import { createPopoutWindow, popoutWin } from '@/window/popup'
+import { createPopoutWindow, popoutWin } from '@/window/popout'
 
 const shouldLog = () => process.argv.includes('--enable-logging')
 let hasCleanedUpIPC = false

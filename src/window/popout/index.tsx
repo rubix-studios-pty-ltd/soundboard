@@ -11,7 +11,7 @@ export let popoutWin: BrowserWindow | null = null
 export async function createPopoutWindow(): Promise<void> {
   const settings = Electron.get('settings')
 
-  const popup = settings?.popoutGrid?.window
+  const popout = settings?.popoutGrid?.window
 
   const window = new BrowserWindow({
     width: 312,
@@ -42,7 +42,7 @@ export async function createPopoutWindow(): Promise<void> {
   popoutWin = window
 
   window.once('ready-to-show', () => {
-    if (popup?.isOpen || popup?.showOnStartup) {
+    if (popout?.isOpen || popout?.showOnStartup) {
       window.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
       window.show()
     }
