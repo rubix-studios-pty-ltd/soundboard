@@ -1,4 +1,4 @@
-const numbers = [
+const numberText = [
   'Zero',
   'One',
   'Two',
@@ -10,9 +10,9 @@ const numbers = [
   'Eight',
   'Nine',
   'Ten',
-] as const
+]
 
-function normalizePart(part: string): string {
+function normalize(part: string): string {
   return part
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -30,13 +30,13 @@ export function generateId(filename: string): string {
 
   return parts
     .map((part, index) => {
-      const normalized = normalizePart(part)
+      const normalized = normalize(part)
 
       if (/^\d+$/.test(normalized)) {
         const value = Number(normalized)
 
         if (value >= 0 && value <= 10) {
-          return numbers[value]
+          return numberText[value]
         }
       }
 
