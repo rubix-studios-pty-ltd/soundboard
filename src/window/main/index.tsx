@@ -6,7 +6,7 @@ import { getIsQuitting } from '@/store/quitting'
 import { Electron } from '@/store/settings'
 import { getMime } from '@/utils/getMime'
 
-const ROOT_PATH = path.join(__dirname, '..')
+const rootPath = path.join(__dirname, '..')
 
 export let win: BrowserWindow | null = null
 let popoutWin: BrowserWindow | null = null
@@ -22,7 +22,7 @@ export async function createWindow(): Promise<void> {
     frame: false,
     show: false,
     titleBarStyle: 'hidden',
-    icon: path.join(ROOT_PATH, 'icon.ico'),
+    icon: path.join(rootPath, 'icon.ico'),
     ...(process.platform === 'darwin'
       ? {
           titleBarStyle: 'hidden',
@@ -31,7 +31,7 @@ export async function createWindow(): Promise<void> {
       : {}),
     webPreferences: {
       partition: 'persist:soundboard',
-      preload: path.join(ROOT_PATH, 'dist', 'preload.cjs'),
+      preload: path.join(rootPath, 'dist', 'preload.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: false,
@@ -53,7 +53,7 @@ export async function createWindow(): Promise<void> {
 
       const soundPath = [
         path.join(app.getPath('userData'), 'sounds', filePath),
-        path.join(ROOT_PATH, filePath),
+        path.join(rootPath, filePath),
       ]
 
       for (const candidate of soundPath) {
@@ -74,7 +74,7 @@ export async function createWindow(): Promise<void> {
       return new Response('File not found', { status: 404 })
     })
 
-    win.loadFile(path.join(ROOT_PATH, 'index.html'))
+    win.loadFile(path.join(rootPath, 'index.html'))
 
     win.on('close', () => {
       if (getIsQuitting() && popoutWin) {
