@@ -6,7 +6,7 @@ export const defaultSettings: Settings = {
   alwaysOnTop: false,
   volume: 1,
   maxPoolSize: 100,
-  maxInstancesPerSound: 20,
+  maxInstancesPerSound: 10,
   buttonSettings: false,
   hiddenSounds: [] as string[],
   buttonColors: {},

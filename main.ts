@@ -20,59 +20,55 @@ const manager = {
   music: audioManager('music'),
 }
 
+const maxPool = 100
+const maxInstance = 10
+const maxFavorites = 18
+const maxPopout = 42
+
+function sanitizeSettings(raw: unknown): Settings {
+  const s = (typeof raw === 'object' && raw) ? (raw as Partial<Settings>) : {}
+
+  const themeOk =
+    typeof s.theme === 'object' &&
+    typeof s.theme?.buttonText === 'string' &&
+    typeof s.theme?.buttonActive === 'string' &&
+    typeof s.theme?.buttonColor === 'string' &&
+    typeof s.theme?.backgroundColor === 'string' &&
+    typeof s.theme?.buttonHoverColor === 'string'
+
+  return {
+    enableMulti: Boolean(s.enableMulti),
+    enableRepeat: Boolean(s.enableRepeat),
+    alwaysOnTop: Boolean(s.alwaysOnTop),
+    volume: Number.isFinite(Number((s as any).volume)) ? Number((s as any).volume) : defaultSettings.volume,
+    maxPoolSize: maxPool,
+    maxInstancesPerSound: maxInstance,
+    buttonSettings: Boolean(s.buttonSettings),
+    hiddenSounds: Array.isArray(s.hiddenSounds) ? s.hiddenSounds as string[] : [],
+    buttonColors: typeof s.buttonColors === 'object' && s.buttonColors ? s.buttonColors || {} : {},
+    dragAndDropEnabled: Boolean(s.dragAndDropEnabled),
+    favorites: {
+      items: Array.isArray(s.favorites?.items) ? s.favorites!.items : [],
+      maxItems: maxFavorites,
+    },
+    theme: themeOk ? (s.theme as Settings['theme']) : defaultSettings.theme,
+    popoutGrid: {
+      items: Array.isArray(s.popoutGrid?.items) ? s.popoutGrid!.items : [],
+      maxItems: maxPopout,
+      window: {
+        isOpen: Boolean(s.popoutGrid?.window?.isOpen),
+        showOnStartup: Boolean(s.popoutGrid?.window?.showOnStartup),
+      },
+    },
+    showSoundGrid: Boolean(s.showSoundGrid),
+    showMusicGrid: Boolean(s.showMusicGrid),
+  }
+}
+
 try {
-  const settings = Electron.get('settings')
-  if (
-    !settings ||
-    typeof settings.volume !== 'number' ||
-    Number.isNaN(settings.volume) ||
-    settings.volume < 0 ||
-    settings.volume > 1 ||
-    typeof settings.maxPoolSize !== 'number' ||
-    Number.isNaN(settings.maxPoolSize) ||
-    typeof settings.maxInstancesPerSound !== 'number' ||
-    Number.isNaN(settings.maxInstancesPerSound) ||
-    !Array.isArray(settings.hiddenSounds) ||
-    typeof settings.buttonColors !== 'object' ||
-    typeof settings.theme !== 'object' ||
-    typeof settings.theme?.buttonText !== 'string' ||
-    typeof settings.theme?.buttonActive !== 'string'
-  ) {
-    Electron.set('settings', {
-      ...defaultSettings,
-      ...settings,
-      volume:
-        settings &&
-        typeof settings.volume === 'number' &&
-        !Number.isNaN(settings.volume) &&
-        settings.volume >= 0 &&
-        settings.volume <= 1
-          ? settings.volume
-          : 1,
-      maxPoolSize:
-        settings && typeof settings.maxPoolSize === 'number' && !Number.isNaN(settings.maxPoolSize)
-          ? settings.maxPoolSize
-          : 100,
-      maxInstancesPerSound:
-        settings &&
-        typeof settings.maxInstancesPerSound === 'number' &&
-        !Number.isNaN(settings.maxInstancesPerSound)
-          ? settings.maxInstancesPerSound
-          : 20,
-      hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],
-      buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {},
-      theme:
-        typeof settings?.theme === 'object' &&
-        typeof settings.theme?.buttonText === 'string' &&
-        typeof settings.theme?.buttonActive === 'string'
-          ? settings.theme
-          : defaultSettings.theme,
-    })
-  }
-} catch (error) {
-  if (shouldLog()) {
-    console.error('Error validating settings:', error)
-  }
+  const raw = Electron.get('settings')
+  Electron.set('settings', sanitizeSettings(raw))
+} catch {
   Electron.set('settings', defaultSettings)
 }
 
@@ -179,53 +175,8 @@ function setupIPC(): void {
 
   ipcMain.on('save-settings', (_event: IpcMainEvent, settings: Settings) => {
     try {
-      const validatedSettings: Settings = {
-        enableMulti: Boolean(settings.enableMulti),
-        enableRepeat: Boolean(settings.enableRepeat),
-        alwaysOnTop: Boolean(settings.alwaysOnTop),
-        volume: Number(settings.volume),
-        maxPoolSize:
-          settings.maxPoolSize === undefined || Number.isNaN(Number(settings.maxPoolSize))
-            ? 100
-            : Number(settings.maxPoolSize),
-        maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
-        buttonSettings: Boolean(settings.buttonSettings),
-        hiddenSounds: Array.isArray(settings.hiddenSounds) ? settings.hiddenSounds : [],
-        buttonColors: typeof settings.buttonColors === 'object' ? settings.buttonColors || {} : {},
-        dragAndDropEnabled: Boolean(settings.dragAndDropEnabled),
-        favorites: {
-          items: Array.isArray(settings.favorites?.items) ? settings.favorites.items : [],
-          maxItems: Number(settings.favorites?.maxItems) || 18,
-        },
-        popoutGrid: {
-          items: Array.isArray(settings.popoutGrid?.items) ? settings.popoutGrid.items : [],
-          maxItems: Number(settings.popoutGrid?.maxItems) || 42,
-          window: {
-            isOpen: Boolean(settings.popoutGrid?.window?.isOpen),
-            showOnStartup: Boolean(settings.popoutGrid?.window?.showOnStartup),
-          },
-        },
-        theme:
-          typeof settings.theme === 'object' &&
-          typeof settings.theme?.buttonText === 'string' &&
-          typeof settings.theme?.buttonActive === 'string' &&
-          typeof settings.theme?.buttonColor === 'string' &&
-          typeof settings.theme?.backgroundColor === 'string' &&
-          typeof settings.theme?.buttonHoverColor === 'string'
-            ? settings.theme
-            : defaultSettings.theme,
-        showSoundGrid: Boolean(settings.showSoundGrid),
-        showMusicGrid: Boolean(settings.showMusicGrid),
-      }
 
-      if (
-        Number.isNaN(validatedSettings.volume) ||
-        validatedSettings.volume < 0 ||
-        validatedSettings.volume > 1
-      ) {
-        validatedSettings.volume = 1
-      }
-
+      const validatedSettings = sanitizeSettings(settings)
       Electron.set('settings', validatedSettings)
 
       if (win) {
@@ -259,36 +210,7 @@ function setupIPC(): void {
           popoutWin.setAlwaysOnTop(isEnabled)
         }
         const currentSettings = Electron.get('settings') ?? defaultSettings
-        const updatedSettings = {
-          ...currentSettings,
-          alwaysOnTop: isEnabled,
-          maxPoolSize: Number(currentSettings.maxPoolSize) || 100,
-          maxInstancesPerSound: Number(currentSettings.maxInstancesPerSound) || 20,
-          buttonSettings: currentSettings.buttonSettings ?? false,
-          hiddenSounds: Array.isArray(currentSettings.hiddenSounds)
-            ? currentSettings.hiddenSounds
-            : [],
-          buttonColors:
-            typeof currentSettings.buttonColors === 'object'
-              ? currentSettings.buttonColors || {}
-              : {},
-          theme:
-            typeof currentSettings.theme === 'object' &&
-            typeof currentSettings.theme?.buttonText === 'string' &&
-            typeof currentSettings.theme?.buttonActive === 'string' &&
-            typeof currentSettings.theme?.buttonColor === 'string' &&
-            typeof currentSettings.theme?.backgroundColor === 'string' &&
-            typeof currentSettings.theme?.buttonHoverColor === 'string'
-              ? currentSettings.theme
-              : defaultSettings.theme,
-          dragAndDropEnabled: Boolean(currentSettings.dragAndDropEnabled),
-          favorites: {
-            items: Array.isArray(currentSettings.favorites?.items)
-              ? currentSettings.favorites.items
-              : [],
-            maxItems: Number(currentSettings.favorites?.maxItems) || 18,
-          },
-        }
+        const updatedSettings = sanitizeSettings({ ...currentSettings, alwaysOnTop: isEnabled })
         Electron.set('settings', updatedSettings)
       }
     } catch (error) {
