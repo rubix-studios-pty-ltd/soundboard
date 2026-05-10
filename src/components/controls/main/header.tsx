@@ -64,7 +64,7 @@ export function Header() {
     }
   }
 
-  const handleTogglePopout = async () => {
+  const togglePopout = async () => {
     try {
       if (showPopout) {
         window.electronAPI.windowControl('close', 'popout')
@@ -129,7 +129,7 @@ export function Header() {
           <button
             type="button"
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
-            onClick={handleTogglePopout}
+            onClick={togglePopout}
           >
             <Popout className="h-3.5 w-3.5" />
           </button>
