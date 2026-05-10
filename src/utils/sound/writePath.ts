@@ -1,6 +1,6 @@
 import { promises as fs } from 'node:fs'
 
-import type { SoundData } from '@/types/sound'
+import { type SoundData } from '@/types/sound'
 
 export async function writePath(jsonPath: string, sounds: SoundData[]): Promise<void> {
   try {

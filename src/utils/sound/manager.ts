@@ -1,4 +1,4 @@
-import type { SoundData } from '@/types/sound'
+import { type SoundData } from '@/types/sound'
 import { deleteSounds } from '@/utils/sound/deleteSound'
 import { getAsset, getJson } from '@/utils/sound/paths'
 import { readSounds } from '@/utils/sound/readSound'

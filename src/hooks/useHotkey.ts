@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import type { HotkeyMap } from '@/types'
-import type { SoundData } from '@/types/sound'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type SoundData } from '@/types/sound'
 
 export function useHotkey(_soundData: SoundData[], onSoundPlay: (soundId: string) => void) {
   const [hotkeyMap, setHotkeyMap] = useState<HotkeyMap>({})

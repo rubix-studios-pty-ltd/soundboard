@@ -1,6 +1,6 @@
 import { KeyManager } from '@/lib/system/hotkeys'
-import type { Config } from '@/types/config'
-import type { SoundData } from '@/types/sound'
+import { type Config } from '@/types/config'
+import { type SoundData } from '@/types/sound'
 import { AudioPool } from '@/utils/audio/audioPool'
 import { getElement } from '@/utils/getElement'
 import { generateId } from '@/utils/sound/generateId'

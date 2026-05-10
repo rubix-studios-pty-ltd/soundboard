@@ -1,4 +1,5 @@
 import { type DragEvent, useCallback, useMemo } from 'react'
+
 import { Exit } from '@/components/icons'
 import { HotkeyModal } from '@/components/modals/hotkey'
 import { SoundButton } from '@/components/sounds/button'

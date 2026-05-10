@@ -1,4 +1,4 @@
-import type { SoundData } from '@/types/sound'
+import { type SoundData } from '@/types/sound'
 import { generateId } from '@/utils/sound/generateId'
 
 export const createSoundData = async (

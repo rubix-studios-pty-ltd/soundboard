@@ -9,6 +9,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "noUncheckedSideEffectImports": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,

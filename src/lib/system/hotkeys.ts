@@ -1,4 +1,4 @@
-import type { HotkeyMap } from '@/types'
+import { type HotkeyMap } from '@/types/hotkeys'
 import { getElement } from '@/utils/getElement'
 
 export class KeyManager {

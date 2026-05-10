@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+
 import { HotkeyModal } from '@/components/modals/hotkey'
 import { SoundButton } from '@/components/sounds/button'
 import { useAudio } from '@/context/audio'

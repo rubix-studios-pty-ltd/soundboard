@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { SettingsControl } from '@/components/controls/settings'
 import { WindowsControls } from '@/components/controls/window'
 import {
@@ -19,7 +20,7 @@ import { Slider } from '@/components/ui/slider'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import type { Settings } from '@/types/settings'
+import { type Settings } from '@/types/settings'
 import { addTrack } from '@/utils/audio/addTrack'
 
 export function Header() {

@@ -1,11 +1,8 @@
-import type { Settings } from '@/types/settings'
-import type { SoundData } from '@/types/sound'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type Settings } from '@/types/settings'
+import { type SoundData } from '@/types/sound'
 
-export interface HotkeyMap {
-  [soundId: string]: string
-}
-
-export interface IpcApi {
+export interface IPC {
   on: (channel: string, listener: (...args: any[]) => void) => void
   off: (channel: string, listener: (...args: any[]) => void) => void
   minimizeWindow: () => void

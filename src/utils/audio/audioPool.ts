@@ -1,4 +1,4 @@
-import type { Pool } from '@/types/pool'
+import { type Pool } from '@/types/pool'
 
 const silentAudio =
   'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA='

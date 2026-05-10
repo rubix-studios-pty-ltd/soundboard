@@ -2,14 +2,14 @@ import path from 'node:path'
 import { BrowserWindow } from 'electron'
 
 import { getIsQuitting } from '@/store/quitting'
-import Store from '@/store/settings'
+import { Electron } from '@/store/settings'
 
 const ROOT_PATH = path.join(__dirname, '..')
 
 export let popoutWin: BrowserWindow | null = null
 
 export async function createPopoutWindow(): Promise<void> {
-  const settings = Store.get('settings')
+  const settings = Electron.get('settings')
 
   const popup = settings?.popoutGrid?.window
 

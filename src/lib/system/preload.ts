@@ -1,17 +1,18 @@
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { contextBridge, ipcRenderer } from 'electron'
-import { defaultSettings } from '@/constants/settings'
 
-import type { HotkeyMap, IpcApi } from '@/types'
-import type { Settings } from '@/types/settings'
+import { defaultSettings } from '@/constants/settings'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type IPC } from '@/types/ipc'
+import { type Settings } from '@/types/settings'
 
 const listeners = new Map<
   (...args: unknown[]) => void,
   (event: Electron.IpcRendererEvent, ...args: unknown[]) => void
 >()
 
-const electronAPI: IpcApi = {
+const electronAPI: IPC = {
   on: (channel: string, listener: (...args: unknown[]) => void) => {
     const subscription = (_event: Electron.IpcRendererEvent, ...args: unknown[]) => {
       listener(...args)

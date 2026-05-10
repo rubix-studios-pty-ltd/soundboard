@@ -1,8 +1,9 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { app, BrowserWindow, protocol } from 'electron'
+
 import { getIsQuitting } from '@/store/quitting'
-import Store from '@/store/settings'
+import { Electron } from '@/store/settings'
 import { getMime } from '@/utils/getMime'
 
 const ROOT_PATH = path.join(__dirname, '..')
@@ -11,7 +12,7 @@ export let win: BrowserWindow | null = null
 let popoutWin: BrowserWindow | null = null
 
 export async function createWindow(): Promise<void> {
-  const settings = Store.get('settings')
+  const settings = Electron.get('settings')
 
   win = new BrowserWindow({
     width: 614,

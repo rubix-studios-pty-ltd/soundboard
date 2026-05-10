@@ -1,12 +1,13 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { app, BrowserWindow, type IpcMainEvent, ipcMain } from 'electron'
+
 import { defaultSettings } from '@/constants/settings'
 import { setIsQuitting } from '@/store/quitting'
-import Store from '@/store/settings'
-import type { HotkeyMap } from '@/types'
-import type { Settings } from '@/types/settings'
-import type { SoundData } from '@/types/sound'
+import { Electron } from '@/store/settings'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type Settings } from '@/types/settings'
+import { type SoundData } from '@/types/sound'
 import { convertOpus } from '@/utils/audio/convertOpus'
 import { soundsManager } from '@/utils/sound/manager'
 import { createWindow, win } from '@/window/main'
@@ -20,7 +21,7 @@ const soundManagers = {
 }
 
 try {
-  const settings = Store.get('settings')
+  const settings = Electron.get('settings')
   if (
     !settings ||
     typeof settings.volume !== 'number' ||
@@ -37,7 +38,7 @@ try {
     typeof settings.theme?.buttonText !== 'string' ||
     typeof settings.theme?.buttonActive !== 'string'
   ) {
-    Store.set('settings', {
+    Electron.set('settings', {
       ...defaultSettings,
       ...settings,
       volume:
@@ -72,7 +73,7 @@ try {
   if (shouldLog()) {
     console.error('Error validating settings:', error)
   }
-  Store.set('settings', defaultSettings)
+  Electron.set('settings', defaultSettings)
 }
 
 function setupIPC(): void {
@@ -101,8 +102,8 @@ function setupIPC(): void {
         case 'close':
           if (target === 'popout') {
             targetWindow.hide()
-            const settings = Store.get('settings')
-            Store.set('settings', {
+            const settings = Electron.get('settings')
+            Electron.set('settings', {
               ...settings,
               popoutGrid: {
                 ...settings.popoutGrid,
@@ -121,10 +122,10 @@ function setupIPC(): void {
           break
         case 'show':
           if (target === 'popout') {
-            const settings = Store.get('settings')
+            const settings = Electron.get('settings')
             targetWindow.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
             targetWindow.show()
-            Store.set('settings', {
+            Electron.set('settings', {
               ...settings,
               popoutGrid: {
                 ...settings.popoutGrid,
@@ -146,7 +147,7 @@ function setupIPC(): void {
 
   ipcMain.handle('load-hotkeys', (): HotkeyMap => {
     try {
-      return Store.get('hotkeys') ?? {}
+      return Electron.get('hotkeys') ?? {}
     } catch (error) {
       if (shouldLog()) {
         console.error('Error loading hotkeys:', error)
@@ -157,7 +158,7 @@ function setupIPC(): void {
 
   ipcMain.handle('load-settings', (): Settings => {
     try {
-      return Store.get('settings') ?? defaultSettings
+      return Electron.get('settings') ?? defaultSettings
     } catch (error) {
       if (shouldLog()) {
         console.error('Error loading settings:', error)
@@ -168,7 +169,7 @@ function setupIPC(): void {
 
   ipcMain.on('save-hotkeys', (_event: IpcMainEvent, newHotkeys: HotkeyMap) => {
     try {
-      Store.set('hotkeys', newHotkeys)
+      Electron.set('hotkeys', newHotkeys)
     } catch (error) {
       if (shouldLog()) {
         console.error('Error saving hotkeys:', error)
@@ -225,7 +226,7 @@ function setupIPC(): void {
         validatedSettings.volume = 1
       }
 
-      Store.set('settings', validatedSettings)
+      Electron.set('settings', validatedSettings)
 
       if (win) {
         win.setAlwaysOnTop(validatedSettings.alwaysOnTop)
@@ -241,7 +242,7 @@ function setupIPC(): void {
         console.error('Error saving settings:', error)
       }
       try {
-        Store.set('settings', defaultSettings)
+        Electron.set('settings', defaultSettings)
       } catch (e) {
         if (shouldLog()) {
           console.error('Failed to save default settings:', e)
@@ -257,7 +258,7 @@ function setupIPC(): void {
         if (popoutWin) {
           popoutWin.setAlwaysOnTop(isEnabled)
         }
-        const currentSettings = Store.get('settings') ?? defaultSettings
+        const currentSettings = Electron.get('settings') ?? defaultSettings
         const updatedSettings = {
           ...currentSettings,
           alwaysOnTop: isEnabled,
@@ -288,7 +289,7 @@ function setupIPC(): void {
             maxItems: Number(currentSettings.favorites?.maxItems) || 18,
           },
         }
-        Store.set('settings', updatedSettings)
+        Electron.set('settings', updatedSettings)
       }
     } catch (error) {
       if (shouldLog()) {
@@ -436,9 +437,9 @@ app.once('before-quit', async () => {
   setIsQuitting(true)
 
   try {
-    const settings = Store.get('settings')
+    const settings = Electron.get('settings')
     if (settings) {
-      Store.set('settings', settings)
+      Electron.set('settings', settings)
     }
   } catch (error) {
     console.error('Error during shutdown:', error)

@@ -1,7 +1,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 
 import { defaultSettings } from '@/constants/settings'
-import type { Settings } from '@/types/settings'
+import { type Settings } from '@/types/settings'
 
 interface SettingsContextType {
   settings: Settings
