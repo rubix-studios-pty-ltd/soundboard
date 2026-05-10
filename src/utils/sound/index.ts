@@ -4,8 +4,8 @@ import { type SoundData } from '@/types/sound'
 import { AudioPool } from '@/utils/audio/audioPool'
 import { generateId } from '@/utils/audio/generateId'
 import { getElement } from '@/utils/getElement'
-import { getMusic } from '@/utils/sound/getMusic'
-import { getSound } from '@/utils/sound/getSound'
+import { getMusic } from '@/utils/getMusic'
+import { getSound } from '@/utils/getSound'
 
 export class SoundboardApp {
   private container1: HTMLElement

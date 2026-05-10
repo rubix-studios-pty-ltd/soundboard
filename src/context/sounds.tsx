@@ -4,8 +4,8 @@ import { useSound } from '@/hooks/useSound'
 import { type SoundData, type SoundsContextType, type SoundType } from '@/types/sound'
 import { generateId } from '@/utils/audio/generateId'
 import { mergeAudio } from '@/utils/audio/mergeAudio'
-import { getMusic } from '@/utils/sound/getMusic'
-import { getSound } from '@/utils/sound/getSound'
+import { getMusic } from '@/utils/getMusic'
+import { getSound } from '@/utils/getSound'
 
 const SoundsContext = createContext<SoundsContextType | null>(null)
 

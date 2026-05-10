@@ -19,7 +19,7 @@ export function useSound(type: 'sound' | 'music') {
     []
   )
 
-  const validateSoundFile = useCallback(async (sound: SoundData): Promise<boolean> => {
+  const soundFile = useCallback(async (sound: SoundData): Promise<boolean> => {
     try {
       await window.electronAPI.validateSound(sound)
       return true
@@ -76,7 +76,7 @@ export function useSound(type: 'sound' | 'music') {
 
         for (const sound of sounds) {
           const processedSound = processSound(sound)
-          const isValid = await validateSoundFile(processedSound)
+          const isValid = await soundFile(processedSound)
 
           if (isValid) {
             validSounds.push(processedSound)
@@ -96,7 +96,7 @@ export function useSound(type: 'sound' | 'music') {
     }
 
     loadUserSounds()
-  }, [type, processSound, validateSoundFile])
+  }, [type, processSound, soundFile])
 
   return { userSounds, loading, addUserSound, removeUserSound, reloadSounds }
 }

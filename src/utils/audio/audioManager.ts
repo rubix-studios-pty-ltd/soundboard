@@ -1,10 +1,10 @@
 import { type SoundData } from '@/types/sound'
 import { deleteAudio } from '@/utils/audio/deleteAudio'
 import { readAudio } from '@/utils/audio/readAudio'
+import { validateFile } from '@/utils/audio/validateFile'
+import { writePath } from '@/utils/audio/writePath'
 import { getAsset } from '@/utils/getAsset'
 import { getJson } from '@/utils/getJson'
-import { validateFile } from '@/utils/validateFile'
-import { writePath } from '@/utils/writePath'
 
 export function audioManager(type: 'sound' | 'music') {
   const jsonPath = getJson(type)
