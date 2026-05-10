@@ -21,7 +21,7 @@ export function recentSource(state: PoolState): void {
   const soundGroups = new Map<string, [string, Pool][]>()
 
   for (const entry of state.pool.entries()) {
-    const [_key, item] = entry
+    const [_, item] = entry
     if (!item.isPlaying) continue
 
     if (!soundGroups.has(item.source)) {
