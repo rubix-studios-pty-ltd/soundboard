@@ -40,9 +40,9 @@ function AppContent() {
   if (!settingsInitialized || !audioReady) return <Loading />
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
+    <div className="flex h-screen flex-col overflow-hidden" style={themeStyles}>
       <Header />
-      <main className="flex-1 p-1">
+      <main className="flex-1 overflow-y-auto p-1">
         <FavoriteGrid />
         <div className="flex flex-wrap items-start justify-around gap-1">
           {showSoundGrid && <SoundGrid type="sound" containerId="container1" />}

@@ -15,7 +15,7 @@ export async function createWindow(): Promise<void> {
   const settings = Electron.get('settings')
 
   win = new BrowserWindow({
-    width: 614,
+    width: 620,
     height: 984,
     resizable: true,
     alwaysOnTop: settings?.alwaysOnTop ?? false,
