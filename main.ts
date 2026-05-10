@@ -1,83 +1,37 @@
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
 import { app, BrowserWindow, type IpcMainEvent, ipcMain } from 'electron'
+
 import { defaultSettings } from '@/constants/settings'
 import { setIsQuitting } from '@/store/quitting'
-import Store from '@/store/settings'
-import type { HotkeyMap } from '@/types'
-import type { Settings } from '@/types/settings'
-import type { SoundData } from '@/types/sound'
+import { Electron } from '@/store/settings'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type Settings } from '@/types/settings'
+import { type SoundData } from '@/types/sound'
+import { audioManager } from '@/utils/audio/audioManager'
 import { convertOpus } from '@/utils/audio/convertOpus'
-import { soundsManager } from '@/utils/sound/manager'
+import { savedSettings } from '@/utils/savedSettings'
 import { createWindow, win } from '@/window/main'
-import { createPopoutWindow, popoutWin } from '@/window/popup'
+import { createPopoutWindow, popoutWin } from '@/window/popout'
 
 const shouldLog = () => process.argv.includes('--enable-logging')
+let hasCleanedUpIPC = false
 
-const soundManagers = {
-  sound: soundsManager('sound'),
-  music: soundsManager('music'),
+const manager = {
+  sound: audioManager('sound'),
+  music: audioManager('music'),
 }
 
 try {
-  const settings = Store.get('settings')
-  if (
-    !settings ||
-    typeof settings.volume !== 'number' ||
-    Number.isNaN(settings.volume) ||
-    settings.volume < 0 ||
-    settings.volume > 1 ||
-    typeof settings.maxPoolSize !== 'number' ||
-    Number.isNaN(settings.maxPoolSize) ||
-    typeof settings.maxInstancesPerSound !== 'number' ||
-    Number.isNaN(settings.maxInstancesPerSound) ||
-    !Array.isArray(settings.hiddenSounds) ||
-    typeof settings.buttonColors !== 'object' ||
-    typeof settings.theme !== 'object' ||
-    typeof settings.theme?.buttonText !== 'string' ||
-    typeof settings.theme?.buttonActive !== 'string'
-  ) {
-    Store.set('settings', {
-      ...defaultSettings,
-      ...settings,
-      volume:
-        settings &&
-        typeof settings.volume === 'number' &&
-        !Number.isNaN(settings.volume) &&
-        settings.volume >= 0 &&
-        settings.volume <= 1
-          ? settings.volume
-          : 1,
-      maxPoolSize:
-        settings && typeof settings.maxPoolSize === 'number' && !Number.isNaN(settings.maxPoolSize)
-          ? settings.maxPoolSize
-          : 100,
-      maxInstancesPerSound:
-        settings &&
-        typeof settings.maxInstancesPerSound === 'number' &&
-        !Number.isNaN(settings.maxInstancesPerSound)
-          ? settings.maxInstancesPerSound
-          : 20,
-      hiddenSounds: Array.isArray(settings?.hiddenSounds) ? settings.hiddenSounds : [],
-      buttonColors: typeof settings?.buttonColors === 'object' ? settings.buttonColors || {} : {},
-      theme:
-        typeof settings?.theme === 'object' &&
-        typeof settings.theme?.buttonText === 'string' &&
-        typeof settings.theme?.buttonActive === 'string'
-          ? settings.theme
-          : defaultSettings.theme,
-    })
-  }
-} catch (error) {
-  if (shouldLog()) {
-    console.error('Error validating settings:', error)
-  }
-  Store.set('settings', defaultSettings)
+  const raw = Electron.get('settings')
+  Electron.set('settings', savedSettings(raw))
+} catch {
+  Electron.set('settings', defaultSettings)
 }
 
 function setupIPC(): void {
   ipcMain.handle('load-sounds', async (_, type: 'sound' | 'music') => {
-    return await soundManagers[type].getAll()
+    return await manager[type].getAll()
   })
 
   ipcMain.on('window-control', (_event: IpcMainEvent, action: string, target: string = 'main') => {
@@ -101,8 +55,8 @@ function setupIPC(): void {
         case 'close':
           if (target === 'popout') {
             targetWindow.hide()
-            const settings = Store.get('settings')
-            Store.set('settings', {
+            const settings = Electron.get('settings')
+            Electron.set('settings', {
               ...settings,
               popoutGrid: {
                 ...settings.popoutGrid,
@@ -114,17 +68,17 @@ function setupIPC(): void {
             })
           } else {
             setIsQuitting(true)
-            cleanupWindows()
             cleanupIPC()
+            cleanupWindows()
             app.quit()
           }
           break
         case 'show':
           if (target === 'popout') {
-            const settings = Store.get('settings')
+            const settings = Electron.get('settings')
             targetWindow.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
             targetWindow.show()
-            Store.set('settings', {
+            Electron.set('settings', {
               ...settings,
               popoutGrid: {
                 ...settings.popoutGrid,
@@ -146,7 +100,7 @@ function setupIPC(): void {
 
   ipcMain.handle('load-hotkeys', (): HotkeyMap => {
     try {
-      return Store.get('hotkeys') ?? {}
+      return Electron.get('hotkeys') ?? {}
     } catch (error) {
       if (shouldLog()) {
         console.error('Error loading hotkeys:', error)
@@ -157,7 +111,7 @@ function setupIPC(): void {
 
   ipcMain.handle('load-settings', (): Settings => {
     try {
-      return Store.get('settings') ?? defaultSettings
+      return Electron.get('settings') ?? defaultSettings
     } catch (error) {
       if (shouldLog()) {
         console.error('Error loading settings:', error)
@@ -168,7 +122,7 @@ function setupIPC(): void {
 
   ipcMain.on('save-hotkeys', (_event: IpcMainEvent, newHotkeys: HotkeyMap) => {
     try {
-      Store.set('hotkeys', newHotkeys)
+      Electron.set('hotkeys', newHotkeys)
     } catch (error) {
       if (shouldLog()) {
         console.error('Error saving hotkeys:', error)
@@ -178,58 +132,13 @@ function setupIPC(): void {
 
   ipcMain.on('save-settings', (_event: IpcMainEvent, settings: Settings) => {
     try {
-      const validatedSettings: Settings = {
-        enableMulti: Boolean(settings.enableMulti),
-        enableRepeat: Boolean(settings.enableRepeat),
-        alwaysOnTop: Boolean(settings.alwaysOnTop),
-        volume: Number(settings.volume),
-        maxPoolSize:
-          settings.maxPoolSize === undefined || Number.isNaN(Number(settings.maxPoolSize))
-            ? 100
-            : Number(settings.maxPoolSize),
-        maxInstancesPerSound: Number(settings.maxInstancesPerSound) || 20,
-        buttonSettings: Boolean(settings.buttonSettings),
-        hiddenSounds: Array.isArray(settings.hiddenSounds) ? settings.hiddenSounds : [],
-        buttonColors: typeof settings.buttonColors === 'object' ? settings.buttonColors || {} : {},
-        dragAndDropEnabled: Boolean(settings.dragAndDropEnabled),
-        favorites: {
-          items: Array.isArray(settings.favorites?.items) ? settings.favorites.items : [],
-          maxItems: Number(settings.favorites?.maxItems) || 18,
-        },
-        popoutGrid: {
-          items: Array.isArray(settings.popoutGrid?.items) ? settings.popoutGrid.items : [],
-          maxItems: Number(settings.popoutGrid?.maxItems) || 42,
-          window: {
-            isOpen: Boolean(settings.popoutGrid?.window?.isOpen),
-            showOnStartup: Boolean(settings.popoutGrid?.window?.showOnStartup),
-          },
-        },
-        theme:
-          typeof settings.theme === 'object' &&
-          typeof settings.theme?.buttonText === 'string' &&
-          typeof settings.theme?.buttonActive === 'string' &&
-          typeof settings.theme?.buttonColor === 'string' &&
-          typeof settings.theme?.backgroundColor === 'string' &&
-          typeof settings.theme?.buttonHoverColor === 'string'
-            ? settings.theme
-            : defaultSettings.theme,
-        showSoundGrid: Boolean(settings.showSoundGrid),
-        showMusicGrid: Boolean(settings.showMusicGrid),
-      }
-
-      if (
-        Number.isNaN(validatedSettings.volume) ||
-        validatedSettings.volume < 0 ||
-        validatedSettings.volume > 1
-      ) {
-        validatedSettings.volume = 1
-      }
-
-      Store.set('settings', validatedSettings)
+      const validatedSettings = savedSettings(settings)
+      Electron.set('settings', validatedSettings)
 
       if (win) {
         win.setAlwaysOnTop(validatedSettings.alwaysOnTop)
       }
+
       if (popoutWin) {
         popoutWin.setAlwaysOnTop(validatedSettings.alwaysOnTop)
       }
@@ -241,7 +150,7 @@ function setupIPC(): void {
         console.error('Error saving settings:', error)
       }
       try {
-        Store.set('settings', defaultSettings)
+        Electron.set('settings', defaultSettings)
       } catch (e) {
         if (shouldLog()) {
           console.error('Failed to save default settings:', e)
@@ -257,38 +166,9 @@ function setupIPC(): void {
         if (popoutWin) {
           popoutWin.setAlwaysOnTop(isEnabled)
         }
-        const currentSettings = Store.get('settings') ?? defaultSettings
-        const updatedSettings = {
-          ...currentSettings,
-          alwaysOnTop: isEnabled,
-          maxPoolSize: Number(currentSettings.maxPoolSize) || 100,
-          maxInstancesPerSound: Number(currentSettings.maxInstancesPerSound) || 20,
-          buttonSettings: currentSettings.buttonSettings ?? false,
-          hiddenSounds: Array.isArray(currentSettings.hiddenSounds)
-            ? currentSettings.hiddenSounds
-            : [],
-          buttonColors:
-            typeof currentSettings.buttonColors === 'object'
-              ? currentSettings.buttonColors || {}
-              : {},
-          theme:
-            typeof currentSettings.theme === 'object' &&
-            typeof currentSettings.theme?.buttonText === 'string' &&
-            typeof currentSettings.theme?.buttonActive === 'string' &&
-            typeof currentSettings.theme?.buttonColor === 'string' &&
-            typeof currentSettings.theme?.backgroundColor === 'string' &&
-            typeof currentSettings.theme?.buttonHoverColor === 'string'
-              ? currentSettings.theme
-              : defaultSettings.theme,
-          dragAndDropEnabled: Boolean(currentSettings.dragAndDropEnabled),
-          favorites: {
-            items: Array.isArray(currentSettings.favorites?.items)
-              ? currentSettings.favorites.items
-              : [],
-            maxItems: Number(currentSettings.favorites?.maxItems) || 18,
-          },
-        }
-        Store.set('settings', updatedSettings)
+        const currentSettings = Electron.get('settings') ?? defaultSettings
+        const updatedSettings = savedSettings({ ...currentSettings, alwaysOnTop: isEnabled })
+        Electron.set('settings', updatedSettings)
       }
     } catch (error) {
       if (shouldLog()) {
@@ -343,7 +223,7 @@ function setupIPC(): void {
 
   ipcMain.handle('add-sound', async (_, params: { sound: SoundData; type: 'sound' | 'music' }) => {
     try {
-      await soundManagers[params.type].add(params.sound)
+      await manager[params.type].add(params.sound)
     } catch (error) {
       if (shouldLog()) {
         console.error('Error adding sound:', error)
@@ -356,7 +236,7 @@ function setupIPC(): void {
     'delete-sound',
     async (_, params: { sound: SoundData; type: 'sound' | 'music' }) => {
       try {
-        await soundManagers[params.type].remove(params.sound.id)
+        await manager[params.type].remove(params.sound.id)
       } catch (error) {
         if (shouldLog()) {
           console.error('Error deleting sound:', error)
@@ -376,6 +256,12 @@ function setupIPC(): void {
         console.error('Error validating sound:', error)
       }
       return false
+    }
+  })
+
+  ipcMain.on('stop-all-audio', () => {
+    for (const window of BrowserWindow.getAllWindows()) {
+      window.webContents.send('stop-all-audio')
     }
   })
 
@@ -428,17 +314,22 @@ function cleanupWindows(): void {
 }
 
 function cleanupIPC(): void {
+  if (hasCleanedUpIPC) {
+    return
+  }
+
+  hasCleanedUpIPC = true
+
   ipcMain.removeAllListeners()
-  win?.webContents?.session.protocol.unhandle('app')
 }
 
 app.once('before-quit', async () => {
   setIsQuitting(true)
 
   try {
-    const settings = Store.get('settings')
+    const settings = Electron.get('settings')
     if (settings) {
-      Store.set('settings', settings)
+      Electron.set('settings', settings)
     }
   } catch (error) {
     console.error('Error during shutdown:', error)
@@ -452,8 +343,8 @@ app.on('window-all-closed', () => {
 })
 
 app.on('will-quit', () => {
-  cleanupWindows()
   cleanupIPC()
+  cleanupWindows()
 })
 
 process.on('uncaughtException', (error: Error) => {

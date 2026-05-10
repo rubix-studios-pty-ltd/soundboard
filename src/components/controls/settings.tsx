@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { ThemePicker } from '@/components/ui/theme-picker'
 import { presetThemes } from '@/constants/themes'
 import { useSettings } from '@/context/setting'
-import type { Settings } from '@/types/settings'
+import { type Settings } from '@/types/settings'
 
 export function SettingsControl() {
   const { settings, updateSettings } = useSettings()
@@ -24,8 +24,8 @@ export function SettingsControl() {
     const theme = presetThemes[themeKey]
     updateSettings({
       theme: {
-        enabled: true,
         ...theme,
+        enabled: true,
       },
     })
   }

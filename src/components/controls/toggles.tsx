@@ -1,17 +1,15 @@
-interface ToggleSwitchProps {
+interface ToggleProps {
   checked: boolean
   onChange: (checked: boolean) => void
 }
 
-export function ToggleSwitch({ checked, onChange }: ToggleSwitchProps) {
+export function ToggleSwitch({ checked, onChange }: ToggleProps) {
   return (
-    <div className="flex flex-col items-center">
-      <input
-        type="checkbox"
-        className="toggle-switch mt-1"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-      />
-    </div>
+    <input
+      type="checkbox"
+      className="flex flex-col items-center toggle-switch mt-1"
+      checked={checked}
+      onChange={(e) => onChange(e.target.checked)}
+    />
   )
 }

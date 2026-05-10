@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
+
 import { Loading } from '@/components/controls/loading'
 import { Header } from '@/components/controls/popout/header'
-import { SoundGrid } from '@/components/sounds/popout/grid'
-import { AudioProvider, useAudio } from '@/context/audio'
+import { AudioGrid } from '@/components/grid/popout'
+import { AudioProvider } from '@/context/audio'
 import { SettingsProvider, useSettings } from '@/context/setting'
 import { SoundsProvider } from '@/context/sounds'
 
@@ -21,8 +22,7 @@ export function App() {
 }
 
 function PopoutContent() {
-  const { settings, isInitialized: settingsInitialized } = useSettings()
-  const { isReady: audioReady } = useAudio()
+  const { settings, isInitialized: initialized } = useSettings()
 
   const { theme } = settings
 
@@ -33,15 +33,13 @@ function PopoutContent() {
     [theme]
   )
 
-  if (!settingsInitialized || !audioReady) return <Loading />
+  if (!initialized) return <Loading />
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden" style={themeStyles}>
       <Header />
-      <main className="flex-1">
-        <div className="p-1">
-          <SoundGrid />
-        </div>
+      <main className="flex-1 p-1">
+        <AudioGrid />
       </main>
     </div>
   )

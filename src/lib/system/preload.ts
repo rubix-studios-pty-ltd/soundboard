@@ -1,17 +1,18 @@
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { contextBridge, ipcRenderer } from 'electron'
-import { defaultSettings } from '@/constants/settings'
 
-import type { HotkeyMap, IpcApi } from '@/types'
-import type { Settings } from '@/types/settings'
+import { defaultSettings } from '@/constants/settings'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type IPC } from '@/types/ipc'
+import { type Settings } from '@/types/settings'
 
 const listeners = new Map<
   (...args: unknown[]) => void,
   (event: Electron.IpcRendererEvent, ...args: unknown[]) => void
 >()
 
-const electronAPI: IpcApi = {
+const electronAPI: IPC = {
   on: (channel: string, listener: (...args: unknown[]) => void) => {
     const subscription = (_event: Electron.IpcRendererEvent, ...args: unknown[]) => {
       listener(...args)
@@ -153,6 +154,14 @@ const electronAPI: IpcApi = {
     }
   },
 
+  stopAllSounds: () => {
+    try {
+      ipcRenderer.send('stop-all-audio')
+    } catch (error) {
+      console.error('Error stopping all sounds:', error)
+    }
+  },
+
   getAppDataPath: async () => {
     try {
       return await ipcRenderer.invoke('get-app-data-path')
@@ -162,7 +171,7 @@ const electronAPI: IpcApi = {
     }
   },
 
-  resolveUserSoundPath: async (url: string) => {
+  userSoundPath: async (url: string) => {
     try {
       const userDataPath = await ipcRenderer.invoke('get-app-data-path')
       const filePath = path.normalize(path.join(userDataPath, 'sounds', url))

@@ -1,8 +1,7 @@
-import type React from 'react'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, type ReactNode, useContext, useEffect, useRef } from 'react'
 
 import { useSettings } from '@/context/setting'
-import AudioPool from '@/utils/audio/pool'
+import { AudioPool } from '@/utils/system/pool'
 
 interface AudioContextType {
   playSound: (
@@ -15,7 +14,7 @@ interface AudioContextType {
   stopAll: () => void
   stopSound: (file: string) => void
   isPlaying: (file: string) => boolean
-  isReady: boolean
+  initialized: boolean
 }
 
 const AudioContext = createContext<AudioContextType>({
@@ -23,59 +22,65 @@ const AudioContext = createContext<AudioContextType>({
   stopAll: () => {},
   stopSound: () => {},
   isPlaying: () => false,
-  isReady: false,
+  initialized: false,
 })
 
-export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function AudioProvider({ children }: { children: ReactNode }) {
+  const { settings, isInitialized: initialized } = useSettings()
+
   const audioPoolRef = useRef<AudioPool | null>(null)
-  const { settings, isInitialized: settingsInitialized } = useSettings()
-  const [isReady, setIsReady] = useState(false)
+  const stopAllHandlerRef = useRef<((...args: unknown[]) => void) | null>(null)
 
   useEffect(() => {
-    if (!settingsInitialized) {
+    if (!initialized) {
       return
     }
 
-    if (audioPoolRef.current) {
-      audioPoolRef.current.dispose()
-    }
-
-    audioPoolRef.current = new AudioPool(
-      settings.maxPoolSize,
-      settings.maxInstancesPerSound,
-      settings.enableMulti,
-      settings.enableRepeat
-    )
-
-    if (settings.volume >= 0 && settings.volume <= 1) {
-      audioPoolRef.current.updateVolume(settings.volume)
-    }
-
-    setIsReady(true)
+    audioPoolRef.current?.dispose()
+    const pool = new AudioPool(settings.enableMulti, settings.enableRepeat)
+    audioPoolRef.current = pool
 
     return () => {
-      if (audioPoolRef.current) {
-        audioPoolRef.current.dispose()
+      pool.dispose()
+      if (audioPoolRef.current === pool) {
+        audioPoolRef.current = null
       }
     }
-  }, [
-    settingsInitialized,
-    settings.volume,
-    settings.enableMulti,
-    settings.enableRepeat,
-    settings.maxPoolSize,
-    settings.maxInstancesPerSound,
-  ])
+  }, [initialized, settings.enableMulti, settings.enableRepeat])
 
   useEffect(() => {
-    if (!audioPoolRef.current || !isReady) {
+    if (!audioPoolRef.current || !initialized) {
+      return
+    }
+
+    audioPoolRef.current.updateVolume(settings.volume)
+  }, [settings.volume, initialized])
+
+  useEffect(() => {
+    if (!audioPoolRef.current || !initialized) {
       return
     }
 
     if (settings.volume >= 0 && settings.volume <= 1) {
       audioPoolRef.current.updateVolume(settings.volume)
     }
-  }, [settings.volume, isReady])
+  }, [settings.volume, initialized])
+
+  useEffect(() => {
+    const handleStopAllAudio = () => {
+      audioPoolRef.current?.stopAll()
+    }
+
+    stopAllHandlerRef.current = handleStopAllAudio
+    window.electronAPI.on('stop-all-audio', handleStopAllAudio)
+
+    return () => {
+      if (stopAllHandlerRef.current) {
+        window.electronAPI.off('stop-all-audio', stopAllHandlerRef.current)
+        stopAllHandlerRef.current = null
+      }
+    }
+  }, [])
 
   const playSound = async (
     _soundId: string,
@@ -84,13 +89,13 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     volume?: number,
     repeatEnabled?: boolean
   ) => {
-    if (!audioPoolRef.current || !isReady) {
+    if (!audioPoolRef.current || !initialized) {
       console.warn('Audio system not ready')
       return
     }
 
     try {
-      await audioPoolRef.current.play(
+      await audioPoolRef.current.playAudio(
         file,
         isUserAdded,
         volume ?? settings.volume,
@@ -105,15 +110,24 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   const stopAll = () => {
-    if (!audioPoolRef.current || !isReady) {
+    if (!audioPoolRef.current || !initialized) {
       return
     }
 
+    if (stopAllHandlerRef.current) {
+      window.electronAPI.off('stop-all-audio', stopAllHandlerRef.current)
+    }
+
     audioPoolRef.current.stopAll()
+    window.electronAPI.stopAllSounds()
+
+    if (stopAllHandlerRef.current) {
+      window.electronAPI.on('stop-all-audio', stopAllHandlerRef.current)
+    }
   }
 
   const stopSound = (file: string) => {
-    if (!audioPoolRef.current || !isReady) {
+    if (!audioPoolRef.current || !initialized) {
       return
     }
 
@@ -121,7 +135,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   const isPlaying = (file: string) => {
-    if (!audioPoolRef.current || !isReady) {
+    if (!audioPoolRef.current || !initialized) {
       return false
     }
 
@@ -129,7 +143,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   return (
-    <AudioContext.Provider value={{ playSound, stopAll, stopSound, isPlaying, isReady }}>
+    <AudioContext.Provider value={{ playSound, stopAll, stopSound, isPlaying, initialized }}>
       {children}
     </AudioContext.Provider>
   )

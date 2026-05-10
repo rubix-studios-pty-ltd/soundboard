@@ -1,7 +1,7 @@
-import type { HotkeyMap } from '@/types'
+import { type HotkeyMap } from '@/types/hotkeys'
 import { getElement } from '@/utils/getElement'
 
-class HotkeyManager {
+export class KeyManager {
   private modal: HTMLElement
   private assignedKeyLabel: HTMLElement
   private clearHotkeyButton: HTMLElement
@@ -89,5 +89,3 @@ class HotkeyManager {
     this.currentSoundId = null
   }
 }
-
-export default HotkeyManager

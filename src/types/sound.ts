@@ -6,3 +6,13 @@ export interface SoundData {
   frequent?: boolean
   title: string
 }
+
+export type SoundType = 'sound' | 'music'
+
+export interface SoundsContextType {
+  sounds: SoundData[]
+  music: SoundData[]
+  addSound: (sound: SoundData, type: SoundType) => Promise<void>
+  removeSound: (sound: SoundData, type: SoundType) => Promise<void>
+  isLoading: boolean
+}

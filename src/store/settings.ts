@@ -1,10 +1,10 @@
-import ElectronStore from 'electron-store'
+import Store from 'electron-store'
+
 import { defaultSettings } from '@/constants/settings'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type Settings } from '@/types/settings'
 
-import type { HotkeyMap } from '@/types'
-import type { Settings } from '@/types/settings'
-
-const Store = new ElectronStore<{
+export const Electron = new Store<{
   hotkeys: HotkeyMap
   settings: Settings
 }>({
@@ -21,5 +21,3 @@ const Store = new ElectronStore<{
     settings: defaultSettings,
   },
 })
-
-export default Store

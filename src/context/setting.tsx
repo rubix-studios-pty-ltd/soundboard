@@ -1,7 +1,7 @@
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 
 import { defaultSettings } from '@/constants/settings'
-import type { Settings } from '@/types/settings'
+import { type Settings } from '@/types/settings'
 
 interface SettingsContextType {
   settings: Settings
@@ -9,7 +9,7 @@ interface SettingsContextType {
   isInitialized: boolean
 }
 
-const validateSettings = (settings: any): Settings => {
+const validateSettings = (settings: Partial<Settings>): Settings => {
   return {
     ...defaultSettings,
     ...settings,
@@ -60,10 +60,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    const handleSettingsUpdate = (_: any, updatedSettings: Settings) => {
-      const validated = validateSettings(updatedSettings)
+    const handleSettingsUpdate = (...args: unknown[]) => {
+      const updatedSettings = args[0]
+
+      if (typeof updatedSettings !== 'object' || updatedSettings === null) {
+        return
+      }
+
+      const validated = validateSettings(updatedSettings as Partial<Settings>)
       setSettings(validated)
     }
+
     window.electronAPI.on('settings-updated', handleSettingsUpdate)
 
     const initializeSettings = async () => {
@@ -71,13 +78,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         const savedSettings = await window.electronAPI.loadSettings()
         const validatedSettings = validateSettings(savedSettings)
         setSettings(validatedSettings)
-      } catch (error: unknown) {
+      } catch (error) {
         console.error('Failed to load settings:', error)
       } finally {
         setIsInitialized(true)
       }
     }
+
     initializeSettings()
+
     return () => {
       window.electronAPI.off('settings-updated', handleSettingsUpdate)
     }

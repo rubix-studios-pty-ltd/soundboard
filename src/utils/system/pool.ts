@@ -1,131 +1,103 @@
-import type { Pool } from '@/types/pool'
+import { maxInstance, maxPool } from '@/constants/settings'
+import { type Pool } from '@/types/pool'
 
 const silentAudio =
   'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA='
 
-class AudioPool {
+export class AudioPool {
   private pool: Map<string, Pool>
-  private maxPoolSize: number
-  private maxInstancesPerSound: number
+  private maxPool: number
+  private maxInstances: number
   private enableMulti: boolean
   private enableRepeat: boolean
-  private unusedAudioElements: HTMLAudioElement[]
+  private unusedAudio: HTMLAudioElement[]
   private instanceCounts: Map<string, number>
   private audioContext: AudioContext
-  private initialized: boolean
   private loadingSounds: Set<string>
-  private initializationPromise: Promise<void> | null
+  private audioWarmup: Promise<void> | null
+  private initialized: boolean
 
-  constructor(
-    maxPoolSize: number = 100,
-    maxInstancesPerSound: number = 20,
-    enableMulti: boolean = true,
-    enableRepeat: boolean = false
-  ) {
+  constructor(enableMulti: boolean = true, enableRepeat: boolean = false) {
     this.pool = new Map()
-    this.maxPoolSize = maxPoolSize
-    this.maxInstancesPerSound = maxInstancesPerSound
-    this.unusedAudioElements = []
+    this.maxPool = maxPool
+    this.maxInstances = maxInstance
+    this.unusedAudio = []
     this.instanceCounts = new Map()
     this.enableMulti = enableMulti
     this.enableRepeat = enableRepeat
-    this.initialized = false
     this.audioContext = new AudioContext()
     this.loadingSounds = new Set()
-    this.initializationPromise = null
-
-    document.addEventListener(
-      'click',
-      () => {
-        if (this.audioContext.state === 'suspended') {
-          this.audioContext.resume()
-        }
-      },
-      { once: true }
-    )
-
-    this.initializationPromise = this.initializeAudioSystem()
+    this.audioWarmup = this.warmAudio()
+    this.initialized = false
   }
 
-  private decrementInstanceCount(source: string): void {
-    const currentCount = this.instanceCounts.get(source) || 0
-    this.instanceCounts.set(source, Math.max(0, currentCount - 1))
-  }
-
-  private createAudioElement(): HTMLAudioElement {
+  private createAudio(): HTMLAudioElement {
     const audio = new Audio()
     audio.preload = 'auto'
     audio.crossOrigin = 'anonymous'
     return audio
   }
 
-  private getEntriesForSource(source: string): [string, Pool][] {
+  private audioSource(source: string): [string, Pool][] {
     return Array.from(this.pool.entries()).filter(([, item]) => item.source === source)
   }
 
-  private detachAudioListeners(poolItem: Pool): void {
+  private detachAudio(poolItem: Pool): void {
     poolItem.cleanupListeners?.forEach((cleanup) => {
       cleanup()
     })
     poolItem.cleanupListeners = []
   }
 
-  private releaseAudioItem(poolItem: Pool): void {
-    this.detachAudioListeners(poolItem)
+  private releaseAudio(poolItem: Pool): void {
+    this.detachAudio(poolItem)
     poolItem.audio.src = ''
     poolItem.isPlaying = false
-    this.decrementInstanceCount(poolItem.source)
-    this.recycleAudioElement(poolItem.audio)
+    this.reduceCount(poolItem.source)
+    this.recycleAudio(poolItem.audio)
   }
 
-  private removePoolEntry(key: string): void {
-    const item = this.pool.get(key)
-    if (!item) {
-      return
-    }
+  private reduceCount(source: string): void {
+    const currentCount = this.instanceCounts.get(source) || 0
+    this.instanceCounts.set(source, Math.max(0, currentCount - 1))
+  }
 
-    this.releaseAudioItem(item)
+  private removeAudio(key: string): void {
+    const item = this.pool.get(key)
+    if (!item) return
+    this.releaseAudio(item)
     this.pool.delete(key)
   }
 
-  private pruneOldestAvailableItem(): boolean {
+  private pruneOldest(): boolean {
     let lruItem: [string, Pool] | undefined
-
     for (const [key, item] of this.pool.entries()) {
       if (!item.isPlaying && (!lruItem || item.lastUsed < lruItem[1].lastUsed)) {
         lruItem = [key, item]
       }
     }
-
-    if (!lruItem) {
-      return false
-    }
-
-    this.removePoolEntry(lruItem[0])
+    if (!lruItem) return false
+    this.removeAudio(lruItem[0])
     return true
   }
 
-  private pruneOldestInstanceForSource(source: string): boolean {
-    const instances = this.getEntriesForSource(source)
-
-    if (instances.length < this.maxInstancesPerSound) {
+  private pruneSource(source: string): boolean {
+    const instances = this.audioSource(source)
+    if (instances.length < this.maxInstances) {
       return false
     }
 
     instances.sort((a, b) => a[1].lastUsed - b[1].lastUsed)
-    this.removePoolEntry(instances[0][0])
+    this.removeAudio(instances[0][0])
     return true
   }
 
-  private async initializeAudioSystem(): Promise<void> {
-    if (this.initialized) {
-      return
-    }
+  private async warmAudio(): Promise<void> {
+    if (this.initialized) return
 
-    const warmupCount = Math.min(5, this.maxPoolSize)
-
+    const warmupCount = Math.min(5, this.maxPool)
     for (let i = 0; i < warmupCount; i++) {
-      const audio = this.createAudioElement()
+      const audio = this.createAudio()
       audio.src = silentAudio
 
       try {
@@ -133,7 +105,7 @@ class AudioPool {
         audio.pause()
         audio.currentTime = 0
         audio.src = ''
-        this.unusedAudioElements.push(audio)
+        this.unusedAudio.push(audio)
       } catch (error) {
         console.warn('Audio warmup failed:', error)
       }
@@ -142,31 +114,178 @@ class AudioPool {
     this.initialized = true
   }
 
-  async play(
+  private getAudio(): HTMLAudioElement {
+    const audio = this.unusedAudio.pop()
+    if (audio) {
+      return audio
+    }
+
+    const newAudio = this.createAudio()
+    newAudio.load()
+    return newAudio
+  }
+
+  private recycleAudio(audio: HTMLAudioElement): void {
+    audio.src = ''
+    audio.load()
+    if (this.unusedAudio.length < this.maxPool) {
+      this.unusedAudio.push(audio)
+    }
+  }
+
+  private audioListeners(poolItem: Pool): void {
+    const endedListener = () => {
+      poolItem.isPlaying = false
+      poolItem.onEnd?.()
+      this.reduceCount(poolItem.source)
+      this.detachAudio(poolItem)
+      this.recycleAudio(poolItem.audio)
+    }
+
+    const pauseListener = () => {
+      if (!poolItem.audio.ended) {
+        poolItem.isPlaying = false
+        poolItem.onEnd?.()
+        this.reduceCount(poolItem.source)
+        this.detachAudio(poolItem)
+        this.recycleAudio(poolItem.audio)
+      }
+    }
+
+    const errorListener = () => {
+      poolItem.isPlaying = false
+      poolItem.onEnd?.()
+      this.reduceCount(poolItem.source)
+      const itemKey = Array.from(this.pool.entries()).find(([_, item]) => item === poolItem)?.[0]
+      if (itemKey) {
+        this.detachAudio(poolItem)
+        this.pool.delete(itemKey)
+      }
+      this.recycleAudio(poolItem.audio)
+    }
+
+    poolItem.audio.addEventListener('ended', endedListener)
+    poolItem.audio.addEventListener('pause', pauseListener)
+    poolItem.audio.addEventListener('error', errorListener)
+
+    poolItem.cleanupListeners = [
+      () => poolItem.audio.removeEventListener('ended', endedListener),
+      () => poolItem.audio.removeEventListener('pause', pauseListener),
+      () => poolItem.audio.removeEventListener('error', errorListener),
+    ]
+  }
+
+  private cleanupAudio(item: Pool): void {
+    this.releaseAudio(item)
+  }
+
+  private async playFromUrl(
+    url: string,
     source: string,
     isUserAdded: boolean,
     volume: number,
     repeat: boolean = false,
     onEnd?: () => void
   ): Promise<void> {
-    if (this.initializationPromise) {
-      await this.initializationPromise
+    const instanceId = `${source}_${Date.now()}`
+
+    let finalUrl = url
+    if (isUserAdded) {
+      try {
+        finalUrl = await window.electronAPI.userSoundPath(url)
+      } catch (error) {
+        console.error('Error resolving user sound path:', error)
+      }
     }
 
-    if (!this.initialized) {
-      console.warn('Audio system not initialized yet')
-      return
+    if (repeat) {
+      const currentCount = this.instanceCounts.get(source) || 0
+      if (currentCount >= this.maxInstances) {
+        this.pruneSource(source)
+      }
     }
 
-    if (this.loadingSounds.has(source)) {
-      return
+    if (this.pool.size >= this.maxPool) {
+      if (!this.pruneOldest()) {
+        const stoppedItem = this.stoppedAudio()
+
+        if (stoppedItem) {
+          const stoppedKey = Array.from(this.pool.entries()).find(
+            ([_, item]) => item === stoppedItem
+          )?.[0]
+          if (stoppedKey) {
+            this.removeAudio(stoppedKey)
+          }
+        } else {
+          console.warn('Audio pool is full.')
+          return
+        }
+      }
     }
+
+    try {
+      const audioElement = this.getAudio()
+
+      const poolItem: Pool = {
+        audio: audioElement,
+        source,
+        isPlaying: false,
+        cleanupListeners: [],
+        onEnd,
+        lastUsed: Date.now(),
+      }
+
+      this.audioListeners(poolItem)
+      this.pool.set(instanceId, poolItem)
+
+      audioElement.currentTime = 0
+      audioElement.src = finalUrl
+      audioElement.volume = volume
+      audioElement.loop = false
+      audioElement.onloadedmetadata = () => {
+        poolItem.duration = audioElement.duration
+      }
+      await audioElement.play()
+      poolItem.isPlaying = true
+      poolItem.lastUsed = Date.now()
+
+      const currentCount = this.instanceCounts.get(source) || 0
+      this.instanceCounts.set(source, currentCount + 1)
+    } catch (error) {
+      console.error('Error playing audio:', error)
+      const item = this.pool.get(instanceId)
+      if (item) {
+        this.cleanupAudio(item)
+        this.pool.delete(instanceId)
+      }
+      throw error
+    }
+  }
+
+  private stoppedAudio(): Pool | undefined {
+    for (const [, item] of this.pool) {
+      if (!item.isPlaying && (item.audio.ended || item.audio.paused)) {
+        return item
+      }
+    }
+    return undefined
+  }
+
+  async playAudio(
+    source: string,
+    isUserAdded: boolean,
+    volume: number,
+    repeat: boolean = false,
+    onEnd?: () => void
+  ): Promise<void> {
+    if (this.audioWarmup || !this.initialized) await this.audioWarmup
+    if (this.loadingSounds.has(source)) return
 
     if (!this.enableMulti) {
       if (this.enableRepeat) {
         for (const [key, item] of this.pool.entries()) {
           if (item.source !== source) {
-            this.cleanupAudioItem(item)
+            this.cleanupAudio(item)
             this.pool.delete(key)
           }
         }
@@ -192,155 +311,9 @@ class AudioPool {
     }
   }
 
-  private getAudioElement(): HTMLAudioElement {
-    const audio = this.unusedAudioElements.pop()
-    if (audio) {
-      return audio
-    }
-
-    const newAudio = this.createAudioElement()
-    newAudio.load()
-    return newAudio
-  }
-
-  private recycleAudioElement(audio: HTMLAudioElement): void {
-    audio.src = ''
-    audio.load()
-    if (this.unusedAudioElements.length < this.maxPoolSize) {
-      this.unusedAudioElements.push(audio)
-    }
-  }
-
-  private setupAudioListeners(poolItem: Pool): void {
-    const endedListener = () => {
-      poolItem.isPlaying = false
-      poolItem.onEnd?.()
-      this.decrementInstanceCount(poolItem.source)
-      this.detachAudioListeners(poolItem)
-      this.recycleAudioElement(poolItem.audio)
-    }
-
-    const pauseListener = () => {
-      if (!poolItem.audio.ended) {
-        poolItem.isPlaying = false
-        poolItem.onEnd?.()
-        this.decrementInstanceCount(poolItem.source)
-      }
-    }
-
-    const errorListener = () => {
-      poolItem.isPlaying = false
-      poolItem.onEnd?.()
-      this.decrementInstanceCount(poolItem.source)
-      const itemKey = Array.from(this.pool.entries()).find(([_, item]) => item === poolItem)?.[0]
-      if (itemKey) {
-        this.detachAudioListeners(poolItem)
-        this.pool.delete(itemKey)
-      }
-      this.recycleAudioElement(poolItem.audio)
-    }
-
-    poolItem.audio.addEventListener('ended', endedListener)
-    poolItem.audio.addEventListener('pause', pauseListener)
-    poolItem.audio.addEventListener('error', errorListener)
-
-    poolItem.cleanupListeners = [
-      () => poolItem.audio.removeEventListener('ended', endedListener),
-      () => poolItem.audio.removeEventListener('pause', pauseListener),
-      () => poolItem.audio.removeEventListener('error', errorListener),
-    ]
-  }
-
-  private cleanupAudioItem(item: Pool): void {
-    this.releaseAudioItem(item)
-  }
-
-  private async playFromUrl(
-    url: string,
-    source: string,
-    isUserAdded: boolean,
-    volume: number,
-    repeat: boolean = false,
-    onEnd?: () => void
-  ): Promise<void> {
-    const instanceId = `${source}_${Date.now()}`
-
-    let finalUrl = url
-    if (isUserAdded) {
-      try {
-        finalUrl = await window.electronAPI.resolveUserSoundPath(url)
-      } catch (error) {
-        console.error('Error resolving user sound path:', error)
-        finalUrl = url
-      }
-    }
-
-    if (repeat) {
-      const currentCount = this.instanceCounts.get(source) || 0
-      if (currentCount >= this.maxInstancesPerSound) {
-        this.pruneOldestInstanceForSource(source)
-      }
-    }
-
-    if (this.pool.size >= this.maxPoolSize) {
-      if (!this.pruneOldestAvailableItem()) {
-        const stoppedItem = this.findStoppedAudio()
-        if (stoppedItem) {
-          const stoppedKey = Array.from(this.pool.entries()).find(
-            ([_, item]) => item === stoppedItem
-          )?.[0]
-          if (stoppedKey) {
-            this.removePoolEntry(stoppedKey)
-          }
-        } else {
-          console.warn('Audio pool is full. Cannot play more sounds simultaneously.')
-          return
-        }
-      }
-    }
-
-    try {
-      const audioElement = this.getAudioElement()
-
-      const poolItem: Pool = {
-        audio: audioElement,
-        source,
-        isPlaying: false,
-        cleanupListeners: [],
-        onEnd,
-        lastUsed: Date.now(),
-      }
-
-      this.setupAudioListeners(poolItem)
-      this.pool.set(instanceId, poolItem)
-
-      audioElement.currentTime = 0
-      audioElement.src = finalUrl
-      audioElement.volume = volume
-      audioElement.loop = false
-      audioElement.onloadedmetadata = () => {
-        poolItem.duration = audioElement.duration
-      }
-      await audioElement.play()
-      poolItem.isPlaying = true
-      poolItem.lastUsed = Date.now()
-
-      const currentCount = this.instanceCounts.get(source) || 0
-      this.instanceCounts.set(source, currentCount + 1)
-    } catch (error) {
-      console.error('Error playing audio:', error)
-      const item = this.pool.get(instanceId)
-      if (item) {
-        this.cleanupAudioItem(item)
-        this.pool.delete(instanceId)
-      }
-      throw error
-    }
-  }
-
   stopAll(): void {
     this.pool.forEach((item) => {
-      this.cleanupAudioItem(item)
+      this.cleanupAudio(item)
     })
     this.pool.clear()
     this.instanceCounts.clear()
@@ -350,7 +323,7 @@ class AudioPool {
     let itemsFound = false
     for (const [key, item] of this.pool.entries()) {
       if (item.source === source) {
-        this.removePoolEntry(key)
+        this.removeAudio(key)
         itemsFound = true
       }
     }
@@ -375,7 +348,7 @@ class AudioPool {
       if (playingSounds.length > 1) {
         const [, mostRecentItem] = playingSounds[0]
         playingSounds.slice(1).forEach(([key]) => {
-          this.removePoolEntry(key)
+          this.removeAudio(key)
         })
 
         this.instanceCounts.clear()
@@ -405,7 +378,7 @@ class AudioPool {
           instances.sort((a, b) => b[1].lastUsed - a[1].lastUsed)
 
           instances.slice(1).forEach(([key]) => {
-            this.removePoolEntry(key)
+            this.removeAudio(key)
           })
 
           this.instanceCounts.set(source, 1)
@@ -423,31 +396,6 @@ class AudioPool {
     return false
   }
 
-  getAudio(source: string): HTMLAudioElement | undefined {
-    const entries = Array.from(this.pool.entries())
-      .filter(([, item]) => item.source === source)
-      .sort((a, b) => b[1].lastUsed - a[1].lastUsed)
-
-    return entries[0]?.[1].audio
-  }
-
-  getPlayingAudios(): Map<string, Pool> {
-    return this.pool
-  }
-
-  private findStoppedAudio(): Pool | undefined {
-    for (const [, item] of this.pool) {
-      if (!item.isPlaying && (item.audio.ended || item.audio.paused)) {
-        return item
-      }
-    }
-    return undefined
-  }
-
-  getInstanceCount(source: string): number {
-    return this.instanceCounts.get(source) || 0
-  }
-
   dispose(): void {
     this.stopAll()
 
@@ -459,14 +407,12 @@ class AudioPool {
 
     this.pool.clear()
     this.instanceCounts.clear()
-    this.unusedAudioElements.forEach((audio) => {
+    this.unusedAudio.forEach((audio) => {
       audio.src = ''
       audio.load()
     })
-    this.unusedAudioElements = []
+    this.unusedAudio = []
     this.initialized = false
-    this.initializationPromise = null
+    this.audioWarmup = null
   }
 }
-
-export default AudioPool

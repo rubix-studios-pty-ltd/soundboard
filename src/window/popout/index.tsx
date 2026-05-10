@@ -2,16 +2,16 @@ import path from 'node:path'
 import { BrowserWindow } from 'electron'
 
 import { getIsQuitting } from '@/store/quitting'
-import Store from '@/store/settings'
+import { Electron } from '@/store/settings'
 
-const ROOT_PATH = path.join(__dirname, '..')
+const rootPath = path.join(__dirname, '..')
 
 export let popoutWin: BrowserWindow | null = null
 
 export async function createPopoutWindow(): Promise<void> {
-  const settings = Store.get('settings')
+  const settings = Electron.get('settings')
 
-  const popup = settings?.popoutGrid?.window
+  const popout = settings?.popoutGrid?.window
 
   const window = new BrowserWindow({
     width: 312,
@@ -21,7 +21,7 @@ export async function createPopoutWindow(): Promise<void> {
     frame: false,
     show: false,
     skipTaskbar: true,
-    icon: path.join(ROOT_PATH, 'icon.ico'),
+    icon: path.join(rootPath, 'icon.ico'),
     ...(process.platform === 'darwin'
       ? {
           titleBarStyle: 'hidden',
@@ -30,7 +30,7 @@ export async function createPopoutWindow(): Promise<void> {
       : {}),
     webPreferences: {
       partition: 'persist:soundboard',
-      preload: path.join(ROOT_PATH, 'dist', 'preload.cjs'),
+      preload: path.join(rootPath, 'dist', 'preload.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: false,
@@ -42,13 +42,13 @@ export async function createPopoutWindow(): Promise<void> {
   popoutWin = window
 
   window.once('ready-to-show', () => {
-    if (popup?.isOpen || popup?.showOnStartup) {
+    if (popout?.isOpen || popout?.showOnStartup) {
       window.setAlwaysOnTop(settings?.alwaysOnTop ?? false)
       window.show()
     }
   })
 
-  void window.loadFile(path.join(ROOT_PATH, 'popout.html'))
+  void window.loadFile(path.join(rootPath, 'popout.html'))
 
   window.on('close', (event) => {
     if (!getIsQuitting()) {

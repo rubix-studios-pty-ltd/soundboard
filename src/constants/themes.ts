@@ -1,4 +1,4 @@
-import type { ThemePreset } from '@/types/theme'
+import { type ThemePreset } from '@/types/theme'
 
 export const presetButtons = [
   '#ef4444',

@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-interface HotkeyModalProps {
+interface ModalProps {
   isOpen: boolean
   onClose: () => void
   onClear: () => void
@@ -18,13 +18,7 @@ interface HotkeyModalProps {
   onAssign: (key: string) => void
 }
 
-export function HotkeyModal({
-  isOpen,
-  onClose,
-  onClear,
-  currentHotkey,
-  onAssign,
-}: HotkeyModalProps) {
+export function HotkeyModal({ isOpen, onClose, onClear, currentHotkey, onAssign }: ModalProps) {
   const description = useMemo(() => {
     if (currentHotkey) {
       return `Hiện tại: "${currentHotkey}". \nNhấn phím mới để thay đổi.`

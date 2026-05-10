@@ -1,13 +1,10 @@
-import type { Settings } from '@/types/settings'
-import type { SoundData } from '@/types/sound'
+import { type HotkeyMap } from '@/types/hotkeys'
+import { type Settings } from '@/types/settings'
+import { type SoundData } from '@/types/sound'
 
-export interface HotkeyMap {
-  [soundId: string]: string
-}
-
-export interface IpcApi {
-  on: (channel: string, listener: (...args: any[]) => void) => void
-  off: (channel: string, listener: (...args: any[]) => void) => void
+export interface IPC {
+  on: (channel: string, listener: (...args: unknown[]) => void) => void
+  off: (channel: string, listener: (...args: unknown[]) => void) => void
   minimizeWindow: () => void
   maximizeWindow: () => void
   closeWindow: () => void
@@ -26,6 +23,7 @@ export interface IpcApi {
   addSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
   deleteSound: (params: { sound: SoundData; type: 'sound' | 'music' }) => Promise<void>
   validateSound: (sound: SoundData) => Promise<boolean>
+  stopAllSounds: () => void
   getAppDataPath: () => Promise<string>
-  resolveUserSoundPath: (url: string) => Promise<string>
+  userSoundPath: (url: string) => Promise<string>
 }

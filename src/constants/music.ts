@@ -1,4 +1,4 @@
-export const rawMusicData: [string, string][] = [
+export const MusicList: [string, string][] = [
   ['sound/10diemgoc.opus', '10 Điểm Gốc'],
   ['sound/30-min.opus', '30 Phút'],
   ['sound/auxima.opus', 'Ái Ố Sì Mà'],

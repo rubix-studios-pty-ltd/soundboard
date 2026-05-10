@@ -1,7 +1,10 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.14/schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
-  "files": { "includes": ["**", "!!**/dist"] },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!dist", "!build", "!out"]
+  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
@@ -14,7 +17,31 @@
     "bracketSpacing": true,
     "expand": "auto",
     "useEditorconfig": true,
-    "includes": ["**", "!**/dist/", "!**/build/", "!**/node_modules/", "!**/release/"]
+    "includes": [
+      "**",
+      "!./node_modules",
+      "!./.pnp",
+      "!**/.pnp.*",
+      "!**/.pnpm-debug.log",
+      "!**/pnpm-lock.yaml",
+      "!./.next/",
+      "!./out/",
+      "!./build",
+      "!./dist",
+      "!**/.DS_Store",
+      "!**/*.pem",
+      "!**/.env",
+      "!**/.tmp",
+      "!**/.git",
+      "!**/.hg",
+      "!**/.pnp.*",
+      "!**/.svn",
+      "!**/.yarn/**",
+      "!**/build",
+      "!**/dist/**",
+      "!**/node_modules",
+      "!**/temp"
+    ]
   },
   "linter": {
     "enabled": true,
@@ -22,8 +49,36 @@
       "recommended": true,
       "suspicious": {
         "noArrayIndexKey": "off"
+      },
+      "style": {
+        "useImportType": {
+          "level": "on",
+          "options": {
+            "style": "inlineType"
+          }
+        }
       }
-    }
+    },
+    "includes": [
+      "**",
+      "!**/.temp",
+      "!**/.*",
+      "!**/.git",
+      "!**/.hg",
+      "!**/.pnp.*",
+      "!**/.svn",
+      "!**/playwright.config.ts",
+      "!**/*.spec.ts",
+      "!**/*.test.ts",
+      "!**/tsconfig.tsbuildinfo",
+      "!**/README.md",
+      "!**/dist/",
+      "!**/.yarn/",
+      "!**/build/",
+      "!**/node_modules/",
+      "!**/temp/",
+      "!**/*.cjs"
+    ]
   },
   "javascript": {
     "formatter": {
@@ -51,6 +106,21 @@
   },
   "assist": {
     "enabled": true,
-    "actions": { "source": { "organizeImports": "on" } }
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              [":NODE:", ":BUN:", ":PACKAGE:", "react", "react/**", "react-*", "react-*/**"],
+              ":BLANK_LINE:",
+              ["**", "!**/*.css", "!**/*.scss"],
+              ":BLANK_LINE:",
+              ["**/*.css", "**/*.scss"]
+            ]
+          }
+        }
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { SettingsControl } from '@/components/controls/settings'
 import { WindowsControls } from '@/components/controls/window'
 import {
@@ -19,31 +20,32 @@ import { Slider } from '@/components/ui/slider'
 import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
-import type { Settings } from '@/types/settings'
-import { addTrack } from '@/utils/audio/addTrack'
+import { type Settings } from '@/types/settings'
+import { addAudio } from '@/utils/audio/addAudio'
 
 export function Header() {
-  const { stopAll } = useAudio()
   const { settings, updateSettings } = useSettings()
+  const { stopAll } = useAudio()
   const { addSound } = useSounds()
-  const [previousVolume, setPreviousVolume] = useState(1)
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [popoutVisible, setPopoutVisible] = useState(false)
 
-  const handleAddSound = async (type: 'sound' | 'music', file: File, title?: string) => {
-    const newSound = await addTrack(file, type, title)
+  const [preVolume, setPreVolume] = useState(1)
+  const [audioModal, setAudioModal] = useState(false)
+  const [showPopout, setShowPopout] = useState(false)
+
+  const loadAudio = async (type: 'sound' | 'music', file: File, title?: string) => {
+    const newSound = await addAudio(file, type, title)
     addSound(newSound, type)
-    setIsAddModalOpen(false)
+    setAudioModal(false)
   }
 
-  const buttonSettings = () => {
+  const toggleSettings = () => {
     const update: Partial<Settings> = {
       buttonSettings: !settings.buttonSettings,
     }
     updateSettings(update)
   }
 
-  const handleVolumeChange = (newVolume: number) => {
+  const changeVolume = (newVolume: number) => {
     if (!Number.isNaN(newVolume) && newVolume >= 0 && newVolume <= 1) {
       const update: Partial<Settings> = { volume: newVolume }
       updateSettings(update)
@@ -52,34 +54,38 @@ export function Header() {
 
   const toggleMute = () => {
     if (settings.volume > 0) {
-      setPreviousVolume(settings.volume)
+      setPreVolume(settings.volume)
       const update: Partial<Settings> = { volume: 0 }
       updateSettings(update)
     } else {
-      const volumeToRestore = previousVolume > 0 ? previousVolume : 1
-      const update: Partial<Settings> = { volume: volumeToRestore }
+      const restore = preVolume > 0 ? preVolume : 1
+      const update: Partial<Settings> = { volume: restore }
       updateSettings(update)
     }
   }
 
   const handleTogglePopout = async () => {
     try {
-      if (popoutVisible) {
+      if (showPopout) {
         window.electronAPI.windowControl('close', 'popout')
       } else {
         window.electronAPI.windowControl('show', 'popout')
       }
 
-      setPopoutVisible((prevState) => !prevState)
+      setShowPopout((prevState) => !prevState)
     } catch {
-      setPopoutVisible(false)
+      setShowPopout(false)
     }
   }
 
   useEffect(() => {
-    if (settings.volume > 0) {
-      setPreviousVolume(settings.volume)
-    }
+    const timeout = setTimeout(() => {
+      if (settings.volume > 0) {
+        setPreVolume(settings.volume)
+      }
+    }, 300)
+
+    return () => clearTimeout(timeout)
   }, [settings.volume])
 
   return (
@@ -98,9 +104,7 @@ export function Header() {
               className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
               onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: true })}
             >
-              <div className="h-3.5 w-3.5">
-                <Library className="h-full w-full" />
-              </div>
+              <Library className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
@@ -109,9 +113,7 @@ export function Header() {
               }`}
               onClick={() => updateSettings({ showSoundGrid: true, showMusicGrid: false })}
             >
-              <div className="h-3.5 w-3.5">
-                <Note className="h-full w-full" />
-              </div>
+              <Note className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
@@ -120,9 +122,7 @@ export function Header() {
               }`}
               onClick={() => updateSettings({ showSoundGrid: false, showMusicGrid: true })}
             >
-              <div className="h-3.5 w-3.5">
-                <Music className="h-full w-full" />
-              </div>
+              <Music className="h-3.5 w-3.5" />
             </button>
           </div>
           <Separator orientation="vertical" />
@@ -131,9 +131,7 @@ export function Header() {
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={handleTogglePopout}
           >
-            <div className="h-3.5 w-3.5">
-              <Popout className="h-full w-full" />
-            </div>
+            <Popout className="h-3.5 w-3.5" />
           </button>
           <Separator orientation="vertical" />
           <div className="flex items-center gap-2.5">
@@ -142,11 +140,9 @@ export function Header() {
               className={`cursor-pointer transition-all duration-300 hover:text-red-500 ${
                 settings.buttonSettings ? 'text-red-500' : 'text-white'
               }`}
-              onClick={buttonSettings}
+              onClick={toggleSettings}
             >
-              <div className="h-4 w-4">
-                <Cog className="h-full w-full" />
-              </div>
+              <Cog className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
@@ -159,18 +155,14 @@ export function Header() {
                 })
               }
             >
-              <div className="h-4 w-4">
-                <Drag className="h-full w-full" />
-              </div>
+              <Drag className="h-3.5 w-3.5" />
             </button>
             <button
               type="button"
               className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
-              onClick={() => setIsAddModalOpen(true)}
+              onClick={() => setAudioModal(true)}
             >
-              <div className="h-4 w-4">
-                <Plus className="h-full w-full" />
-              </div>
+              <Plus className="h-4 w-4" />
             </button>
           </div>
           <button
@@ -178,13 +170,11 @@ export function Header() {
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={stopAll}
           >
-            <div className="h-5.5 w-5.5">
-              <StopIcon className="h-full w-full" />
-            </div>
+            <StopIcon className="h-5.5 w-5.5" />
           </button>
           <Slider
             value={[settings.volume * 100]}
-            onValueChange={(value) => handleVolumeChange(value[0] / 100)}
+            onValueChange={(value) => changeVolume(value[0] / 100)}
             max={100}
             step={1}
             className="w-12.5 invert"
@@ -194,13 +184,7 @@ export function Header() {
             className="cursor-pointer text-white transition-all duration-300 hover:text-red-500"
             onClick={toggleMute}
           >
-            <div className="h-4 w-4">
-              {settings.volume > 0 ? (
-                <Volume className="h-full w-full" />
-              ) : (
-                <Mute className="h-full w-full" />
-              )}
-            </div>
+            {settings.volume > 0 ? <Volume className="h-4 w-4" /> : <Mute className="h-4 w-4" />}
           </button>
           <Separator orientation="vertical" />
         </div>
@@ -208,11 +192,7 @@ export function Header() {
         <WindowsControls />
       </div>
 
-      <AddSoundModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAdd={handleAddSound}
-      />
+      <AddSoundModal isOpen={audioModal} onClose={() => setAudioModal(false)} onAdd={loadAudio} />
     </div>
   )
 }
