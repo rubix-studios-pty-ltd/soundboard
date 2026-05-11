@@ -1,6 +1,8 @@
 import path from 'node:path'
 import { app } from 'electron'
 
-export function getJson(type: 'sound' | 'music'): string {
+import { type SoundType } from '@/types/sound'
+
+export function getJson(type: SoundType): string {
   return path.join(app.getPath('userData'), `${type}s.json`)
 }

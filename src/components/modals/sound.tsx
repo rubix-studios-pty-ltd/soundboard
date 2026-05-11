@@ -12,12 +12,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import LoadingSpinner from '@/components/ui/spinner'
+import { type SoundType } from '@/types/sound'
 
 interface AddSoundModalProps {
   isOpen: boolean
   onClose: () => void
-  onAdd: (type: 'sound' | 'music', file: File, title?: string) => Promise<void>
-  defaultType?: 'sound' | 'music'
+  onAdd: (type: SoundType, file: File, title?: string) => Promise<void>
+  defaultType?: SoundType
 }
 
 export function AddSoundModal({
@@ -26,7 +27,7 @@ export function AddSoundModal({
   onAdd,
   defaultType = 'sound',
 }: AddSoundModalProps) {
-  const [type, setType] = useState<'sound' | 'music'>(defaultType)
+  const [type, setType] = useState<SoundType>(defaultType)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [displayName, setDisplayName] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
@@ -101,7 +102,7 @@ export function AddSoundModal({
 
           <RadioGroup
             value={type}
-            onValueChange={(value: 'sound' | 'music') => setType(value)}
+            onValueChange={(value: SoundType) => setType(value)}
             className="mt-1 flex gap-4"
           >
             <div className="flex items-center gap-2">

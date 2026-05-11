@@ -21,6 +21,7 @@ import { useAudio } from '@/context/audio'
 import { useSettings } from '@/context/setting'
 import { useSounds } from '@/context/sounds'
 import { type Settings } from '@/types/settings'
+import { type SoundType } from '@/types/sound'
 import { addAudio } from '@/utils/audio/addAudio'
 
 export function Header() {
@@ -32,7 +33,7 @@ export function Header() {
   const [audioModal, setAudioModal] = useState(false)
   const [showPopout, setShowPopout] = useState(false)
 
-  const loadAudio = async (type: 'sound' | 'music', file: File, title?: string) => {
+  const loadAudio = async (type: SoundType, file: File, title?: string) => {
     const newSound = await addAudio(file, type, title)
     addSound(newSound, type)
     setAudioModal(false)

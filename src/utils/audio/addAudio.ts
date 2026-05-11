@@ -1,6 +1,7 @@
+import { type SoundType } from '@/types/sound'
 import { createAudioData } from '@/utils/audio/createAudioData'
 
-export async function addAudio(file: File, type: 'sound' | 'music', customTitle?: string) {
+export async function addAudio(file: File, type: SoundType, customTitle?: string) {
   try {
     const sound = await createAudioData(file, type, customTitle)
 

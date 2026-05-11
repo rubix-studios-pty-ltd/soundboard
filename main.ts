@@ -7,7 +7,7 @@ import { setIsQuitting } from '@/store/quitting'
 import { Electron } from '@/store/settings'
 import { type HotkeyMap } from '@/types/hotkeys'
 import { type Settings } from '@/types/settings'
-import { type SoundData } from '@/types/sound'
+import { type SoundData, type SoundType } from '@/types/sound'
 import { audioManager } from '@/utils/audio/audioManager'
 import { convertOpus } from '@/utils/audio/convertOpus'
 import { savedSettings } from '@/utils/savedSettings'
@@ -30,7 +30,7 @@ try {
 }
 
 function setupIPC(): void {
-  ipcMain.handle('load-sounds', async (_, type: 'sound' | 'music') => {
+  ipcMain.handle('load-sounds', async (_, type: SoundType) => {
     return await manager[type].getAll()
   })
 
@@ -184,7 +184,7 @@ function setupIPC(): void {
       params: {
         buffer: ArrayBuffer
         originalName: string
-        type: 'sound' | 'music'
+        type: SoundType
       }
     ) => {
       try {
@@ -221,7 +221,7 @@ function setupIPC(): void {
     }
   )
 
-  ipcMain.handle('add-sound', async (_, params: { sound: SoundData; type: 'sound' | 'music' }) => {
+  ipcMain.handle('add-sound', async (_, params: { sound: SoundData; type: SoundType }) => {
     try {
       await manager[params.type].add(params.sound)
     } catch (error) {
@@ -232,19 +232,16 @@ function setupIPC(): void {
     }
   })
 
-  ipcMain.handle(
-    'delete-sound',
-    async (_, params: { sound: SoundData; type: 'sound' | 'music' }) => {
-      try {
-        await manager[params.type].remove(params.sound.id)
-      } catch (error) {
-        if (shouldLog()) {
-          console.error('Error deleting sound:', error)
-        }
-        throw error
+  ipcMain.handle('delete-sound', async (_, params: { sound: SoundData; type: SoundType }) => {
+    try {
+      await manager[params.type].remove(params.sound.id)
+    } catch (error) {
+      if (shouldLog()) {
+        console.error('Error deleting sound:', error)
       }
+      throw error
     }
-  )
+  })
 
   ipcMain.handle('validate-sound', async (_, sound: SoundData) => {
     try {
