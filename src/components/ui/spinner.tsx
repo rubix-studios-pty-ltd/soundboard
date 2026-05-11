@@ -1,13 +1,11 @@
-import type React from 'react'
-
 import { cn } from '@/lib/utils'
 
-interface LoadingSpinnerProps {
+interface SpinnerProps {
   className?: string
   size?: 'sm' | 'md' | 'lg'
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ className, size = 'md' }) => {
+export function Spinner({ className, size = 'md' }: SpinnerProps) {
   const sizeClasses = {
     sm: 'w-4 h-4',
     md: 'w-6 h-6',
@@ -24,5 +22,3 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ className, size = 'md' 
     />
   )
 }
-
-export default LoadingSpinner
