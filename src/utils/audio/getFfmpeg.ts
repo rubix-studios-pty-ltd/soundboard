@@ -1,24 +1,22 @@
-import { statSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 
 export function getFfmpeg() {
   const platform = process.platform
-  const platformFolder =
+  const folder =
     platform === 'darwin' ? (process.arch === 'arm64' ? 'darwin-arm64' : 'darwin-x64') : 'win32'
-  const platformBinary = platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
+  const binary = platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
 
-  const pathsToTry = [
-    path.join(__dirname, '..', 'vendor', 'ffmpeg', platformFolder, platformBinary),
-    path.join(process.resourcesPath, 'ffmpeg', platformFolder, platformBinary),
+  const candidates = [
+    path.join(process.resourcesPath, 'ffmpeg', folder, binary),
+    path.join(process.cwd(), 'dist', 'vendor', 'ffmpeg', folder, binary),
+    path.join(__dirname, 'vendor', 'ffmpeg', folder, binary),
+    path.join(__dirname, '..', 'vendor', 'ffmpeg', folder, binary),
   ]
 
-  for (const tryPath of pathsToTry) {
-    try {
-      if (statSync(tryPath).isFile()) {
-        return tryPath
-      }
-    } catch {
-      // File missing
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate
     }
   }
 

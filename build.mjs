@@ -1,4 +1,5 @@
-import { rmSync } from 'node:fs'
+import { cpSync, rmSync } from 'node:fs'
+import path from 'node:path'
 import * as esbuild from 'esbuild'
 
 const isWatch = process.argv.includes('--watch')
@@ -71,7 +72,6 @@ const buildOptions = [
 ]
 
 if (isWatch) {
-  console.log('Starting watch mode...')
   Promise.all(buildOptions.map((options) => esbuild.context(options)))
     .then((contexts) => Promise.all(contexts.map((context) => context.watch())))
     .then(() => {
@@ -84,9 +84,12 @@ if (isWatch) {
 } else {
   try {
     rmSync('dist', { recursive: true, force: true })
-    console.log('Building...')
     await Promise.all(buildOptions.map((options) => esbuild.build(options)))
-    console.log('Build complete')
+    cpSync(
+      path.resolve('src/vendor'),
+      path.resolve('dist/vendor'),
+      { recursive: true }
+    )
   } catch (err) {
     console.error('Build failed:', err)
     process.exit(1)
