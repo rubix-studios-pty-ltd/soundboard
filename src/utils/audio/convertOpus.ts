@@ -15,6 +15,9 @@ export async function convertOpus(filePath: string, outputPath: string): Promise
     '-y',
     '-i',
     filePath,
+    '-vn',
+    '-c:a',
+    'libopus',
     '-af',
     audioFilters.join(','),
     '-ar',
@@ -23,8 +26,6 @@ export async function convertOpus(filePath: string, outputPath: string): Promise
     '64k',
     '-map_metadata',
     '-1',
-    '-f',
-    'opus',
     outputPath,
   ]
 
