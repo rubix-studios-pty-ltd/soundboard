@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.20.1](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.0...v3.20.1) (2026-05-11)
+
+
+### Bug Fixes
+
+* **ffmpeg:** binary inclusion to final build outputl ([3c5442a](https://github.com/rubix-studios-pty-ltd/soundboard/commit/3c5442a88a2369fa992bfbf3a547938fe7b33ef7))
+
 # [3.20.0](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.19.0...v3.20.0) (2026-05-10)
 
 
