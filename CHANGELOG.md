@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.20.2](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.1...v3.20.2) (2026-05-22)
+
+
+### Bug Fixes
+
+* update copyright information to remove "Pty. Ltd." from author name ([5f896b9](https://github.com/rubix-studios-pty-ltd/soundboard/commit/5f896b9d3a8e43d97aa5b6e4c9d21f43d2818d45))
+
 ## [3.20.1](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.0...v3.20.1) (2026-05-11)
 
 
