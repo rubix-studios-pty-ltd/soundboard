@@ -11,7 +11,7 @@ import {
 } from '@/utils/system/pool/cleanup'
 import { createElement, getElement, warmPool } from '@/utils/system/pool/lifecycle'
 import { audioListeners } from '@/utils/system/pool/listeners'
-import { recentInstance, recentSource } from '@/utils/system/pool/modes'
+import { singleItem, singlePool } from '@/utils/system/pool/modes'
 
 export class AudioPool {
   private pool: Map<string, Pool>
@@ -219,14 +219,14 @@ export class AudioPool {
   updateMulti(enabled: boolean): void {
     this.enableMulti = enabled
     if (!enabled) {
-      recentInstance(this.poolState())
+      singlePool(this.poolState())
     }
   }
 
   updateRepeat(enabled: boolean): void {
     this.enableRepeat = enabled
     if (!enabled) {
-      recentSource(this.poolState())
+      singleItem(this.poolState())
     }
   }
 

@@ -1,9 +1,9 @@
 import { type SoundType } from '@/types/sound'
-import { createAudioData } from '@/utils/audio/createAudioData'
+import { audioData } from '@/utils/audio/audioData'
 
 export async function addAudio(file: File, type: SoundType, customTitle?: string) {
   try {
-    const sound = await createAudioData(file, type, customTitle)
+    const sound = await audioData(file, type, customTitle)
 
     await window.electronAPI.addSound({
       sound,

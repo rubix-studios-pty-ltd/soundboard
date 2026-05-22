@@ -11,7 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import LoadingSpinner from '@/components/ui/spinner'
+import { Spinner } from '@/components/ui/spinner'
 import { type SoundType } from '@/types/sound'
 
 interface AddSoundModalProps {
@@ -74,7 +74,7 @@ export function AddSoundModal({
         {isLoading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center rounded-lg bg-black">
             <div className="flex flex-col items-center gap-2">
-              <LoadingSpinner size="lg" />
+              <Spinner size="lg" />
               <span>Đang chuyển đổi...</span>
             </div>
           </div>

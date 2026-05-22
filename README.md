@@ -243,7 +243,7 @@ MIT License - See full license in LICENSE file.
 
 ## Author
 
-Rubix Studios Pty. Ltd.
+Rubix Studios
 
 ## Contact
 

@@ -1,14 +1,14 @@
 import { type Pool } from '@/types/pool'
 import { type PoolState, removeAudio } from '@/utils/system/pool/cleanup'
 
-export function recentInstance(state: PoolState): void {
-  const playingSounds = Array.from(state.pool.entries())
+export function singlePool(state: PoolState): void {
+  const poolGroups = Array.from(state.pool.entries())
     .filter(([_, item]) => item.isPlaying)
     .sort((a, b) => b[1].lastUsed - a[1].lastUsed)
 
-  if (playingSounds.length > 1) {
-    const [, mostRecentItem] = playingSounds[0]
-    playingSounds.slice(1).forEach(([key]) => {
+  if (poolGroups.length > 1) {
+    const [, mostRecentItem] = poolGroups[0]
+    poolGroups.slice(1).forEach(([key]) => {
       removeAudio(state, key)
     })
 
@@ -17,21 +17,21 @@ export function recentInstance(state: PoolState): void {
   }
 }
 
-export function recentSource(state: PoolState): void {
-  const soundGroups = new Map<string, [string, Pool][]>()
+export function singleItem(state: PoolState): void {
+  const audioGroups = new Map<string, [string, Pool][]>()
 
   for (const entry of state.pool.entries()) {
     const [_, item] = entry
     if (!item.isPlaying) continue
 
-    if (!soundGroups.has(item.source)) {
-      soundGroups.set(item.source, [])
+    if (!audioGroups.has(item.source)) {
+      audioGroups.set(item.source, [])
     }
 
-    soundGroups.get(item.source)?.push(entry)
+    audioGroups.get(item.source)?.push(entry)
   }
 
-  for (const [source, instances] of soundGroups) {
+  for (const [source, instances] of audioGroups) {
     if (instances.length > 1) {
       instances.sort((a, b) => b[1].lastUsed - a[1].lastUsed)
 

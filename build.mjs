@@ -85,11 +85,7 @@ if (isWatch) {
   try {
     rmSync('dist', { recursive: true, force: true })
     await Promise.all(buildOptions.map((options) => esbuild.build(options)))
-    cpSync(
-      path.resolve('src/vendor'),
-      path.resolve('dist/vendor'),
-      { recursive: true }
-    )
+    cpSync(path.resolve('src/vendor'), path.resolve('dist/vendor'), { recursive: true })
   } catch (err) {
     console.error('Build failed:', err)
     process.exit(1)
