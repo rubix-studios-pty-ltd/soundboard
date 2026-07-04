@@ -239,16 +239,16 @@ Contributions are welcome! Please read our:
 
 ## License
 
-MIT License - See full license in LICENSE file.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support or inquiries:
+
+- LinkedIn: [rubixvi](https://www.linkedin.com/in/rubixvi/)
+- Website: [Rubix Studios](https://rubixstudios.com.au)
 
 ## Author
 
-Rubix Studios
-
-## Contact
-
-For support or inquiries, contact Vincent Vu
-
-- Facebook: [@rubixvi](https://www.facebook.com/rubixvi/)
-
-Rubix Studios - [https://rubixstudios.com.au](https://rubixstudios.com.au).
+Rubix Studios  
+[https://rubixstudios.com.au](https://rubixstudios.com.au)
