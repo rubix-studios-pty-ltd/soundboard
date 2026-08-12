@@ -37,7 +37,7 @@
     "clsx": "^2.1.1",
     "concurrently": "^10.0.4",
     "cross-env": "^10.1.0",
-    "electron": "^43.2.0",
+    "electron": "^43.3.0",
     "electron-builder": "^26.15.3",
     "esbuild": "^0.28.1",
     "fs-extra": "^11.4.0",
