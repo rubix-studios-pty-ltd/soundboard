@@ -39,7 +39,7 @@
     "cross-env": "^10.1.0",
     "electron": "^43.2.0",
     "electron-builder": "^26.15.3",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "fs-extra": "^11.4.0",
     "nodemon": "^3.1.14",
     "postcss": "^8.5.25",
