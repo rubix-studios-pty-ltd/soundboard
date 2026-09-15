@@ -4,10 +4,10 @@ allowBuilds:
   esbuild: true
 
 ignoredBuiltDependencies:
-  - '@parcel/watcher'
   - electron-winstaller
 
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - '@tailwindcss/oxide'
   - electron
   - esbuild
