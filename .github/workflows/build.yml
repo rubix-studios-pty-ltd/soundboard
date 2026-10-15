@@ -124,19 +124,19 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Download Windows artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: windows-build
           path: release
 
       - name: Download macOS x64 artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: macos-x64-build
           path: release
 
       - name: Download macOS arm64 artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: macos-arm64-build
           path: release
