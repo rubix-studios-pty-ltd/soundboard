@@ -7,123 +7,107 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.20.2](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.1...v3.20.2) (2026-05-22)
 
-
 ### Bug Fixes
 
-* update copyright information to remove "Pty. Ltd." from author name ([5f896b9](https://github.com/rubix-studios-pty-ltd/soundboard/commit/5f896b9d3a8e43d97aa5b6e4c9d21f43d2818d45))
+- update copyright information to remove "Pty. Ltd." from author name ([5f896b9](https://github.com/rubix-studios-pty-ltd/soundboard/commit/5f896b9d3a8e43d97aa5b6e4c9d21f43d2818d45))
 
 ## [3.20.1](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.0...v3.20.1) (2026-05-11)
 
-
 ### Bug Fixes
 
-* **ffmpeg:** binary inclusion to final build outputl ([3c5442a](https://github.com/rubix-studios-pty-ltd/soundboard/commit/3c5442a88a2369fa992bfbf3a547938fe7b33ef7))
+- **ffmpeg:** binary inclusion to final build outputl ([3c5442a](https://github.com/rubix-studios-pty-ltd/soundboard/commit/3c5442a88a2369fa992bfbf3a547938fe7b33ef7))
 
 # [3.20.0](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.19.0...v3.20.0) (2026-05-10)
 
-
 ### Features
 
-* **release:** rename functions for consistency and clarity, update loading text, and implement useAudio hook ([de31afb](https://github.com/rubix-studios-pty-ltd/soundboard/commit/de31afba702c54309b67f4918b1091a36d9aa528))
+- **release:** rename functions for consistency and clarity, update loading text, and implement useAudio hook ([de31afb](https://github.com/rubix-studios-pty-ltd/soundboard/commit/de31afba702c54309b67f4918b1091a36d9aa528))
 
 # [3.19.0](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.14...v3.19.0) (2026-05-09)
 
-
 ### Features
 
-* **release:** replace createId with createSoundData for audio track addition; remove createId utility ([25231aa](https://github.com/rubix-studios-pty-ltd/soundboard/commit/25231aa4001aae668180470141509a4195be03b2))
+- **release:** replace createId with createSoundData for audio track addition; remove createId utility ([25231aa](https://github.com/rubix-studios-pty-ltd/soundboard/commit/25231aa4001aae668180470141509a4195be03b2))
 
 ## [3.18.14](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.13...v3.18.14) (2026-05-09)
 
-
 ### Bug Fixes
 
-* correct border style in Header component for consistency ([60c8e62](https://github.com/rubix-studios-pty-ltd/soundboard/commit/60c8e623317b6849fa69acb1495adff1a825cd6a))
+- correct border style in Header component for consistency ([60c8e62](https://github.com/rubix-studios-pty-ltd/soundboard/commit/60c8e623317b6849fa69acb1495adff1a825cd6a))
 
 ## [3.18.13](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.12...v3.18.13) (2026-03-23)
 
-
 ### Bug Fixes
 
-* **release:** security hardening via dependency updates ([c6291f5](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c6291f50ca112acb0501e83516380d1555a98f15))
+- **release:** security hardening via dependency updates ([c6291f5](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c6291f50ca112acb0501e83516380d1555a98f15))
 
 ## [3.18.12](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.11...v3.18.12) (2026-03-02)
 
-
 ### Bug Fixes
 
-* add lang attribute to HTML tags for accessibility and SEO ([0eacce2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/0eacce217a1a0da9836d9e9c079c56086b827e01))
+- add lang attribute to HTML tags for accessibility and SEO ([0eacce2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/0eacce217a1a0da9836d9e9c079c56086b827e01))
 
 ## [3.18.11](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.10...v3.18.11) (2026-02-03)
 
-
 ### Bug Fixes
 
-* update dependency array comment in SoundGrid component ([0e5800b](https://github.com/rubix-studios-pty-ltd/soundboard/commit/0e5800bc031aecb0fcb6629eb6e48d74fb05e80a))
+- update dependency array comment in SoundGrid component ([0e5800b](https://github.com/rubix-studios-pty-ltd/soundboard/commit/0e5800bc031aecb0fcb6629eb6e48d74fb05e80a))
 
 ## [3.18.10](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.9...v3.18.10) (2026-01-22)
 
-
 ### Bug Fixes
 
-* **security:** patch release ([c7ea97b](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c7ea97b5abb117631a878fb69624c06f88afa079))
-* **security:** patch release ([a3ff7eb](https://github.com/rubix-studios-pty-ltd/soundboard/commit/a3ff7eb183ec849398be635a4325647240ac5e67))
+- **security:** patch release ([c7ea97b](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c7ea97b5abb117631a878fb69624c06f88afa079))
+- **security:** patch release ([a3ff7eb](https://github.com/rubix-studios-pty-ltd/soundboard/commit/a3ff7eb183ec849398be635a4325647240ac5e67))
 
 ## [3.18.9](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.8...v3.18.9) (2025-12-19)
 
-
 ### Bug Fixes
 
-* update class name for disabled state in Slider component ([493b7fc](https://github.com/rubix-studios-pty-ltd/soundboard/commit/493b7fcf45f00865abfd658c70da999623a28c0a))
+- update class name for disabled state in Slider component ([493b7fc](https://github.com/rubix-studios-pty-ltd/soundboard/commit/493b7fcf45f00865abfd658c70da999623a28c0a))
 
 ## [3.18.8](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.7...v3.18.8) (2025-12-12)
 
-
 ### Bug Fixes
 
-* remove unused tailwindcss-animated dependency from package.json and pnpm-lock.yaml ([f3eba19](https://github.com/rubix-studios-pty-ltd/soundboard/commit/f3eba194e115fd3b761f0bac5a58c8146336be87))
-* update tailwind stylesheet path in prettier configuration ([8df411e](https://github.com/rubix-studios-pty-ltd/soundboard/commit/8df411e1f8bda1f017ed86527979796a661ee593))
+- remove unused tailwindcss-animated dependency from package.json and pnpm-lock.yaml ([f3eba19](https://github.com/rubix-studios-pty-ltd/soundboard/commit/f3eba194e115fd3b761f0bac5a58c8146336be87))
+- update tailwind stylesheet path in prettier configuration ([8df411e](https://github.com/rubix-studios-pty-ltd/soundboard/commit/8df411e1f8bda1f017ed86527979796a661ee593))
 
 ## [3.18.7](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.6...v3.18.7) (2025-12-03)
 
-
 ### Bug Fixes
 
-* **security:** Refactor code structure for improved readability and maintainability ([2694e43](https://github.com/rubix-studios-pty-ltd/soundboard/commit/2694e437df817403bbfd2d727ce4ef6f8b9d26ac))
+- **security:** Refactor code structure for improved readability and maintainability ([2694e43](https://github.com/rubix-studios-pty-ltd/soundboard/commit/2694e437df817403bbfd2d727ce4ef6f8b9d26ac))
 
 ## [3.18.6](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.5...v3.18.6) (2025-10-14)
 
-
 ### Bug Fixes
 
-* format className string for better readability in SoundButton component ([ecc5068](https://github.com/rubix-studios-pty-ltd/soundboard/commit/ecc5068c4ddf1f900ad314ba30176d7cefd2355e))
+- format className string for better readability in SoundButton component ([ecc5068](https://github.com/rubix-studios-pty-ltd/soundboard/commit/ecc5068c4ddf1f900ad314ba30176d7cefd2355e))
 
 ## [3.18.5](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.4...v3.18.5) (2025-10-02)
 
-
 ### Bug Fixes
 
-* add development branch configuration and update changelog settings in release config ([96c8cc3](https://github.com/rubix-studios-pty-ltd/soundboard/commit/96c8cc346bc9da31e78a7d947a7d5046c5c80717))
-* update build workflow to include development branch and streamline pnpm setup ([421b24a](https://github.com/rubix-studios-pty-ltd/soundboard/commit/421b24a6abc735876bceb25129a6b2af86b378e0))
+- add development branch configuration and update changelog settings in release config ([96c8cc3](https://github.com/rubix-studios-pty-ltd/soundboard/commit/96c8cc346bc9da31e78a7d947a7d5046c5c80717))
+- update build workflow to include development branch and streamline pnpm setup ([421b24a](https://github.com/rubix-studios-pty-ltd/soundboard/commit/421b24a6abc735876bceb25129a6b2af86b378e0))
 
 ## [3.18.4](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.3...v3.18.4) (2025-10-02)
 
-
 ### Bug Fixes
 
-* add artifact upload steps for Windows and macOS builds ([ab324c2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/ab324c292d28bc6fc945e0ba08f4962a76331e84))
-* update @types/node dependency to version 24.6.2 and remove unused @semantic-release/npm ([215fbe1](https://github.com/rubix-studios-pty-ltd/soundboard/commit/215fbe1afe146ccee63338a0bd6cd4df4681a25a))
-* update artifact paths for Windows and macOS builds to use wildcards ([61f7ae1](https://github.com/rubix-studios-pty-ltd/soundboard/commit/61f7ae1dda6641be47c1d590ae2f8219cffcbcb3))
-* update build scripts to prevent publishing artifacts for Windows and macOS ([c870fe0](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c870fe07a275776f6fb4612f51ecf41edd9910e5))
-* update macOS artifact download steps and labels for clarity ([c4ea1d2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c4ea1d22b1a0ded0774dfbac1a14d0be578a22ef))
+- add artifact upload steps for Windows and macOS builds ([ab324c2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/ab324c292d28bc6fc945e0ba08f4962a76331e84))
+- update @types/node dependency to version 24.6.2 and remove unused @semantic-release/npm ([215fbe1](https://github.com/rubix-studios-pty-ltd/soundboard/commit/215fbe1afe146ccee63338a0bd6cd4df4681a25a))
+- update artifact paths for Windows and macOS builds to use wildcards ([61f7ae1](https://github.com/rubix-studios-pty-ltd/soundboard/commit/61f7ae1dda6641be47c1d590ae2f8219cffcbcb3))
+- update build scripts to prevent publishing artifacts for Windows and macOS ([c870fe0](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c870fe07a275776f6fb4612f51ecf41edd9910e5))
+- update macOS artifact download steps and labels for clarity ([c4ea1d2](https://github.com/rubix-studios-pty-ltd/soundboard/commit/c4ea1d22b1a0ded0774dfbac1a14d0be578a22ef))
 
 ## [3.18.3](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.18.2...v3.18.3) (2025-10-02)
 
-
 ### Bug Fixes
 
-* add missing dependency installation step in release job ([3bfd539](https://github.com/rubix-studios-pty-ltd/soundboard/commit/3bfd5397d89655d83ed40e34b6009e2cdc986fa0))
-* update SoundButton component logic and styling ([7ad88ef](https://github.com/rubix-studios-pty-ltd/soundboard/commit/7ad88ef7e917177d8dd757dae556e9665edd22cc))
+- add missing dependency installation step in release job ([3bfd539](https://github.com/rubix-studios-pty-ltd/soundboard/commit/3bfd5397d89655d83ed40e34b6009e2cdc986fa0))
+- update SoundButton component logic and styling ([7ad88ef](https://github.com/rubix-studios-pty-ltd/soundboard/commit/7ad88ef7e917177d8dd757dae556e9665edd22cc))
 
 # Changelog
 
@@ -143,26 +127,23 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [3.17.1](///compare/v3.17.0...v3.17.1) (2025-07-19)
 
-
 ### Bug Fixes
 
-* Update dependencies for @types/node, electron, and esbuild to latest versions 643d4f6
+- Update dependencies for @types/node, electron, and esbuild to latest versions 643d4f6
 
 ## [3.17.0](///compare/v3.16.1...v3.17.0) (2025-07-15)
 
-
 ### Features
 
-* Update entry points and add resolveUserSoundPath function for audio management 2325b39
+- Update entry points and add resolveUserSoundPath function for audio management 2325b39
 
 ### [3.16.1](///compare/v3.16.0...v3.16.1) (2025-07-15)
 
 ## [3.16.0](///compare/v3.15.6...v3.16.0) (2025-07-15)
 
-
 ### Features
 
-* Implement audio conversion and management features 1c68460
+- Implement audio conversion and management features 1c68460
 
 ### [3.15.6](///compare/v3.15.5...v3.15.6) (2025-07-14)
 
@@ -172,127 +153,114 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [3.15.3](///compare/v3.15.2...v3.15.3) (2025-07-14)
 
-
 ### Bug Fixes
 
-* streamline ffmpeg path resolution by removing redundant entries a5f6ec8
-* update ffmpeg resource path to point directly to executable 4af182e
+- streamline ffmpeg path resolution by removing redundant entries a5f6ec8
+- update ffmpeg resource path to point directly to executable 4af182e
 
 ### [3.15.2](///compare/v3.15.1...v3.15.2) (2025-07-14)
 
 ### [3.15.1](///compare/v3.15.0...v3.15.1) (2025-07-14)
 
-
 ### Bug Fixes
 
-* add traffic light position to main and popout window configurations 607e2d0
-* improve ffmpeg path resolution for better compatibility across platforms da4c4a4
-* update ffmpeg resource paths for better compatibility d7beb9e
+- add traffic light position to main and popout window configurations 607e2d0
+- improve ffmpeg path resolution for better compatibility across platforms da4c4a4
+- update ffmpeg resource paths for better compatibility d7beb9e
 
 ## [3.15.0](///compare/v3.14.0...v3.15.0) (2025-07-14)
 
-
 ### Features
 
-* refine macOS build process by separating x64 and arm64 configurations 33ade95
+- refine macOS build process by separating x64 and arm64 configurations 33ade95
 
 ## [3.14.0](///compare/v3.13.1...v3.14.0) (2025-07-14)
 
-
 ### Features
 
-* add new sound "Cười Hẹ Hẹ" and remove "Chiến Thắng" from music data 4ffdd95
-* enhance DMG configuration with custom options for macOS build 1af2be7
+- add new sound "Cười Hẹ Hẹ" and remove "Chiến Thắng" from music data 4ffdd95
+- enhance DMG configuration with custom options for macOS build 1af2be7
 
 
 ### Bug Fixes
 
-* simplify DMG configuration by removing unnecessary options c9af663
+- simplify DMG configuration by removing unnecessary options c9af663
 
 ### [3.13.1](///compare/v3.13.0...v3.13.1) (2025-07-14)
 
-
 ### Bug Fixes
 
-* update DMG artifact naming and format for macOS build 6b08650
+- update DMG artifact naming and format for macOS build 6b08650
 
 ## [3.13.0](///compare/v3.12.0...v3.13.0) (2025-07-14)
 
-
 ### Features
 
-* enhance macOS build process with architecture-specific options e84d6fe
+- enhance macOS build process with architecture-specific options e84d6fe
 
 ## [3.12.0](///compare/v3.11.2...v3.12.0) (2025-07-14)
 
-
 ### Features
 
-* add DMG format specification for macOS build 82221be
+- add DMG format specification for macOS build 82221be
 
 
 ### Bug Fixes
 
-* set parent window for popout window creation c196579
+- set parent window for popout window creation c196579
 
 ### [3.11.2](///compare/v3.11.1...v3.11.2) (2025-07-14)
 
-
 ### Bug Fixes
 
-* update mac build targets to include architecture specifications 9250eca
+- update mac build targets to include architecture specifications 9250eca
 
 ### [3.11.1](///compare/v3.11.0...v3.11.1) (2025-07-14)
 
-
 ### Bug Fixes
 
-* reorganize imports and improve audio context disposal handling 04f4391
-* set parent window and type for popout window creation a77ba19
-* update Node engine requirement and adjust TypeScript target and library settings bce0133
+- reorganize imports and improve audio context disposal handling 04f4391
+- set parent window and type for popout window creation a77ba19
+- update Node engine requirement and adjust TypeScript target and library settings bce0133
 
 ## [3.11.0](///compare/v3.10.1...v3.11.0) (2025-07-13)
 
-
 ### Features
 
-* update popout window dimensions and include popup.html in build 4802af9
+- update popout window dimensions and include popup.html in build 4802af9
 
 
 ### Bug Fixes
 
-* adjust pnpm and electron app cleanup handling 21c2902
-* ensure popout window is destroyed on application quit 0e3930b
-* update target versions for build and correct popup.html reference to popout.html fe0b8d4
+- adjust pnpm and electron app cleanup handling 21c2902
+- ensure popout window is destroyed on application quit 0e3930b
+- update target versions for build and correct popup.html reference to popout.html fe0b8d4
 
 
 ### Code Refactoring
 
-* simplify popout window settings and remove unused modal logic 7e41224
+- simplify popout window settings and remove unused modal logic 7e41224
 
 ### [3.10.1](///compare/v3.10.0...v3.10.1) (2025-07-13)
 
 ## [3.10.0](///compare/v3.9.0...v3.10.0) (2025-07-13)
 
-
 ### Features
 
-* make sound items draggable based on drag-and-drop setting 93418c7
+- make sound items draggable based on drag-and-drop setting 93418c7
 
 ## [3.9.0](///compare/v3.8.0...v3.9.0) (2025-07-13)
 
-
 ### Features
 
-* update popout window dimensions and enhance sound button properties 9429333
+- update popout window dimensions and enhance sound button properties 9429333
 
 ## [3.8.0](///compare/v3.7.20...v3.8.0) (2025-07-13)
 
-
 ### Features
 
-* add popout window functionality with drag-and-drop support for sound management 1560417
-* enhance audio settings and UI controls c215ede
+- add popout window functionality with drag-and-drop support for sound management 1560417
+- enhance audio settings and UI controls c215ede
 
 ### [3.7.20](///compare/v3.7.19...v3.7.20) (2025-06-24)
 
@@ -302,66 +270,58 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [3.7.17](///compare/v3.7.16...v3.7.17) (2025-06-23)
 
-
 ### Bug Fixes
 
-* change font weight from semibold to bold for sound button title d47e0e2
+- change font weight from semibold to bold for sound button title d47e0e2
 
 ### [3.7.16](///compare/v3.7.15...v3.7.16) (2025-06-23)
 
-
 ### Bug Fixes
 
-* correct spelling in music data entry for "B Mày" to "Bố Mày" 5481d93
-* update dependencies for @types/node, caniuse-lite, electron-to-chromium, end-of-stream, and pump d347c22
+- correct spelling in music data entry for "B Mày" to "Bố Mày" 5481d93
+- update dependencies for @types/node, caniuse-lite, electron-to-chromium, end-of-stream, and pump d347c22
 
 ### [3.7.15](///compare/v3.7.14...v3.7.15) (2025-06-23)
 
 ### [3.7.14](///compare/v3.7.13...v3.7.14) (2025-06-13)
 
-
 ### Bug Fixes
 
-* update pnpm version to 10 in build workflow 3bba3bc
+- update pnpm version to 10 in build workflow 3bba3bc
 
 ### [3.7.13](///compare/v3.7.12...v3.7.13) (2025-06-13)
 
-
 ### Bug Fixes
 
-* downgrade pnpm version to 9 and update caching strategy abdb7f9
+- downgrade pnpm version to 9 and update caching strategy abdb7f9
 
 ### [3.7.12](///compare/v3.7.11...v3.7.12) (2025-06-13)
 
-
 ### Bug Fixes
 
-* update fluent-ffmpeg package name and add async dependency 8fe1f05
+- update fluent-ffmpeg package name and add async dependency 8fe1f05
 
 ### [3.7.11](///compare/v3.7.10...v3.7.11) (2025-06-13)
 
 ### [3.7.10](///compare/v3.7.9...v3.7.10) (2025-06-13)
 
-
 ### Bug Fixes
 
-* update pnpm version to 10 in build workflow f2c0f31
+- update pnpm version to 10 in build workflow f2c0f31
 
 ### [3.7.9](///compare/v3.7.8...v3.7.9) (2025-06-13)
 
 ### [3.7.8](///compare/v3.7.7...v3.7.8) (2025-06-13)
 
-
 ### Bug Fixes
 
-* update dependency installation and caching strategy in build workflow 9239ec6
+- update dependency installation and caching strategy in build workflow 9239ec6
 
 ### [3.7.7](///compare/v3.7.6...v3.7.7) (2025-06-13)
 
-
 ### Bug Fixes
 
-* update release commands to use pnpm instead of npm 40eb0e7
+- update release commands to use pnpm instead of npm 40eb0e7
 
 ### [3.7.6](///compare/v3.7.5...v3.7.6) (2025-06-13)
 
@@ -373,147 +333,138 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [3.7.2](///compare/v3.7.1...v3.7.2) (2025-04-20)
 
-
 ### Bug Fixes
 
-* correct version comparison links in CHANGELOG.md 6d5b8a0
-* revert version to 3.7.1 in package.json and package-lock.json 84e42ef
-* update Rubix Studios URL to remove 'www' prefix 649d3b4
+- correct version comparison links in CHANGELOG.md 6d5b8a0
+- revert version to 3.7.1 in package.json and package-lock.json 84e42ef
+- update Rubix Studios URL to remove 'www' prefix 649d3b4
 
 ### [3.7.1](///compare/v3.7.0...v3.7.1) (2025-04-18)
 
-
 ### Bug Fixes
 
-* revert version to 3.7.0 in package-lock.json and update version badge in README.md 29470b9
+- revert version to 3.7.0 in package-lock.json and update version badge in README.md 29470b9
 
 ## [3.7.0](///compare/v3.4.5...v3.7.0) (2025-04-18)
 
-
 ### Features
 
-* enhance FFmpeg binary resolution and update packaging for ffmpeg-static a862aaa
-* integrate fluent-ffmpeg and manage FFmpeg binary extraction; remove ffmpeg-installer dependency 8e6ecec
+- enhance FFmpeg binary resolution and update packaging for ffmpeg-static a862aaa
+- integrate fluent-ffmpeg and manage FFmpeg binary extraction; remove ffmpeg-installer dependency 8e6ecec
 
 
 ### Bug Fixes
 
-* update file type validation to accept video files and adjust input accept attribute fc3c0fc
+- update file type validation to accept video files and adjust input accept attribute fc3c0fc
 
 
 ### Code Refactoring
 
-* remove ffmpeg and ffmpeg-installer from build external dependencies; update type declarations 8ad8d03
+- remove ffmpeg and ffmpeg-installer from build external dependencies; update type declarations 8ad8d03
 
 ### [3.4.5](///compare/v3.4.4...v3.4.5) (2025-04-16)
 
-
 ### Code Refactoring
 
-* consolidate theme and settings management by removing unused data and introducing constants d3c71dc
+- consolidate theme and settings management by removing unused data and introducing constants d3c71dc
 
 ### [3.4.4](///compare/v3.4.3...v3.4.4) (2025-04-15)
 
-
 ### Code Refactoring
 
-* disable React DevTools global hook in browser build options f85d5f2
+- disable React DevTools global hook in browser build options f85d5f2
 
 ### [3.4.3](///compare/v3.4.2...v3.4.3) (2025-04-15)
 
-
 ### Code Refactoring
 
-* remove unused create-release job from build workflow 92b06dd
+- remove unused create-release job from build workflow 92b06dd
 
 ### [3.4.2](///compare/v3.4.1...v3.4.2) (2025-04-15)
 
-
 ### Bug Fixes
 
-* correct version comparison links in changelog and remove redundant section 064584f
-* reorder Code Refactoring section in changelog for clarity e949804
-* update maxItems for favorites to 18 across settings and preload 5041979
-* update version comparison link in changelog and remove redundant section 0ace399
+- correct version comparison links in changelog and remove redundant section 064584f
+- reorder Code Refactoring section in changelog for clarity e949804
+- update maxItems for favorites to 18 across settings and preload 5041979
+- update version comparison link in changelog and remove redundant section 0ace399
 
 
 ### Code Refactoring
 
-* simplify sound management by removing locking mechanism and updating favorites component 74317c4
-* streamline code formatting and improve readability in build workflow and audio pool disposal cafb61c
+- simplify sound management by removing locking mechanism and updating favorites component 74317c4
+- streamline code formatting and improve readability in build workflow and audio pool disposal cafb61c
 
 ### [3.4.1](///compare/v3.2.0...v3.4.1) (2025-04-15)
 
-
 ### Features
 
-* enhance sound management by adding validation, user-added sound support, and improved file handling 418328f
-* enhance sound management with user-added sounds, implement loading and deletion features 42ce969
-* add changelog reading and GitHub release creation steps to build workflow 2f0225d
-* integrate hotkey management in favorites grid with sound playback support e5fa71c
+- enhance sound management by adding validation, user-added sound support, and improved file handling 418328f
+- enhance sound management with user-added sounds, implement loading and deletion features 42ce969
+- add changelog reading and GitHub release creation steps to build workflow 2f0225d
+- integrate hotkey management in favorites grid with sound playback support e5fa71c
 
 
 ### Documentation
 
-* update README to include favorites management and custom sound import features fa0ce4b
+- update README to include favorites management and custom sound import features fa0ce4b
 
 
 ### Code Refactoring
 
-* clean up import order and format sound play function 35d1de7
+- clean up import order and format sound play function 35d1de7
 
 
 ### Bug Fixes
 
-* ensure file input accepts only audio files f7893f7
+- ensure file input accepts only audio files f7893f7
 
 
 ## [3.2.0](///compare/v3.1.0...v3.2.0) (2025-04-15)
 
-
 ### Features
 
-* favourites and custom user sound ffmepg bundle 7e7d31f
-* implement sound management and conversion features, enhance UI components, and update theme colors 4fa03dd
+- favourites and custom user sound ffmepg bundle 7e7d31f
+- implement sound management and conversion features, enhance UI components, and update theme colors 4fa03dd
 
 
 ### Bug Fixes
 
-* hide add sound button when not needed ce84406
+- hide add sound button when not needed ce84406
 
 
 ### Documentation
 
-* enhance README with additional project info and badges ed3cd5c
-* reorganize badge sections in README for improved clarity 1ac0a4b
-* update README and add Security Policy; enhance changelog and Code of Conduct 1acf7fd
-* update README to improve build and quality badge organization 2fd3e40
+- enhance README with additional project info and badges ed3cd5c
+- reorganize badge sections in README for improved clarity 1ac0a4b
+- update README and add Security Policy; enhance changelog and Code of Conduct 1acf7fd
+- update README to improve build and quality badge organization 2fd3e40
 
 
 ### Code Refactoring
 
-* clean up setupIPC function by removing unnecessary comments and improving code clarity afb0e33
+- clean up setupIPC function by removing unnecessary comments and improving code clarity afb0e33
 
 ## [3.1.0](///compare/v3.0.4...v3.1.0) (2025-04-14)
 
 ### Features
 
-* add standard-version for versioning and changelog generation 4c77733
-* integrate auto-updater for automatic updates; add GitHub publish configuration 7066394
-* replace color and hide settings with buttonSettings; update related components and remove unused icons fbd5ecf
+- add standard-version for versioning and changelog generation 4c77733
+- integrate auto-updater for automatic updates; add GitHub publish configuration 7066394
+- replace color and hide settings with buttonSettings; update related components and remove unused icons fbd5ecf
 
 ### Bug Fixes
 
-* enhance error logging by adding braces for clarity in multiple locations 1a2a3a8
-* improve logging format in auto-updater events for better readability 338b80a
-* remove redundant publish options from build scripts for Windows and macOS 09c6ecb
-* revert version number to 3.0.5 in package.json f3c712b
-* update @types/node and @types/react to latest versions dd699c6
-* update branches for push and pull_request triggers in build workflow 7383d79
-* update build scripts for Windows and macOS to include publish option 2642643
-* update buttonActive and buttonColor values for theme presets 55cca0d
-* update package.json and cog.tsx for artifact naming and SVG attributes a7bbedd
-* update titles for sound tracks to improve clarity a247bac
+- enhance error logging by adding braces for clarity in multiple locations 1a2a3a8
+- improve logging format in auto-updater events for better readability 338b80a
+- remove redundant publish options from build scripts for Windows and macOS 09c6ecb
+- revert version number to 3.0.5 in package.json f3c712b
+- update @types/node and @types/react to latest versions dd699c6
+- update branches for push and pull_request triggers in build workflow 7383d79
+- update build scripts for Windows and macOS to include publish option 2642643
+- update buttonActive and buttonColor values for theme presets 55cca0d
+- update package.json and cog.tsx for artifact naming and SVG attributes a7bbedd
+- update titles for sound tracks to improve clarity a247bac
 
 ## [3.0.5](https://github.com/rubixvi/soundboard/compare/v3.0.4...v3.0.5) (Current)
 
