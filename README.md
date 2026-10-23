@@ -27,7 +27,6 @@ Một ứng dụng soundboard dành cho máy tính, được xây dựng bằng 
 ## Security
 
 Please see our [Security Policy](SECURITY.md) for information about:
-
 - Supported versions
 - Reporting vulnerabilities
 - Security best practices
@@ -231,7 +230,6 @@ The built application will be available in the `release` directory.
 ## Contributing
 
 Contributions are welcome! Please read our:
-
 - [Security Policy](SECURITY.md) for reporting vulnerabilities
 - [Code of Conduct](CODE_OF_CONDUCT.md) for community guidelines
 - Create issues for bugs or feature requests
@@ -244,7 +242,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 For support or inquiries:
-
 - LinkedIn: [rubixvi](https://www.linkedin.com/in/rubixvi/)
 - Website: [Rubix Studios](https://rubixstudios.com.au)
 
