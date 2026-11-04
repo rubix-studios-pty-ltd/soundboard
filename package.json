@@ -33,7 +33,7 @@
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "autoprefixer": "^10.6.1",
+    "autoprefixer": "^10.6.2",
     "clsx": "^2.1.1",
     "concurrently": "^10.0.6",
     "cross-env": "^10.1.0",
