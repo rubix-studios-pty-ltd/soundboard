@@ -5,6 +5,7 @@ This project uses [semantic-release](https://semantic-release.gitbook.io/semanti
 ## Making Changes
 
 When committing, follow [Conventional Commits](https://www.conventionalcommits.org/) so semantic-release can correctly determine version bumps:
+
 - `feat: add new feature` → **minor** version
 - `fix: resolve bug` → **patch** version
 - `feat!: breaking change` or `BREAKING CHANGE:` in body → **major** version
@@ -20,6 +21,7 @@ When committing, follow [Conventional Commits](https://www.conventionalcommits.o
 ## Creating a Release
 
 Releases are fully automated via GitHub Actions:
+
 1. Push commits to `master` with proper conventional commit messages.
 2. CI runs tests and builds the application.
 3. Semantic-release:

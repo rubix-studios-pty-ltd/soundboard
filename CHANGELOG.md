@@ -195,7 +195,6 @@ All notable changes to this project will be documented in this file. See [standa
 - add new sound "Cười Hẹ Hẹ" and remove "Chiến Thắng" from music data 4ffdd95
 - enhance DMG configuration with custom options for macOS build 1af2be7
 
-
 ### Bug Fixes
 
 - simplify DMG configuration by removing unnecessary options c9af663
@@ -217,7 +216,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 - add DMG format specification for macOS build 82221be
-
 
 ### Bug Fixes
 
@@ -243,13 +241,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 - update popout window dimensions and include popup.html in build 4802af9
 
-
 ### Bug Fixes
 
 - adjust pnpm and electron app cleanup handling 21c2902
 - ensure popout window is destroyed on application quit 0e3930b
 - update target versions for build and correct popup.html reference to popout.html fe0b8d4
-
 
 ### Code Refactoring
 
@@ -366,11 +362,9 @@ All notable changes to this project will be documented in this file. See [standa
 - enhance FFmpeg binary resolution and update packaging for ffmpeg-static a862aaa
 - integrate fluent-ffmpeg and manage FFmpeg binary extraction; remove ffmpeg-installer dependency 8e6ecec
 
-
 ### Bug Fixes
 
 - update file type validation to accept video files and adjust input accept attribute fc3c0fc
-
 
 ### Code Refactoring
 
@@ -403,7 +397,6 @@ All notable changes to this project will be documented in this file. See [standa
 - update maxItems for favorites to 18 across settings and preload 5041979
 - update version comparison link in changelog and remove redundant section 0ace399
 
-
 ### Code Refactoring
 
 - simplify sound management by removing locking mechanism and updating favorites component 74317c4
@@ -418,21 +411,17 @@ All notable changes to this project will be documented in this file. See [standa
 - add changelog reading and GitHub release creation steps to build workflow 2f0225d
 - integrate hotkey management in favorites grid with sound playback support e5fa71c
 
-
 ### Documentation
 
 - update README to include favorites management and custom sound import features fa0ce4b
-
 
 ### Code Refactoring
 
 - clean up import order and format sound play function 35d1de7
 
-
 ### Bug Fixes
 
 - ensure file input accepts only audio files f7893f7
-
 
 ## [3.2.0](///compare/v3.1.0...v3.2.0) (2025-04-15)
 
@@ -441,11 +430,9 @@ All notable changes to this project will be documented in this file. See [standa
 - favourites and custom user sound ffmepg bundle 7e7d31f
 - implement sound management and conversion features, enhance UI components, and update theme colors 4fa03dd
 
-
 ### Bug Fixes
 
 - hide add sound button when not needed ce84406
-
 
 ### Documentation
 
@@ -453,7 +440,6 @@ All notable changes to this project will be documented in this file. See [standa
 - reorganize badge sections in README for improved clarity 1ac0a4b
 - update README and add Security Policy; enhance changelog and Code of Conduct 1acf7fd
 - update README to improve build and quality badge organization 2fd3e40
-
 
 ### Code Refactoring
 
