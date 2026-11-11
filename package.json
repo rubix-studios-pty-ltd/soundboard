@@ -46,7 +46,7 @@
     "rimraf": "^6.1.4",
     "semantic-release": "^25.0.9",
     "tailwind-merge": "^3.7.0",
-    "tailwindcss": "^4.3.4",
+    "tailwindcss": "^4.3.5",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "7.0.2"
   },
