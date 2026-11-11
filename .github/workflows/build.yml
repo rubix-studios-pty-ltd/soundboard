@@ -72,7 +72,7 @@ jobs:
 
       - name: Upload Windows Artifact
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: windows-build
           path: release/*.exe
@@ -84,7 +84,7 @@ jobs:
 
       - name: Upload macOS x64 Artifact
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: macos-x64-build
           path: release/*x64.dmg
@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload macOS arm64 Artifact
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: macos-arm64-build
           path: release/*arm64.dmg
@@ -113,7 +113,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Node
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
 
@@ -124,19 +124,19 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Download Windows artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: windows-build
           path: release
 
       - name: Download macOS x64 artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: macos-x64-build
           path: release
 
       - name: Download macOS arm64 artifacts
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: macos-arm64-build
           path: release
