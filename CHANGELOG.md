@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.20.5](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.4...v3.20.5) (2026-11-11)
+
+
+### Bug Fixes
+
+* **sec:** node security update ([f111de8](https://github.com/rubix-studios-pty-ltd/soundboard/commit/f111de815334e2733a16e716f75c233d2913d9a3))
+
 ## [3.20.4](https://github.com/rubix-studios-pty-ltd/soundboard/compare/v3.20.3...v3.20.4) (2026-10-23)
 
 
