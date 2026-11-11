@@ -35,7 +35,7 @@
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.6.2",
     "clsx": "^2.1.1",
-    "concurrently": "^10.0.6",
+    "concurrently": "^10.0.7",
     "cross-env": "^10.1.0",
     "electron": "^45.2.3",
     "electron-builder": "^26.18.0",
