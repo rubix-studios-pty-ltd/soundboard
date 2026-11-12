@@ -44,14 +44,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
 
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.1.1
-
+      
+      - name: Setup Node
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          check-latest: true
+          cache: pnpm
+      
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
@@ -114,14 +116,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Node
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.1
+      
+      - name: Setup Node
         uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6.1.1
-
+          check-latest: true
+          cache: pnpm
+      
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
