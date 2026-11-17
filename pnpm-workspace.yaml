@@ -6,6 +6,9 @@ allowBuilds:
 ignoredBuiltDependencies:
   - electron-winstaller
 
+minimumReleaseAgeExclude:
+  - semantic-release@26.0.1
+
 onlyBuiltDependencies:
   - "@parcel/watcher"
   - "@tailwindcss/oxide"
