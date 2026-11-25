@@ -33,11 +33,11 @@
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "autoprefixer": "^10.6.2",
+    "autoprefixer": "^10.7.0",
     "clsx": "^2.1.1",
     "concurrently": "^10.0.7",
     "cross-env": "^10.1.0",
-    "electron": "^45.3.2",
+    "electron": "^45.4.1",
     "electron-builder": "^26.18.0",
     "esbuild": "^0.28.2",
     "fs-extra": "^11.4.1",
@@ -45,7 +45,7 @@
     "postcss": "^8.5.33",
     "rimraf": "^6.1.4",
     "semantic-release": "^26.0.1",
-    "tailwind-merge": "^3.7.0",
+    "tailwind-merge": "^3.7.1",
     "tailwindcss": "^4.3.5",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "7.0.2"
@@ -136,5 +136,5 @@
       "output": "release"
     }
   },
-  "packageManager": "pnpm@12.21.0"
+  "packageManager": "pnpm@12.23.0"
 }
